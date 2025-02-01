@@ -1,10 +1,10 @@
 """
 This module contains the calculation result component.
 """
-from dash import html
+from dash import html, dcc
 import styles
 
-def create_calculation_result(current_calcs, start_time, end_time, overall_avg, strip_averages):
+def create_calculation_result(current_calcs, start_time, end_time, overall_avg, strip_averages, thickness=None):
     """Create a calculation result component."""
     return html.Div([
         html.Hr(style={'margin': '20px 0'}),
@@ -19,6 +19,24 @@ def create_calculation_result(current_calcs, start_time, end_time, overall_avg, 
         html.Div([
             html.Strong("Overall Average: "),
             html.Span(f"{overall_avg:.2f}", id={'type': 'overall-average', 'index': current_calcs - 1})
+        ], style=styles.CALCULATION_SECTION),
+        html.Div([
+            html.Strong("Thickness: "),
+            dcc.Input(
+                id={'type': 'thickness-input', 'index': current_calcs - 1},
+                type='number',
+                placeholder='Enter thickness...',
+                value=thickness,
+                step=1,
+                style={
+                    'marginLeft': '5px',
+                    'width': '100px',
+                    'padding': '5px',
+                    'borderRadius': '4px',
+                    'border': '1px solid #ddd'
+                }
+            ),
+            html.Span("mm", style={'marginLeft': '5px', 'color': '#666'})
         ], style=styles.CALCULATION_SECTION),
         # Collapsible section for individual averages
         html.Div([

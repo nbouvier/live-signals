@@ -3,17 +3,18 @@ This module contains all the callback functions for the Dash application.
 """
 
 import numpy as np
-from dash import Input, Output, State, ctx, html
+from dash import Input, Output, State, ctx, html, ALL
 import dash
 import styles
 from data_processing import create_figure
 from components.calculation_result import create_calculation_result
+from models import CalculationResult
 
 def register_callbacks(app, time_values, raw_strip_resp):
     """Register all callbacks for the application."""
     
-    # Global list to store overall averages
-    overall_averages = []
+    # Global list to store calculation results
+    calculation_results = []
     
     @app.callback(
         [Output('strip-responses-graph', 'figure'),
@@ -87,14 +88,14 @@ def register_callbacks(app, time_values, raw_strip_resp):
             
             overall_avg = np.mean([avg for _, avg in strip_averages])
             
-            # Store the overall average
-            overall_averages.append(overall_avg)
+            # Store the calculation result
+            calculation_results.append(CalculationResult(overall_average=overall_avg))
 
-            # Print the overall averages for debugging
-            print(f"Overall averages: {overall_averages}")
+            # Print the calculation results for debugging
+            print(f"Calculation results: {calculation_results}")
             
             # Get the current number of calculations
-            current_calcs = len(overall_averages)
+            current_calcs = len(calculation_results)
             
             # Create new calculation result
             new_calculation = create_calculation_result(
@@ -102,7 +103,8 @@ def register_callbacks(app, time_values, raw_strip_resp):
                 start_time,
                 end_time,
                 overall_avg,
-                strip_averages
+                strip_averages,
+                thickness=calculation_results[-1].thickness
             )
             
             # Create new list of calculations
@@ -129,6 +131,29 @@ def register_callbacks(app, time_values, raw_strip_resp):
                 html.Div(f"Error processing selection: {str(e)}", style=styles.ERROR_MESSAGE),
                 styles.CLOSE_BUTTON
             )
+
+    @app.callback(
+        Output({'type': 'thickness-input', 'index': ALL}, 'value'),
+        Input({'type': 'thickness-input', 'index': ALL}, 'value'),
+        State({'type': 'thickness-input', 'index': ALL}, 'id')
+    )
+    def update_thickness(values, ids):
+        """Update thickness values when they change."""
+        if not values or not ids:
+            return dash.no_update
+
+        # Update thickness values in our calculation results
+        for value, id_dict in zip(values, ids):
+            index = id_dict['index']
+            if index < len(calculation_results):
+                # Convert to integer if value is not None
+                calculation_results[index].thickness = int(float(value)) if value is not None else None
+
+        # Print updated calculation results for debugging
+        print(f"Updated calculation results: {calculation_results}")
+        
+        # Return integer values
+        return [int(float(v)) if v is not None else None for v in values]
 
     @app.callback(
         [Output('popup-message', 'style', allow_duplicate=True),
@@ -239,6 +264,6 @@ def register_callbacks(app, time_values, raw_strip_resp):
         
         return new_style, new_button_children
 
-    # Function to get stored averages (can be used by other callbacks)
-    def get_stored_averages():
-        return overall_averages 
+    # Function to get stored calculation results (can be used by other callbacks)
+    def get_calculation_results():
+        return calculation_results 
