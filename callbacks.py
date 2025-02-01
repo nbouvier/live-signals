@@ -5,8 +5,17 @@ This module contains all the callback functions for the Dash application.
 import numpy as np
 from dash import Input, Output, State, ctx, html
 import dash
-from styles import OVERLAY_STYLE, OVERLAY_VISIBLE_STYLE, TOGGLE_BUTTON_STYLE, PLACEHOLDER_STYLE
+from styles import (
+    OVERLAY_STYLE, OVERLAY_VISIBLE_STYLE, TOGGLE_BUTTON_STYLE,
+    BASE_GRAPH_STYLE, BASE_PLACEHOLDER_STYLE, BASE_POPUP_STYLE,
+    HIDDEN_POPUP_STYLE, CALCULATION_CONTAINER_STYLE, CALCULATION_HEADER_STYLE,
+    CALCULATION_SECTION_STYLE, STRIP_TOGGLE_BUTTON_STYLE,
+    STRIP_AVERAGES_CONTENT_STYLE, STRIP_AVERAGE_ITEM_STYLE,
+    CLICK_CATCHER_STYLE, CLOSE_BUTTON_STYLE, ERROR_MESSAGE_STYLE,
+    SELECTION_INDICATOR_BASE_STYLE
+)
 from data_processing import create_figure
+from components.calculation_result import create_calculation_result
 
 def register_callbacks(app, time_values, raw_strip_resp):
     """Register all callbacks for the application."""
@@ -21,33 +30,19 @@ def register_callbacks(app, time_values, raw_strip_resp):
         [Input('strip-selector', 'value')]
     )
     def update_figure(selected_strips):
-        base_graph_style = {'height': '800px', 'width': '100%'}
-        base_placeholder_style = {
-            'height': '800px',
-            'width': '100%',
-            'backgroundColor': '#f9f9f9',
-            'border': '1px solid #ddd',
-            'borderRadius': '5px',
-            'display': 'flex',
-            'justifyContent': 'center',
-            'alignItems': 'center',
-            'color': '#666',
-            'fontSize': '18px'
-        }
-        
         # Handle empty strip selection
         if not selected_strips:
             return (
                 {},  # Empty figure
-                dict(base_graph_style, **{'display': 'none'}),  # Hide graph
-                base_placeholder_style  # Show placeholder
+                dict(BASE_GRAPH_STYLE, **{'display': 'none'}),  # Hide graph
+                BASE_PLACEHOLDER_STYLE  # Show placeholder
             )
         
         # Handle strip selection changes
         return (
             create_figure(time_values, raw_strip_resp, selected_strips),
-            base_graph_style,  # Show graph
-            dict(base_placeholder_style, **{'display': 'none'})  # Hide placeholder
+            BASE_GRAPH_STYLE,  # Show graph
+            dict(BASE_PLACEHOLDER_STYLE, **{'display': 'none'})  # Hide placeholder
         )
 
     @app.callback(
@@ -64,48 +59,6 @@ def register_callbacks(app, time_values, raw_strip_resp):
     def update_averages(n_clicks, selected_strips, selected_data, relayout_data, existing_content):
         if not n_clicks:  # Skip initial callback
             return None, {'display': 'none'}, None, {'display': 'none'}
-
-        base_popup_style = {
-            'display': 'block',
-            'position': 'fixed',
-            'bottom': '20px',
-            'right': '20px',
-            'backgroundColor': 'white',
-            'padding': '20px',
-            'borderRadius': '5px',
-            'boxShadow': '0 2px 10px rgba(0,0,0,0.1)',
-            'zIndex': 1000,
-            'textAlign': 'center',
-            'transition': 'transform 0.3s ease-out',
-            'transform': 'translateY(0)',  # Slide up to final position
-            'border': '2px solid #ff3333'
-        }
-
-        hidden_popup_style = {
-            'display': 'none',
-            'position': 'fixed',
-            'bottom': '20px',
-            'right': '20px',
-            'backgroundColor': 'white',
-            'padding': '20px',
-            'borderRadius': '5px',
-            'boxShadow': '0 2px 10px rgba(0,0,0,0.1)',
-            'zIndex': 1000,
-            'textAlign': 'center',
-            'transition': 'transform 0.3s ease-out',
-            'transform': 'translateY(100%)',  # Start from below
-            'border': '2px solid #ff3333'
-        }
-
-        base_button_style = {
-            'backgroundColor': '#ff3333',
-            'color': 'white',
-            'border': 'none',
-            'padding': '8px 16px',
-            'borderRadius': '4px',
-            'cursor': 'pointer',
-            'display': 'block'
-        }
 
         try:
             # Get time range
@@ -124,9 +77,9 @@ def register_callbacks(app, time_values, raw_strip_resp):
             else:
                 return (
                     existing_content,  # Keep existing content unchanged
-                    base_popup_style,
-                    html.Div("Please make a selection first", style={'color': '#ff3333', 'fontWeight': 'bold'}),
-                    base_button_style
+                    BASE_POPUP_STYLE,
+                    html.Div("Please make a selection first", style=ERROR_MESSAGE_STYLE),
+                    CLOSE_BUTTON_STYLE
                 )
                 
             start_time, end_time = range_bounds
@@ -151,58 +104,14 @@ def register_callbacks(app, time_values, raw_strip_resp):
             # Get the current number of calculations
             current_calcs = len(overall_averages)
             
-            # Create new calculation result with calculation index
-            new_calculation = html.Div([
-                html.Hr(style={'margin': '20px 0'}),
-                html.Div([
-                    html.Strong("Calculation Time: "),
-                    html.Span(f"Calculation #{current_calcs}", style={'color': '#666'})
-                ], style={'marginBottom': '10px'}),
-                html.Div([
-                    html.Strong("Time Range: "),
-                    f"{start_time:.1f}ms - {end_time:.1f}ms"
-                ], style={'marginBottom': '10px'}),
-                html.Div([
-                    html.Strong("Overall Average: "),
-                    html.Span(f"{overall_avg:.2f}", id={'type': 'overall-average', 'index': current_calcs - 1})
-                ], style={'marginBottom': '15px'}),
-                # Collapsible section for individual averages
-                html.Div([
-                    # Toggle button with arrow
-                    html.Button([
-                        html.I(className="fas fa-chevron-right", style={'marginRight': '8px', 'transition': 'transform 0.3s'}),
-                        html.Strong("Individual Strip Averages")
-                    ],
-                    id={'type': 'toggle-strip-averages', 'index': current_calcs},
-                    style={
-                        'backgroundColor': 'transparent',
-                        'border': 'none',
-                        'padding': '8px 0',
-                        'cursor': 'pointer',
-                        'display': 'flex',
-                        'alignItems': 'center',
-                        'width': '100%',
-                        'color': '#333',
-                        'marginBottom': '8px'
-                    }),
-                    # Content (hidden by default)
-                    html.Div([
-                        html.Div(f"Strip {strip_num}: {avg:.2f}", 
-                                style={'marginBottom': '4px'})
-                        for strip_num, avg in sorted(strip_averages)
-                    ],
-                    id={'type': 'strip-averages-content', 'index': current_calcs},
-                    style={
-                        'maxHeight': '300px',
-                        'overflowY': 'auto',
-                        'display': 'none',
-                        'padding': '10px',
-                        'backgroundColor': '#fff',
-                        'borderRadius': '4px',
-                        'border': '1px solid #eee'
-                    })
-                ])
-            ], style={'backgroundColor': '#f8f9fa', 'padding': '15px', 'borderRadius': '5px', 'marginBottom': '15px'})
+            # Create new calculation result
+            new_calculation = create_calculation_result(
+                current_calcs,
+                start_time,
+                end_time,
+                overall_avg,
+                strip_averages
+            )
             
             # Create new list of calculations
             if existing_content is None:
@@ -224,9 +133,9 @@ def register_callbacks(app, time_values, raw_strip_resp):
             print(f"Debug - Error: {e}")
             return (
                 existing_content,
-                base_popup_style,
-                html.Div(f"Error processing selection: {str(e)}", style={'color': 'red'}),
-                base_button_style
+                BASE_POPUP_STYLE,
+                html.Div(f"Error processing selection: {str(e)}", style=ERROR_MESSAGE_STYLE),
+                CLOSE_BUTTON_STYLE
             )
 
     @app.callback(
@@ -237,23 +146,7 @@ def register_callbacks(app, time_values, raw_strip_resp):
     )
     def close_popup(n_clicks):
         if n_clicks:
-            hidden_style = {
-                'display': 'block',  # Keep display block during animation
-                'position': 'fixed',
-                'bottom': '20px',
-                'right': '20px',
-                'backgroundColor': 'white',
-                'padding': '20px',
-                'borderRadius': '5px',
-                'boxShadow': '0 2px 10px rgba(0,0,0,0.1)',
-                'zIndex': 1000,
-                'textAlign': 'center',
-                'transition': 'transform 0.3s ease-out',
-                'transform': 'translateY(100%)',  # Slide down
-                'border': '2px solid #ff3333'
-            }
-            # Use setTimeout in the frontend to actually hide the element after animation
-            return hidden_style, {'display': 'none'}
+            return HIDDEN_POPUP_STYLE, {'display': 'none'}
         return dash.no_update, dash.no_update
 
     @app.callback(
@@ -293,11 +186,7 @@ def register_callbacks(app, time_values, raw_strip_resp):
         if button_id == 'toggle-strip-selection':
             if current_style == OVERLAY_STYLE:
                 # Show menu
-                return (
-                    OVERLAY_VISIBLE_STYLE, 
-                    {'display': 'block', 'position': 'fixed', 'top': 0, 'left': 0, 'width': '100%', 'height': '100%', 'backgroundColor': 'rgba(0,0,0,0.3)', 'zIndex': 999},
-                    dict(TOGGLE_BUTTON_STYLE, **{'display': 'none'})
-                )
+                return OVERLAY_VISIBLE_STYLE, CLICK_CATCHER_STYLE, dict(TOGGLE_BUTTON_STYLE, **{'display': 'none'})
             else:
                 # Hide menu
                 return OVERLAY_STYLE, {'display': 'none'}, TOGGLE_BUTTON_STYLE
@@ -313,14 +202,6 @@ def register_callbacks(app, time_values, raw_strip_resp):
          Input('strip-responses-graph', 'relayoutData')]
     )
     def update_selection_indicator(selected_data, relayout_data):
-        base_style = {
-            'width': '20px',
-            'height': '20px',
-            'borderRadius': '50%',
-            'display': 'inline-block',
-            'marginRight': '10px'
-        }
-        
         # Check if there's an active selection either through selectedData
         # or through the range selector in relayoutData
         selection_active = False
@@ -330,8 +211,9 @@ def register_callbacks(app, time_values, raw_strip_resp):
         elif relayout_data and ('xaxis.range[0]' in relayout_data or 'xaxis.range' in relayout_data):
             selection_active = True
         
-        base_style['backgroundColor'] = 'green' if selection_active else 'red'
-        return base_style
+        return dict(SELECTION_INDICATOR_BASE_STYLE, **{
+            'backgroundColor': 'green' if selection_active else 'red'
+        })
 
     @app.callback(
         [Output({'type': 'strip-averages-content', 'index': dash.MATCH}, 'style'),

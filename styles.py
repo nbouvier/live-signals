@@ -123,4 +123,126 @@ FLEX_CONTAINER_STYLE = {
         'gap': '20px',
         'alignItems': 'flex-start'
     }
+}
+
+# Base graph styles
+BASE_GRAPH_STYLE = {
+    'height': '800px',
+    'width': '100%'
+}
+
+BASE_PLACEHOLDER_STYLE = {
+    'height': '800px',
+    'width': '100%',
+    'backgroundColor': '#f9f9f9',
+    'border': '1px solid #ddd',
+    'borderRadius': '5px',
+    'display': 'flex',
+    'justifyContent': 'center',
+    'alignItems': 'center',
+    'color': '#666',
+    'fontSize': '18px'
+}
+
+# Popup styles
+BASE_POPUP_STYLE = {
+    'display': 'block',
+    'position': 'fixed',
+    'bottom': '20px',
+    'right': '20px',
+    'backgroundColor': 'white',
+    'padding': '20px',
+    'borderRadius': '5px',
+    'boxShadow': '0 2px 10px rgba(0,0,0,0.1)',
+    'zIndex': 1000,
+    'textAlign': 'center',
+    'transition': 'transform 0.3s ease-out',
+    'transform': 'translateY(0)',
+    'border': '2px solid #ff3333'
+}
+
+HIDDEN_POPUP_STYLE = {
+    **BASE_POPUP_STYLE,
+    'transform': 'translateY(100%)'
+}
+
+# Calculation result styles
+CALCULATION_CONTAINER_STYLE = {
+    'backgroundColor': '#f8f9fa',
+    'padding': '15px',
+    'borderRadius': '5px',
+    'marginBottom': '15px'
+}
+
+CALCULATION_HEADER_STYLE = {
+    'marginBottom': '10px'
+}
+
+CALCULATION_SECTION_STYLE = {
+    'marginBottom': '10px'
+}
+
+# Strip averages toggle styles
+STRIP_TOGGLE_BUTTON_STYLE = {
+    'backgroundColor': 'transparent',
+    'border': 'none',
+    'padding': '8px 0',
+    'cursor': 'pointer',
+    'display': 'flex',
+    'alignItems': 'center',
+    'width': '100%',
+    'color': '#333',
+    'marginBottom': '8px'
+}
+
+STRIP_AVERAGES_CONTENT_STYLE = {
+    'maxHeight': '300px',
+    'overflowY': 'auto',
+    'display': 'none',
+    'padding': '10px',
+    'backgroundColor': '#fff',
+    'borderRadius': '4px',
+    'border': '1px solid #eee'
+}
+
+STRIP_AVERAGE_ITEM_STYLE = {
+    'marginBottom': '4px'
+}
+
+# Click catcher style
+CLICK_CATCHER_STYLE = {
+    'display': 'block',
+    'position': 'fixed',
+    'top': 0,
+    'left': 0,
+    'width': '100%',
+    'height': '100%',
+    'backgroundColor': 'rgba(0,0,0,0.3)',
+    'zIndex': 999
+}
+
+# Close button style
+CLOSE_BUTTON_STYLE = {
+    'backgroundColor': '#ff3333',
+    'color': 'white',
+    'border': 'none',
+    'padding': '8px 16px',
+    'borderRadius': '4px',
+    'cursor': 'pointer',
+    'display': 'block'
+}
+
+# Error message style
+ERROR_MESSAGE_STYLE = {
+    'color': '#ff3333',
+    'fontWeight': 'bold'
+}
+
+# Selection indicator styles
+SELECTION_INDICATOR_BASE_STYLE = {
+    'width': '20px',
+    'height': '20px',
+    'borderRadius': '50%',
+    'display': 'inline-block',
+    'marginRight': '10px'
 } 
