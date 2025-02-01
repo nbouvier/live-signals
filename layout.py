@@ -3,7 +3,7 @@ This module contains the Dash layout components for the application.
 """
 
 from dash import html
-from styles import TOGGLE_BUTTON_STYLE, CLICK_CATCHER_STYLE
+import styles
 from components.strip_selector import create_strip_selector_panel
 from components.graph_display import create_graph_display
 from components.averages_panel import create_averages_panel
@@ -13,7 +13,7 @@ def create_layout(time_values, raw_strip_resp, create_figure):
     """Create the main application layout."""
     return html.Div([
         # Click catcher
-        html.Div(id='click-catcher', style=dict(CLICK_CATCHER_STYLE, **{'display': 'none'})),
+        html.Div(id='click-catcher', style=dict(styles.CLICK_CATCHER, **{'display': 'none'})),
         
         # Popup message
         create_popup_message(),
@@ -22,7 +22,7 @@ def create_layout(time_values, raw_strip_resp, create_figure):
         html.Button(
             '☰ Strip Selection', 
             id='toggle-strip-selection',
-            style=TOGGLE_BUTTON_STYLE
+            style=styles.TOGGLE_BUTTON
         ),
         
         # Strip selection panel

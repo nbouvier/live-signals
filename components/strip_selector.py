@@ -2,12 +2,7 @@
 This module contains the strip selector component.
 """
 from dash import html, dcc
-from styles import (
-    STRIP_SELECTOR_STYLE,
-    BUTTON_STYLE,
-    BUTTON_CONTAINER_STYLE,
-    OVERLAY_STYLE
-)
+import styles
 
 def create_strip_selector_panel():
     """Create the strip selector panel component."""
@@ -19,15 +14,15 @@ def create_strip_selector_panel():
                     'Select All', 
                     id='select-all-button', 
                     n_clicks=0,
-                    style=BUTTON_STYLE
+                    style=styles.BUTTON
                 ),
                 html.Button(
                     'Unselect All', 
                     id='unselect-all-button', 
                     n_clicks=0,
-                    style=dict(BUTTON_STYLE, **{'backgroundColor': '#f44336'})
+                    style=dict(styles.BUTTON, **{'backgroundColor': '#f44336'})
                 ),
-            ], style=BUTTON_CONTAINER_STYLE),
+            ], style=styles.BUTTON_CONTAINER),
             dcc.Checklist(
                 id='strip-selector',
                 options=[
@@ -46,7 +41,7 @@ def create_strip_selector_panel():
                     'transition': 'background-color 0.3s',
                     ':hover': {'backgroundColor': '#e6e6e6'}
                 },
-                style=STRIP_SELECTOR_STYLE
+                style=styles.STRIP_SELECTOR
             ),
         ], style={'position': 'relative'})
-    ], id='strip-selection-panel', style=OVERLAY_STYLE) 
+    ], id='strip-selection-panel', style=styles.OVERLAY) 

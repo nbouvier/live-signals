@@ -5,15 +5,7 @@ This module contains all the callback functions for the Dash application.
 import numpy as np
 from dash import Input, Output, State, ctx, html
 import dash
-from styles import (
-    OVERLAY_STYLE, OVERLAY_VISIBLE_STYLE, TOGGLE_BUTTON_STYLE,
-    BASE_GRAPH_STYLE, BASE_PLACEHOLDER_STYLE, BASE_POPUP_STYLE,
-    HIDDEN_POPUP_STYLE, CALCULATION_CONTAINER_STYLE, CALCULATION_HEADER_STYLE,
-    CALCULATION_SECTION_STYLE, STRIP_TOGGLE_BUTTON_STYLE,
-    STRIP_AVERAGES_CONTENT_STYLE, STRIP_AVERAGE_ITEM_STYLE,
-    CLICK_CATCHER_STYLE, CLOSE_BUTTON_STYLE, ERROR_MESSAGE_STYLE,
-    SELECTION_INDICATOR_BASE_STYLE
-)
+import styles
 from data_processing import create_figure
 from components.calculation_result import create_calculation_result
 
@@ -34,15 +26,15 @@ def register_callbacks(app, time_values, raw_strip_resp):
         if not selected_strips:
             return (
                 {},  # Empty figure
-                dict(BASE_GRAPH_STYLE, **{'display': 'none'}),  # Hide graph
-                BASE_PLACEHOLDER_STYLE  # Show placeholder
+                dict(styles.BASE_GRAPH, **{'display': 'none'}),  # Hide graph
+                styles.BASE_PLACEHOLDER  # Show placeholder
             )
         
         # Handle strip selection changes
         return (
             create_figure(time_values, raw_strip_resp, selected_strips),
-            BASE_GRAPH_STYLE,  # Show graph
-            dict(BASE_PLACEHOLDER_STYLE, **{'display': 'none'})  # Hide placeholder
+            styles.BASE_GRAPH,  # Show graph
+            dict(styles.BASE_PLACEHOLDER, **{'display': 'none'})  # Hide placeholder
         )
 
     @app.callback(
@@ -77,9 +69,9 @@ def register_callbacks(app, time_values, raw_strip_resp):
             else:
                 return (
                     existing_content,  # Keep existing content unchanged
-                    BASE_POPUP_STYLE,
-                    html.Div("Please make a selection first", style=ERROR_MESSAGE_STYLE),
-                    CLOSE_BUTTON_STYLE
+                    styles.BASE_POPUP,
+                    html.Div("Please make a selection first", style=styles.ERROR_MESSAGE),
+                    styles.CLOSE_BUTTON
                 )
                 
             start_time, end_time = range_bounds
@@ -133,9 +125,9 @@ def register_callbacks(app, time_values, raw_strip_resp):
             print(f"Debug - Error: {e}")
             return (
                 existing_content,
-                BASE_POPUP_STYLE,
-                html.Div(f"Error processing selection: {str(e)}", style=ERROR_MESSAGE_STYLE),
-                CLOSE_BUTTON_STYLE
+                styles.BASE_POPUP,
+                html.Div(f"Error processing selection: {str(e)}", style=styles.ERROR_MESSAGE),
+                styles.CLOSE_BUTTON
             )
 
     @app.callback(
@@ -146,7 +138,7 @@ def register_callbacks(app, time_values, raw_strip_resp):
     )
     def close_popup(n_clicks):
         if n_clicks:
-            return HIDDEN_POPUP_STYLE, {'display': 'none'}
+            return styles.HIDDEN_POPUP, {'display': 'none'}
         return dash.no_update, dash.no_update
 
     @app.callback(
@@ -179,22 +171,22 @@ def register_callbacks(app, time_values, raw_strip_resp):
     def toggle_strip_selection(toggle_clicks, catcher_clicks, current_style):
         ctx = dash.callback_context
         if not ctx.triggered:
-            return OVERLAY_STYLE, {'display': 'none'}, TOGGLE_BUTTON_STYLE
+            return styles.OVERLAY, {'display': 'none'}, styles.TOGGLE_BUTTON
         
         button_id = ctx.triggered[0]['prop_id'].split('.')[0]
         
         if button_id == 'toggle-strip-selection':
-            if current_style == OVERLAY_STYLE:
+            if current_style == styles.OVERLAY:
                 # Show menu
-                return OVERLAY_VISIBLE_STYLE, CLICK_CATCHER_STYLE, dict(TOGGLE_BUTTON_STYLE, **{'display': 'none'})
+                return styles.OVERLAY_VISIBLE, styles.CLICK_CATCHER, dict(styles.TOGGLE_BUTTON, **{'display': 'none'})
             else:
                 # Hide menu
-                return OVERLAY_STYLE, {'display': 'none'}, TOGGLE_BUTTON_STYLE
+                return styles.OVERLAY, {'display': 'none'}, styles.TOGGLE_BUTTON
         elif button_id == 'click-catcher':
             # Hide menu
-            return OVERLAY_STYLE, {'display': 'none'}, TOGGLE_BUTTON_STYLE
+            return styles.OVERLAY, {'display': 'none'}, styles.TOGGLE_BUTTON
         
-        return current_style, {'display': 'none'}, TOGGLE_BUTTON_STYLE
+        return current_style, {'display': 'none'}, styles.TOGGLE_BUTTON
 
     @app.callback(
         Output('selection-indicator', 'style'),
@@ -211,7 +203,7 @@ def register_callbacks(app, time_values, raw_strip_resp):
         elif relayout_data and ('xaxis.range[0]' in relayout_data or 'xaxis.range' in relayout_data):
             selection_active = True
         
-        return dict(SELECTION_INDICATOR_BASE_STYLE, **{
+        return dict(styles.SELECTION_INDICATOR, **{
             'backgroundColor': 'green' if selection_active else 'red'
         })
 

@@ -3,7 +3,7 @@ This module contains all the styles used in the application.
 """
 
 # Strip selector styles
-STRIP_SELECTOR_STYLE = {
+STRIP_SELECTOR = {
     'display': 'grid',
     'gridTemplateColumns': 'repeat(auto-fill, minmax(100px, 1fr))',
     'gap': '5px',
@@ -17,7 +17,7 @@ STRIP_SELECTOR_STYLE = {
 }
 
 # Button styles
-BUTTON_STYLE = {
+BUTTON = {
     'backgroundColor': '#4CAF50',
     'color': 'white',
     'padding': '10px 20px',
@@ -28,14 +28,14 @@ BUTTON_STYLE = {
     'fontSize': '14px'
 }
 
-BUTTON_CONTAINER_STYLE = {
+BUTTON_CONTAINER = {
     'display': 'flex',
     'gap': '10px',
     'marginBottom': '10px'
 }
 
 # Overlay styles
-OVERLAY_STYLE = {
+OVERLAY = {
     'position': 'fixed',
     'top': '0',
     'left': '-400px',
@@ -49,7 +49,7 @@ OVERLAY_STYLE = {
     'overflow': 'hidden'
 }
 
-OVERLAY_VISIBLE_STYLE = {
+OVERLAY_VISIBLE = {
     'position': 'fixed',
     'top': '0',
     'left': '0',
@@ -63,7 +63,7 @@ OVERLAY_VISIBLE_STYLE = {
     'overflow': 'hidden'
 }
 
-TOGGLE_BUTTON_STYLE = {
+TOGGLE_BUTTON = {
     'position': 'fixed',
     'top': '20px',
     'left': '20px',
@@ -79,7 +79,7 @@ TOGGLE_BUTTON_STYLE = {
 }
 
 # Graph styles
-GRAPH_CONTAINER_STYLE = {
+GRAPH_CONTAINER = {
     'position': 'relative',
     'height': '800px',
     'width': '100%',
@@ -88,13 +88,13 @@ GRAPH_CONTAINER_STYLE = {
     'borderRadius': '5px',
 }
 
-PLACEHOLDER_STYLE = {
+PLACEHOLDER = {
     'textAlign': 'center',
     'color': '#666',
     'fontSize': '18px'
 }
 
-LOADING_STYLE = {
+LOADING = {
     'position': 'absolute',
     'top': '0',
     'left': '0',
@@ -108,7 +108,7 @@ LOADING_STYLE = {
 }
 
 # Container styles
-AVERAGES_CONTAINER_STYLE = {
+AVERAGES_CONTAINER = {
     'padding': '20px',
     'backgroundColor': 'white',
     'border': '1px solid #ddd',
@@ -116,7 +116,7 @@ AVERAGES_CONTAINER_STYLE = {
     'margin': '20px 0',
 }
 
-FLEX_CONTAINER_STYLE = {
+FLEX_CONTAINER = {
     'display': 'block',
     '@media (min-width: 992px)': {
         'display': 'flex',
@@ -126,12 +126,12 @@ FLEX_CONTAINER_STYLE = {
 }
 
 # Base graph styles
-BASE_GRAPH_STYLE = {
+BASE_GRAPH = {
     'height': '800px',
     'width': '100%'
 }
 
-BASE_PLACEHOLDER_STYLE = {
+BASE_PLACEHOLDER = {
     'height': '800px',
     'width': '100%',
     'backgroundColor': '#f9f9f9',
@@ -145,7 +145,7 @@ BASE_PLACEHOLDER_STYLE = {
 }
 
 # Popup styles
-BASE_POPUP_STYLE = {
+BASE_POPUP = {
     'display': 'block',
     'position': 'fixed',
     'bottom': '20px',
@@ -161,29 +161,29 @@ BASE_POPUP_STYLE = {
     'border': '2px solid #ff3333'
 }
 
-HIDDEN_POPUP_STYLE = {
-    **BASE_POPUP_STYLE,
+HIDDEN_POPUP = {
+    **BASE_POPUP,
     'transform': 'translateY(100%)'
 }
 
 # Calculation result styles
-CALCULATION_CONTAINER_STYLE = {
+CALCULATION_CONTAINER = {
     'backgroundColor': '#f8f9fa',
     'padding': '15px',
     'borderRadius': '5px',
     'marginBottom': '15px'
 }
 
-CALCULATION_HEADER_STYLE = {
+CALCULATION_HEADER = {
     'marginBottom': '10px'
 }
 
-CALCULATION_SECTION_STYLE = {
+CALCULATION_SECTION = {
     'marginBottom': '10px'
 }
 
 # Strip averages toggle styles
-STRIP_TOGGLE_BUTTON_STYLE = {
+STRIP_TOGGLE_BUTTON = {
     'backgroundColor': 'transparent',
     'border': 'none',
     'padding': '8px 0',
@@ -195,7 +195,7 @@ STRIP_TOGGLE_BUTTON_STYLE = {
     'marginBottom': '8px'
 }
 
-STRIP_AVERAGES_CONTENT_STYLE = {
+STRIP_AVERAGES_CONTENT = {
     'maxHeight': '300px',
     'overflowY': 'auto',
     'display': 'none',
@@ -205,12 +205,12 @@ STRIP_AVERAGES_CONTENT_STYLE = {
     'border': '1px solid #eee'
 }
 
-STRIP_AVERAGE_ITEM_STYLE = {
+STRIP_AVERAGE_ITEM = {
     'marginBottom': '4px'
 }
 
 # Click catcher style
-CLICK_CATCHER_STYLE = {
+CLICK_CATCHER = {
     'display': 'block',
     'position': 'fixed',
     'top': 0,
@@ -222,7 +222,7 @@ CLICK_CATCHER_STYLE = {
 }
 
 # Close button style
-CLOSE_BUTTON_STYLE = {
+CLOSE_BUTTON = {
     'backgroundColor': '#ff3333',
     'color': 'white',
     'border': 'none',
@@ -233,13 +233,13 @@ CLOSE_BUTTON_STYLE = {
 }
 
 # Error message style
-ERROR_MESSAGE_STYLE = {
+ERROR_MESSAGE = {
     'color': '#ff3333',
     'fontWeight': 'bold'
 }
 
 # Selection indicator styles
-SELECTION_INDICATOR_BASE_STYLE = {
+SELECTION_INDICATOR = {
     'width': '20px',
     'height': '20px',
     'borderRadius': '50%',

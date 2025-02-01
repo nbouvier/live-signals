@@ -2,10 +2,7 @@
 This module contains the averages panel component.
 """
 from dash import html
-from styles import (
-    BUTTON_STYLE,
-    SELECTION_INDICATOR_BASE_STYLE
-)
+import styles
 
 def create_averages_panel():
     """Create the averages panel component."""
@@ -16,7 +13,7 @@ def create_averages_panel():
         html.Div([
             html.Div(
                 id='selection-indicator',
-                style=dict(SELECTION_INDICATOR_BASE_STYLE, **{'backgroundColor': 'red'})
+                style=dict(styles.SELECTION_INDICATOR, **{'backgroundColor': 'red'})
             ),
             html.Span("Selection Active", style={'fontSize': '14px'})
         ], style={'display': 'flex', 'alignItems': 'center', 'marginBottom': '20px'}),
@@ -27,7 +24,7 @@ def create_averages_panel():
         ],
         id='calc-button',
         n_clicks=0,
-        style=dict(BUTTON_STYLE, **{
+        style=dict(styles.BUTTON, **{
             'backgroundColor': '#2196F3',
             'width': '100%',
             'display': 'flex',
