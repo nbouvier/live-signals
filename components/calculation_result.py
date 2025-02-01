@@ -27,7 +27,7 @@ def create_calculation_result(current_calcs, start_time, end_time, overall_avg, 
                 type='number',
                 placeholder='Enter thickness...',
                 value=thickness,
-                step=1,
+                step=0.01,
                 style={
                     'marginLeft': '5px',
                     'width': '100px',
@@ -36,7 +36,7 @@ def create_calculation_result(current_calcs, start_time, end_time, overall_avg, 
                     'border': '1px solid #ddd'
                 }
             ),
-            html.Span("mm", style={'marginLeft': '5px', 'color': '#666'})
+            html.Span("cm", style={'marginLeft': '5px', 'color': '#666'})
         ], style=styles.CALCULATION_SECTION),
         # Collapsible section for individual averages
         html.Div([

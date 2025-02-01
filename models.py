@@ -12,7 +12,7 @@ class CalculationResult:
     
     Attributes:
         overall_average: The overall average of the calculation
-        thickness: The thickness value in millimeters (optional, integer)
+        thickness: The thickness value in centimeters (optional, float with 2 decimal places)
     """
     overall_average: float
-    thickness: Optional[int] = None 
+    thickness: Optional[float] = None 

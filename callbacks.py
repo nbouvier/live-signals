@@ -8,6 +8,7 @@ import dash
 import styles
 from data_processing import create_figure
 from components.calculation_result import create_calculation_result
+from components.fit_graph import create_fit_graph
 from models import CalculationResult
 
 def register_callbacks(app, time_values, raw_strip_resp):
@@ -19,23 +20,27 @@ def register_callbacks(app, time_values, raw_strip_resp):
     @app.callback(
         [Output('strip-responses-graph', 'figure'),
          Output('strip-responses-graph', 'style'),
-         Output('graph-placeholder', 'style')],
-        [Input('strip-selector', 'value')]
+         Output('graph-placeholder', 'style'),
+         Output('fit-graph-container', 'children')],
+        [Input('strip-selector', 'value'),
+         Input({'type': 'thickness-input', 'index': ALL}, 'value')]
     )
-    def update_figure(selected_strips):
+    def update_figure(selected_strips, thickness_values):
         # Handle empty strip selection
         if not selected_strips:
             return (
                 {},  # Empty figure
                 dict(styles.BASE_GRAPH, **{'display': 'none'}),  # Hide graph
-                styles.BASE_PLACEHOLDER  # Show placeholder
+                styles.BASE_PLACEHOLDER,  # Show placeholder
+                create_fit_graph(calculation_results)  # Add fit graph
             )
         
         # Handle strip selection changes
         return (
             create_figure(time_values, raw_strip_resp, selected_strips),
             styles.BASE_GRAPH,  # Show graph
-            dict(styles.BASE_PLACEHOLDER, **{'display': 'none'})  # Hide placeholder
+            dict(styles.BASE_PLACEHOLDER, **{'display': 'none'}),  # Hide placeholder
+            create_fit_graph(calculation_results)  # Add fit graph
         )
 
     @app.callback(
@@ -146,14 +151,14 @@ def register_callbacks(app, time_values, raw_strip_resp):
         for value, id_dict in zip(values, ids):
             index = id_dict['index']
             if index < len(calculation_results):
-                # Convert to integer if value is not None
-                calculation_results[index].thickness = int(float(value)) if value is not None else None
+                # Convert to float with 2 decimal places if value is not None
+                calculation_results[index].thickness = round(float(value), 2) if value is not None else None
 
         # Print updated calculation results for debugging
         print(f"Updated calculation results: {calculation_results}")
         
-        # Return integer values
-        return [int(float(v)) if v is not None else None for v in values]
+        # Return float values with 2 decimal places
+        return [round(float(v), 2) if v is not None else None for v in values]
 
     @app.callback(
         [Output('popup-message', 'style', allow_duplicate=True),
