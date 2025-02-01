@@ -11,6 +11,9 @@ from data_processing import create_figure
 def register_callbacks(app, time_values, raw_strip_resp):
     """Register all callbacks for the application."""
     
+    # Global list to store overall averages
+    overall_averages = []
+    
     @app.callback(
         [Output('strip-responses-graph', 'figure'),
          Output('strip-responses-graph', 'style'),
@@ -139,24 +142,21 @@ def register_callbacks(app, time_values, raw_strip_resp):
             
             overall_avg = np.mean([avg for _, avg in strip_averages])
             
-            # Get the current number of calculations
-            current_calcs = 0
-            if existing_content is not None:
-                if isinstance(existing_content, list):
-                    current_calcs = len(existing_content)
-                else:
-                    existing_calculations = existing_content.get('props', {}).get('children', [])
-                    if isinstance(existing_calculations, list):
-                        current_calcs = len(existing_calculations)
-                    else:
-                        current_calcs = 1 if existing_calculations else 0
+            # Store the overall average
+            overall_averages.append(overall_avg)
+
+            # Print the overall averages for debugging
+            print(f"Overall averages: {overall_averages}")
             
-            # Create new calculation result
+            # Get the current number of calculations
+            current_calcs = len(overall_averages)
+            
+            # Create new calculation result with calculation index
             new_calculation = html.Div([
                 html.Hr(style={'margin': '20px 0'}),
                 html.Div([
                     html.Strong("Calculation Time: "),
-                    html.Span(f"Calculation #{current_calcs + 1}", style={'color': '#666'})
+                    html.Span(f"Calculation #{current_calcs}", style={'color': '#666'})
                 ], style={'marginBottom': '10px'}),
                 html.Div([
                     html.Strong("Time Range: "),
@@ -164,7 +164,7 @@ def register_callbacks(app, time_values, raw_strip_resp):
                 ], style={'marginBottom': '10px'}),
                 html.Div([
                     html.Strong("Overall Average: "),
-                    f"{overall_avg:.2f}"
+                    html.Span(f"{overall_avg:.2f}", id={'type': 'overall-average', 'index': current_calcs - 1})
                 ], style={'marginBottom': '15px'}),
                 # Collapsible section for individual averages
                 html.Div([
@@ -173,7 +173,7 @@ def register_callbacks(app, time_values, raw_strip_resp):
                         html.I(className="fas fa-chevron-right", style={'marginRight': '8px', 'transition': 'transform 0.3s'}),
                         html.Strong("Individual Strip Averages")
                     ],
-                    id={'type': 'toggle-strip-averages', 'index': current_calcs + 1},
+                    id={'type': 'toggle-strip-averages', 'index': current_calcs},
                     style={
                         'backgroundColor': 'transparent',
                         'border': 'none',
@@ -191,7 +191,7 @@ def register_callbacks(app, time_values, raw_strip_resp):
                                 style={'marginBottom': '4px'})
                         for strip_num, avg in sorted(strip_averages)
                     ],
-                    id={'type': 'strip-averages-content', 'index': current_calcs + 1},
+                    id={'type': 'strip-averages-content', 'index': current_calcs},
                     style={
                         'maxHeight': '300px',
                         'overflowY': 'auto',
@@ -225,7 +225,7 @@ def register_callbacks(app, time_values, raw_strip_resp):
             return (
                 existing_content,
                 base_popup_style,
-                html.Div("Error processing selection. Please try again.", style={'color': 'red'}),
+                html.Div(f"Error processing selection: {str(e)}", style={'color': 'red'}),
                 base_button_style
             )
 
@@ -363,4 +363,8 @@ def register_callbacks(app, time_values, raw_strip_resp):
             html.Strong("Individual Strip Averages")
         ]
         
-        return new_style, new_button_children 
+        return new_style, new_button_children
+
+    # Function to get stored averages (can be used by other callbacks)
+    def get_stored_averages():
+        return overall_averages 
