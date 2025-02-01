@@ -10,7 +10,12 @@ from callbacks import register_callbacks
 
 def main():
     # Initialize the Dash app
-    app = Dash(__name__)
+    app = Dash(
+        __name__,
+        external_stylesheets=[
+            'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css'
+        ]
+    )
 
     # Read the data
     path = r"C:\Users\nelbo\Bureau\Github\nbouvier\live-signals\data\4T_Al_Cu_step_fant_3_4_5_cm_VREF_UC_10000_sans_colli_MRT.bin"

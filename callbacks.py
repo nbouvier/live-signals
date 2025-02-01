@@ -48,15 +48,61 @@ def register_callbacks(app, time_values, raw_strip_resp):
         )
 
     @app.callback(
-        Output('averages-content', 'children'),
+        [Output('averages-content', 'children'),
+         Output('popup-message', 'style'),
+         Output('popup-message-content', 'children'),
+         Output('close-popup', 'style')],
         [Input('calc-button', 'n_clicks')],
         [State('strip-selector', 'value'),
          State('strip-responses-graph', 'selectedData'),
-         State('strip-responses-graph', 'relayoutData')]
+         State('strip-responses-graph', 'relayoutData'),
+         State('averages-content', 'children')]
     )
-    def update_averages(n_clicks, selected_strips, selected_data, relayout_data):
+    def update_averages(n_clicks, selected_strips, selected_data, relayout_data, existing_content):
         if not n_clicks:  # Skip initial callback
-            return None
+            return None, {'display': 'none'}, None, {'display': 'none'}
+
+        base_popup_style = {
+            'display': 'block',
+            'position': 'fixed',
+            'bottom': '20px',
+            'right': '20px',
+            'backgroundColor': 'white',
+            'padding': '20px',
+            'borderRadius': '5px',
+            'boxShadow': '0 2px 10px rgba(0,0,0,0.1)',
+            'zIndex': 1000,
+            'textAlign': 'center',
+            'transition': 'transform 0.3s ease-out',
+            'transform': 'translateY(0)',  # Slide up to final position
+            'border': '2px solid #ff3333'
+        }
+
+        hidden_popup_style = {
+            'display': 'none',
+            'position': 'fixed',
+            'bottom': '20px',
+            'right': '20px',
+            'backgroundColor': 'white',
+            'padding': '20px',
+            'borderRadius': '5px',
+            'boxShadow': '0 2px 10px rgba(0,0,0,0.1)',
+            'zIndex': 1000,
+            'textAlign': 'center',
+            'transition': 'transform 0.3s ease-out',
+            'transform': 'translateY(100%)',  # Start from below
+            'border': '2px solid #ff3333'
+        }
+
+        base_button_style = {
+            'backgroundColor': '#ff3333',
+            'color': 'white',
+            'border': 'none',
+            'padding': '8px 16px',
+            'borderRadius': '4px',
+            'cursor': 'pointer',
+            'display': 'block'
+        }
 
         try:
             # Get time range
@@ -73,7 +119,12 @@ def register_callbacks(app, time_values, raw_strip_resp):
             elif relayout_data and 'xaxis.range' in relayout_data:
                 range_bounds = relayout_data['xaxis.range']
             else:
-                return html.Div("Please make a selection first", style={'color': 'red'})
+                return (
+                    existing_content,  # Keep existing content unchanged
+                    base_popup_style,
+                    html.Div("Please make a selection first", style={'color': '#ff3333', 'fontWeight': 'bold'}),
+                    base_button_style
+                )
                 
             start_time, end_time = range_bounds
             
@@ -88,7 +139,25 @@ def register_callbacks(app, time_values, raw_strip_resp):
             
             overall_avg = np.mean([avg for _, avg in strip_averages])
             
-            return html.Div([
+            # Get the current number of calculations
+            current_calcs = 0
+            if existing_content is not None:
+                if isinstance(existing_content, list):
+                    current_calcs = len(existing_content)
+                else:
+                    existing_calculations = existing_content.get('props', {}).get('children', [])
+                    if isinstance(existing_calculations, list):
+                        current_calcs = len(existing_calculations)
+                    else:
+                        current_calcs = 1 if existing_calculations else 0
+            
+            # Create new calculation result
+            new_calculation = html.Div([
+                html.Hr(style={'margin': '20px 0'}),
+                html.Div([
+                    html.Strong("Calculation Time: "),
+                    html.Span(f"Calculation #{current_calcs + 1}", style={'color': '#666'})
+                ], style={'marginBottom': '10px'}),
                 html.Div([
                     html.Strong("Time Range: "),
                     f"{start_time:.1f}ms - {end_time:.1f}ms"
@@ -97,19 +166,95 @@ def register_callbacks(app, time_values, raw_strip_resp):
                     html.Strong("Overall Average: "),
                     f"{overall_avg:.2f}"
                 ], style={'marginBottom': '15px'}),
+                # Collapsible section for individual averages
                 html.Div([
-                    html.Strong("Individual Strip Averages:", style={'display': 'block', 'marginBottom': '8px'}),
+                    # Toggle button with arrow
+                    html.Button([
+                        html.I(className="fas fa-chevron-right", style={'marginRight': '8px', 'transition': 'transform 0.3s'}),
+                        html.Strong("Individual Strip Averages")
+                    ],
+                    id={'type': 'toggle-strip-averages', 'index': current_calcs + 1},
+                    style={
+                        'backgroundColor': 'transparent',
+                        'border': 'none',
+                        'padding': '8px 0',
+                        'cursor': 'pointer',
+                        'display': 'flex',
+                        'alignItems': 'center',
+                        'width': '100%',
+                        'color': '#333',
+                        'marginBottom': '8px'
+                    }),
+                    # Content (hidden by default)
                     html.Div([
                         html.Div(f"Strip {strip_num}: {avg:.2f}", 
                                 style={'marginBottom': '4px'})
                         for strip_num, avg in sorted(strip_averages)
-                    ], style={'maxHeight': '300px', 'overflowY': 'auto'})
+                    ],
+                    id={'type': 'strip-averages-content', 'index': current_calcs + 1},
+                    style={
+                        'maxHeight': '300px',
+                        'overflowY': 'auto',
+                        'display': 'none',
+                        'padding': '10px',
+                        'backgroundColor': '#fff',
+                        'borderRadius': '4px',
+                        'border': '1px solid #eee'
+                    })
                 ])
-            ])
+            ], style={'backgroundColor': '#f8f9fa', 'padding': '15px', 'borderRadius': '5px', 'marginBottom': '15px'})
+            
+            # Create new list of calculations
+            if existing_content is None:
+                all_calculations = [new_calculation]
+            else:
+                # If existing_content is a list, extend it
+                if isinstance(existing_content, list):
+                    all_calculations = existing_content + [new_calculation]
+                # If existing_content is a Div, get its children
+                else:
+                    existing_calculations = existing_content.get('props', {}).get('children', [])
+                    if not isinstance(existing_calculations, list):
+                        existing_calculations = [existing_calculations]
+                    all_calculations = existing_calculations + [new_calculation]
+            
+            return html.Div(all_calculations), {'display': 'none'}, None, {'display': 'none'}
             
         except Exception as e:
             print(f"Debug - Error: {e}")
-            return html.Div("Error processing selection. Please try again.", style={'color': 'red'})
+            return (
+                existing_content,
+                base_popup_style,
+                html.Div("Error processing selection. Please try again.", style={'color': 'red'}),
+                base_button_style
+            )
+
+    @app.callback(
+        [Output('popup-message', 'style', allow_duplicate=True),
+         Output('close-popup', 'style', allow_duplicate=True)],
+        [Input('close-popup', 'n_clicks')],
+        prevent_initial_call=True
+    )
+    def close_popup(n_clicks):
+        if n_clicks:
+            hidden_style = {
+                'display': 'block',  # Keep display block during animation
+                'position': 'fixed',
+                'bottom': '20px',
+                'right': '20px',
+                'backgroundColor': 'white',
+                'padding': '20px',
+                'borderRadius': '5px',
+                'boxShadow': '0 2px 10px rgba(0,0,0,0.1)',
+                'zIndex': 1000,
+                'textAlign': 'center',
+                'transition': 'transform 0.3s ease-out',
+                'transform': 'translateY(100%)',  # Slide down
+                'border': '2px solid #ff3333'
+            }
+            # Use setTimeout in the frontend to actually hide the element after animation
+            return hidden_style, {'display': 'none'}
+        return dash.no_update, dash.no_update
 
     @app.callback(
         Output('strip-selector', 'value'),
@@ -186,4 +331,36 @@ def register_callbacks(app, time_values, raw_strip_resp):
             selection_active = True
         
         base_style['backgroundColor'] = 'green' if selection_active else 'red'
-        return base_style 
+        return base_style
+
+    @app.callback(
+        [Output({'type': 'strip-averages-content', 'index': dash.MATCH}, 'style'),
+         Output({'type': 'toggle-strip-averages', 'index': dash.MATCH}, 'children')],
+        Input({'type': 'toggle-strip-averages', 'index': dash.MATCH}, 'n_clicks'),
+        State({'type': 'strip-averages-content', 'index': dash.MATCH}, 'style'),
+        prevent_initial_call=True
+    )
+    def toggle_strip_averages(n_clicks, current_style):
+        if n_clicks is None:
+            return dash.no_update, dash.no_update
+        
+        is_visible = current_style.get('display', 'none') != 'none'
+        
+        # Update content style
+        new_style = dict(current_style)
+        new_style['display'] = 'none' if is_visible else 'block'
+        
+        # Update button icon
+        new_button_children = [
+            html.I(
+                className="fas fa-chevron-right" if is_visible else "fas fa-chevron-down",
+                style={
+                    'marginRight': '8px',
+                    'transition': 'transform 0.3s',
+                    'transform': 'rotate(0deg)' if is_visible else 'rotate(90deg)'
+                }
+            ),
+            html.Strong("Individual Strip Averages")
+        ]
+        
+        return new_style, new_button_children 

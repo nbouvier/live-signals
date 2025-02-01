@@ -20,6 +20,45 @@ def create_layout(time_values, raw_strip_resp, create_figure):
             'display': 'none'
         }),
         
+        # Popup message
+        html.Div([
+            html.Div(id='popup-message-content', style={
+                'color': '#ff3333',
+                'fontWeight': 'bold',
+                'marginBottom': '15px'
+            }),
+            html.Button(
+                "OK",
+                id='close-popup',
+                style={
+                    'backgroundColor': '#ff3333',
+                    'color': 'white',
+                    'border': 'none',
+                    'padding': '8px 16px',
+                    'borderRadius': '4px',
+                    'cursor': 'pointer',
+                    'display': 'none'
+                }
+            )
+        ],
+            id='popup-message',
+            style={
+                'display': 'none',
+                'position': 'fixed',
+                'bottom': '20px',
+                'right': '20px',
+                'backgroundColor': 'white',
+                'padding': '20px',
+                'borderRadius': '5px',
+                'boxShadow': '0 2px 10px rgba(0,0,0,0.1)',
+                'zIndex': 1000,
+                'textAlign': 'center',
+                'transition': 'transform 0.3s ease-out',
+                'transform': 'translateY(100%)',
+                'border': '2px solid #ff3333'
+            }
+        ),
+        
         # Toggle button
         html.Button(
             '☰ Strip Selection', 
@@ -107,13 +146,7 @@ def create_layout(time_values, raw_strip_resp, create_figure):
                 # Averages container
                 html.Div([
                     html.H3('Calculated Averages', style={'marginTop': '0', 'marginBottom': '20px'}),
-                    html.Button(
-                        'Calculate Average', 
-                        id='calc-button', 
-                        n_clicks=0,
-                        style=dict(BUTTON_STYLE, **{'backgroundColor': '#2196F3', 'width': '100%'})
-                    ),
-                    html.Div(id='averages-content', style={'marginTop': '20px'}),
+                    html.Div(id='averages-content', style={'marginBottom': '20px'}),
                     # Selection indicator
                     html.Div([
                         html.Div(
@@ -128,7 +161,22 @@ def create_layout(time_values, raw_strip_resp, create_figure):
                             }
                         ),
                         html.Span("Selection Active", style={'fontSize': '14px'})
-                    ], style={'display': 'flex', 'alignItems': 'center', 'marginTop': '20px'})
+                    ], style={'display': 'flex', 'alignItems': 'center', 'marginBottom': '20px'}),
+                    # Calculate button at the bottom
+                    html.Button([
+                        html.I(className="fas fa-plus", style={'marginRight': '8px'}),  # Plus icon
+                        "Average"
+                    ],
+                    id='calc-button',
+                    n_clicks=0,
+                    style=dict(BUTTON_STYLE, **{
+                        'backgroundColor': '#2196F3',
+                        'width': '100%',
+                        'display': 'flex',
+                        'alignItems': 'center',
+                        'justifyContent': 'center',
+                        'gap': '8px'
+                    }))
                 ], style={'flex': '0 0 300px'}),
             ], style={'display': 'flex', 'gap': '20px', 'width': '100%'}),
         ], style={'marginLeft': '60px', 'marginRight': '20px', 'width': 'calc(100% - 80px)'})]) 
