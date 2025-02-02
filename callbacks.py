@@ -21,18 +21,41 @@ def register_callbacks(app, time_values, raw_strip_resp):
         [Output('strip-responses-graph', 'figure'),
          Output('strip-responses-graph', 'style'),
          Output('graph-placeholder', 'style'),
-         Output('fit-graph-container', 'children')],
+         Output('fit-graph-container', 'children'),
+         Output('averages-content', 'children')],
+        Input('url', 'pathname')
+    )
+    def initialize_page(pathname):
+        """Reset everything when the page loads."""
+        # Clear all calculations
+        calculation_results.clear()
+        CalculationResult.reset_id_counter()
+        
+        return (
+            create_figure(time_values, raw_strip_resp, list(range(18, 153)), []),  # Empty figure with no selections
+            styles.BASE_GRAPH,
+            dict(styles.BASE_PLACEHOLDER, **{'display': 'none'}),
+            create_fit_graph([]),  # Empty fit graph
+            None  # Clear calculation panel
+        )
+    
+    @app.callback(
+        [Output('strip-responses-graph', 'figure', allow_duplicate=True),
+         Output('strip-responses-graph', 'style', allow_duplicate=True),
+         Output('graph-placeholder', 'style', allow_duplicate=True),
+         Output('fit-graph-container', 'children', allow_duplicate=True)],
         [Input('strip-selector', 'value'),
-         Input({'type': 'thickness-input', 'index': ALL}, 'value')]
+         Input({'type': 'thickness-input', 'index': ALL}, 'value')],
+        prevent_initial_call=True
     )
     def update_figure(selected_strips, thickness_values):
         # Handle empty strip selection
         if not selected_strips:
             return (
-                {},  # Empty figure
-                dict(styles.BASE_GRAPH, **{'display': 'none'}),  # Hide graph
-                styles.BASE_PLACEHOLDER,  # Show placeholder
-                create_fit_graph(calculation_results)  # Add fit graph
+                create_figure(time_values, raw_strip_resp, list(range(18, 153)), []),  # Empty figure with no selections
+                styles.BASE_GRAPH,
+                dict(styles.BASE_PLACEHOLDER, **{'display': 'none'}),
+                create_fit_graph([])  # Empty fit graph
             )
         
         # Handle strip selection changes
@@ -44,14 +67,15 @@ def register_callbacks(app, time_values, raw_strip_resp):
         )
 
     @app.callback(
-        [Output('averages-content', 'children'),
+        [Output('averages-content', 'children', allow_duplicate=True),
          Output('popup-message', 'style'),
          Output('popup-message-content', 'children'),
          Output('close-popup', 'style')],
         [Input('calc-button', 'n_clicks')],
         [State('strip-selector', 'value'),
          State('strip-responses-graph', 'selectedData'),
-         State('averages-content', 'children')]
+         State('averages-content', 'children')],
+        prevent_initial_call=True
     )
     def update_averages(n_clicks, selected_strips, selected_data, existing_content):
         if not n_clicks:  # Skip initial callback
@@ -86,27 +110,17 @@ def register_callbacks(app, time_values, raw_strip_resp):
             overall_avg = np.mean([avg for _, avg in strip_averages])
             
             # Store the calculation result
-            current_calcs = len(calculation_results)
-            new_color = SELECTION_COLORS[current_calcs % len(SELECTION_COLORS)]
+            new_color = SELECTION_COLORS[len(calculation_results) % len(SELECTION_COLORS)]
             calculation_results.append(CalculationResult(
                 overall_average=overall_avg,
                 start_time=start_time,
                 end_time=end_time,
-                color=new_color
+                color=new_color,
+                strip_averages=strip_averages
             ))
             
-            # Get the current number of calculations
-            current_calcs = len(calculation_results)
-            
             # Create new calculation result
-            new_calculation = create_calculation_result(
-                current_calcs,
-                start_time,
-                end_time,
-                overall_avg,
-                strip_averages,
-                thickness=calculation_results[-1].thickness
-            )
+            new_calculation = create_calculation_result(calculation_results[-1])
             
             # Create new list of calculations
             if existing_content is None:
@@ -251,6 +265,52 @@ def register_callbacks(app, time_values, raw_strip_resp):
         ]
         
         return new_style, new_button_children
+
+    @app.callback(
+        [Output('strip-responses-graph', 'figure', allow_duplicate=True),
+         Output('averages-content', 'children', allow_duplicate=True)],
+        Input({'type': 'delete-calculation', 'index': ALL}, 'n_clicks'),
+        [State('strip-selector', 'value'),
+         State('averages-content', 'children')],
+        prevent_initial_call=True
+    )
+    def delete_calculation(delete_clicks, selected_strips, existing_content):
+        """Delete a calculation when the trash button is clicked."""
+        if not any(click for click in delete_clicks if click):
+            return dash.no_update, dash.no_update
+        
+        # Find which calculation was deleted
+        ctx_triggered = ctx.triggered_id
+        if ctx_triggered is None:
+            return dash.no_update, dash.no_update
+            
+        deleted_id = ctx_triggered['index']
+        
+        # Find and remove the calculation with matching ID
+        for i, calc in enumerate(calculation_results):
+            if calc.id == deleted_id:
+                calculation_results.pop(i)
+                break
+        
+        # Update the calculation display
+        if existing_content is None or not isinstance(existing_content, dict):
+            all_calculations = []
+        else:
+            all_calculations = existing_content.get('props', {}).get('children', [])
+            if not isinstance(all_calculations, list):
+                all_calculations = [all_calculations]
+        
+        # Recreate all calculation displays
+        updated_calculations = []
+        for result in calculation_results:
+            new_calc = create_calculation_result(result)
+            updated_calculations.append(new_calc)
+        
+        # Update the graph and calculation panel
+        return (
+            create_figure(time_values, raw_strip_resp, selected_strips, calculation_results),
+            html.Div(updated_calculations) if updated_calculations else None
+        )
 
     # Function to get stored calculation results (can be used by other callbacks)
     def get_calculation_results():

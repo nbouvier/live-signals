@@ -2,7 +2,7 @@
 This module contains the Dash layout components for the application.
 """
 
-from dash import html
+from dash import html, dcc
 import styles
 from components.strip_selector import create_strip_selector_panel
 from components.graph_display import create_graph_display
@@ -13,6 +13,9 @@ from components.fit_graph import create_fit_graph
 def create_layout(time_values, raw_strip_resp, create_figure):
     """Create the main application layout."""
     return html.Div([
+        # URL Location component for page initialization
+        dcc.Location(id='url'),
+        
         # Click catcher
         html.Div(id='click-catcher', style=dict(styles.CLICK_CATCHER, **{'display': 'none'})),
         
