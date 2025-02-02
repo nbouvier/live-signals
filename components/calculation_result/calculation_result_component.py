@@ -3,7 +3,6 @@ This module contains the calculation result component.
 """
 from dash import html, dcc
 from .calculation_result_style import *  # Import styles directly from the style file
-from data_processing import SELECTION_COLORS  # Import the colors
 
 def create_calculation_result(calculation_result):
     """

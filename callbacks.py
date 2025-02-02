@@ -6,7 +6,7 @@ import numpy as np
 from dash import Input, Output, State, ctx, html, ALL
 import dash
 import styles
-from data_processing import create_figure, SELECTION_COLORS
+from data_processing import create_figure
 from components.calculation_result import create_calculation_result
 from components.fit_graph import create_fit_graph
 from models import CalculationResult
@@ -110,12 +110,10 @@ def register_callbacks(app, time_values, raw_strip_resp):
             overall_avg = np.mean([avg for _, avg in strip_averages])
             
             # Store the calculation result
-            new_color = SELECTION_COLORS[len(calculation_results) % len(SELECTION_COLORS)]
             calculation_results.append(CalculationResult(
                 overall_average=overall_avg,
                 start_time=start_time,
                 end_time=end_time,
-                color=new_color,
                 strip_averages=strip_averages
             ))
             
