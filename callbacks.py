@@ -42,35 +42,32 @@ def register_callbacks(app, time_values, raw_strip_resp):
     @app.callback(
         [Output('strip-responses-graph', 'figure', allow_duplicate=True),
          Output('strip-responses-graph', 'style', allow_duplicate=True),
-         Output('graph-placeholder', 'style', allow_duplicate=True),
-         Output('fit-graph-container', 'children', allow_duplicate=True)],
-        [Input('strip-selector', 'value'),
-         Input({'type': 'thickness-input', 'index': ALL}, 'value')],
+         Output('graph-placeholder', 'style', allow_duplicate=True)],
+        Input('strip-selector', 'value'),
         prevent_initial_call=True
     )
-    def update_figure(selected_strips, thickness_values):
+    def update_figure(selected_strips):
         # Handle empty strip selection
         if not selected_strips:
             return (
                 create_figure(time_values, raw_strip_resp, list(range(18, 153)), []),  # Empty figure with no selections
                 styles.BASE_GRAPH,
-                dict(styles.BASE_PLACEHOLDER, **{'display': 'none'}),
-                create_fit_graph([])  # Empty fit graph
+                dict(styles.BASE_PLACEHOLDER, **{'display': 'none'})
             )
         
         # Handle strip selection changes
         return (
             create_figure(time_values, raw_strip_resp, selected_strips, calculation_results),
             styles.BASE_GRAPH,  # Show graph
-            dict(styles.BASE_PLACEHOLDER, **{'display': 'none'}),  # Hide placeholder
-            create_fit_graph(calculation_results)  # Add fit graph
+            dict(styles.BASE_PLACEHOLDER, **{'display': 'none'})  # Hide placeholder
         )
 
     @app.callback(
         [Output('averages-content', 'children', allow_duplicate=True),
          Output('popup-message', 'style'),
          Output('popup-message-content', 'children'),
-         Output('close-popup', 'style')],
+         Output('close-popup', 'style'),
+         Output('strip-responses-graph', 'figure', allow_duplicate=True)],
         [Input('calc-button', 'n_clicks')],
         [State('strip-selector', 'value'),
          State('strip-responses-graph', 'selectedData'),
@@ -79,7 +76,7 @@ def register_callbacks(app, time_values, raw_strip_resp):
     )
     def update_averages(n_clicks, selected_strips, selected_data, existing_content):
         if not n_clicks:  # Skip initial callback
-            return None, {'display': 'none'}, None, {'display': 'none'}
+            return None, {'display': 'none'}, None, {'display': 'none'}, dash.no_update
 
         try:
             # Get time range
@@ -93,7 +90,8 @@ def register_callbacks(app, time_values, raw_strip_resp):
                     existing_content,  # Keep existing content unchanged
                     styles.BASE_POPUP,
                     html.Div("Please make a selection first", style=styles.ERROR_MESSAGE),
-                    styles.CLOSE_BUTTON
+                    styles.CLOSE_BUTTON,
+                    dash.no_update
                 )
                 
             start_time, end_time = range_bounds
@@ -134,7 +132,10 @@ def register_callbacks(app, time_values, raw_strip_resp):
                         existing_calculations = [existing_calculations]
                     all_calculations = existing_calculations + [new_calculation]
             
-            return html.Div(all_calculations), {'display': 'none'}, None, {'display': 'none'}
+            # Update graph with new calculation result
+            updated_figure = create_figure(time_values, raw_strip_resp, selected_strips, calculation_results)
+            
+            return html.Div(all_calculations), {'display': 'none'}, None, {'display': 'none'}, updated_figure
             
         except Exception as e:
             print(f"Debug - Error: {e}")
@@ -142,7 +143,8 @@ def register_callbacks(app, time_values, raw_strip_resp):
                 existing_content,
                 styles.BASE_POPUP,
                 html.Div(f"Error processing selection: {str(e)}", style=styles.ERROR_MESSAGE),
-                styles.CLOSE_BUTTON
+                styles.CLOSE_BUTTON,
+                dash.no_update
             )
 
     @app.callback(
@@ -157,10 +159,13 @@ def register_callbacks(app, time_values, raw_strip_resp):
 
         # Update thickness values in our calculation results
         for value, id_dict in zip(values, ids):
-            index = id_dict['index']
-            if index < len(calculation_results):
-                # Convert to float with 2 decimal places if value is not None
-                calculation_results[index].thickness = round(float(value), 2) if value is not None else None
+            calc_id = id_dict['index']
+            # Find the calculation with matching ID
+            for calc in calculation_results:
+                if calc.id == calc_id:
+                    # Convert to float with 2 decimal places if value is not None
+                    calc.thickness = round(float(value), 2) if value is not None else None
+                    break
         
         # Return float values with 2 decimal places
         return [round(float(v), 2) if v is not None else None for v in values]
@@ -296,10 +301,20 @@ def register_callbacks(app, time_values, raw_strip_resp):
             updated_calculations.append(new_calc)
         
         # Update the graph and calculation panel
-        return (
-            create_figure(time_values, raw_strip_resp, selected_strips, calculation_results),
-            html.Div(updated_calculations) if updated_calculations else None
-        )
+        updated_figure = create_figure(time_values, raw_strip_resp, selected_strips, calculation_results)
+        return updated_figure, html.Div(updated_calculations) if updated_calculations else None
+
+    @app.callback(
+        Output('fit-graph-container', 'children', allow_duplicate=True),
+        [Input({'type': 'thickness-input', 'index': ALL}, 'value'),
+         Input({'type': 'delete-calculation', 'index': ALL}, 'n_clicks')],
+        prevent_initial_call=True
+    )
+    def update_fit_graph(thickness_values, delete_clicks):
+        """Update fit graph when thickness values change or calculations are deleted."""
+        # Only show calculations that have thickness values
+        filtered_results = [calc for calc in calculation_results if calc.thickness is not None]
+        return create_fit_graph(filtered_results)
 
     # Function to get stored calculation results (can be used by other callbacks)
     def get_calculation_results():
