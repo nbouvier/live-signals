@@ -2,20 +2,20 @@
 This module contains the popup message component.
 """
 from dash import html
-import styles
+from .popup_message_style import *  # Import styles directly from the style file
 
 def create_popup_message():
     """Create the popup message component."""
     return html.Div([
         html.Div(
             id='popup-message-content',
-            style=styles.ERROR_MESSAGE
+            style=ERROR_MESSAGE
         ),
         html.Button(
             "OK",
             id='close-popup',
-            style=styles.CLOSE_BUTTON
+            style=CLOSE_BUTTON
         )
     ],
     id='popup-message',
-    style=dict(styles.BASE_POPUP, **{'display': 'none'})) 
+    style=dict(BASE_POPUP, **{'display': 'none'})) 

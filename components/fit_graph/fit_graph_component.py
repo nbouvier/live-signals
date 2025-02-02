@@ -1,11 +1,11 @@
 """
-This module contains the exponential fit graph component.
+This module contains the fit graph component.
 """
 from dash import html, dcc
 import numpy as np
 import plotly.graph_objects as go
 from scipy.optimize import curve_fit
-import styles
+from .fit_graph_style import *  # Import styles directly from the style file
 
 def exponential_model(x, a, b):
     """Exponential decay model function."""
@@ -30,8 +30,10 @@ def create_fit_graph(calculation_results):
                   if r.thickness is not None]
     
     if not valid_pairs:
-        return html.Div("No data points available for fitting", 
-                       style={'textAlign': 'center', 'color': '#666', 'marginTop': '20px'})
+        return html.Div(
+            "No data points available for fitting", 
+            style=NO_DATA_MESSAGE
+        )
     
     thicknesses, averages = zip(*valid_pairs)
     thicknesses = np.array(thicknesses)
@@ -40,8 +42,10 @@ def create_fit_graph(calculation_results):
     # Calculate fit
     a, b = calc_mu(thicknesses, averages)
     if a is None or b is None:
-        return html.Div("Unable to calculate exponential fit", 
-                       style={'textAlign': 'center', 'color': '#666', 'marginTop': '20px'})
+        return html.Div(
+            "Unable to calculate exponential fit", 
+            style=NO_DATA_MESSAGE
+        )
     
     # Generate points for the fit line
     x_fit = np.linspace(0, max(thicknesses), 100)
@@ -56,11 +60,7 @@ def create_fit_graph(calculation_results):
         y=averages,
         mode='markers',
         name='Experimental',
-        marker=dict(
-            color='orange',
-            symbol='triangle-up',
-            size=10
-        ),
+        marker=EXPERIMENTAL_MARKER,
         hovertemplate="Thickness: %{x:.2f} cm<br>Response: %{y:.3f}<extra></extra>"
     ))
     
@@ -70,10 +70,7 @@ def create_fit_graph(calculation_results):
         y=y_fit,
         mode='lines',
         name='Exponential fit',
-        line=dict(
-            color='black',
-            dash='dash'
-        ),
+        line=FIT_LINE,
         hovertemplate="Thickness: %{x:.2f} cm<br>Response: %{y:.3f}<extra></extra>"
     ))
     
@@ -83,13 +80,8 @@ def create_fit_graph(calculation_results):
         xaxis_title='Thickness (cm)',
         yaxis_title='Response / Response step 0',
         showlegend=True,
-        legend=dict(
-            yanchor="top",
-            y=0.99,
-            xanchor="right",
-            x=0.99
-        ),
-        margin=dict(l=50, r=50, t=50, b=50),
+        legend=LEGEND,
+        margin=MARGIN,
         height=400
     )
     
@@ -100,6 +92,6 @@ def create_fit_graph(calculation_results):
     return html.Div([
         dcc.Graph(
             figure=fig,
-            style={'height': '400px'}
+            style=GRAPH
         )
-    ], style={'marginTop': '20px'}) 
+    ], style=CONTAINER) 

@@ -2,7 +2,7 @@
 This module contains the graph display component.
 """
 from dash import html, dcc
-import styles
+from .graph_display_style import *  # Import styles directly from the style file
 
 def create_graph_display(time_values, raw_strip_resp, create_figure):
     """Create the graph display component."""
@@ -16,14 +16,14 @@ def create_graph_display(time_values, raw_strip_resp, create_figure):
                 children=dcc.Graph(
                     id='strip-responses-graph',
                     figure=create_figure(time_values, raw_strip_resp),
-                    style=styles.BASE_GRAPH
+                    style=BASE_GRAPH
                 )
             ),
             # Placeholder (same size as graph)
             html.Div(
                 "No data to display. Please select at least one strip.",
                 id='graph-placeholder',
-                style=dict(styles.BASE_PLACEHOLDER, **{'display': 'none'})
+                style=dict(BASE_PLACEHOLDER, **{'display': 'none'})
             )
-        ], style={'flex': '1 1 auto', 'minWidth': '0', 'width': '100%', 'position': 'relative'})
+        ], style=CONTAINER)
     ]) 

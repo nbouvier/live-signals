@@ -1,6 +1,46 @@
 """
-This module contains all the styles used in the application.
+This module contains global style variables used across the application.
 """
+
+# Color palette
+PRIMARY_COLOR = '#2196F3'
+SECONDARY_COLOR = '#4CAF50'
+DANGER_COLOR = '#ff3333'
+WARNING_COLOR = '#f44336'
+BACKGROUND_COLOR = '#f9f9f9'
+TEXT_COLOR = '#333'
+MUTED_TEXT_COLOR = '#666'
+
+# Border styles
+BORDER_RADIUS = '4px'
+BORDER_COLOR = '#ddd'
+BORDER_STYLE = f'1px solid {BORDER_COLOR}'
+
+# Spacing
+SPACING_UNIT = '4px'
+SPACING_SMALL = '8px'
+SPACING_MEDIUM = '16px'
+SPACING_LARGE = '24px'
+
+# Font sizes
+FONT_SIZE_SMALL = '12px'
+FONT_SIZE_NORMAL = '14px'
+FONT_SIZE_LARGE = '18px'
+
+# Z-index layers
+Z_INDEX_OVERLAY = 1000
+Z_INDEX_POPUP = 1001
+Z_INDEX_TOOLTIP = 1002
+
+# Transitions
+TRANSITION_FAST = '0.2s'
+TRANSITION_NORMAL = '0.3s'
+TRANSITION_SLOW = '0.5s'
+
+# Common styles
+SHADOW_LIGHT = '0 2px 4px rgba(0,0,0,0.1)'
+SHADOW_MEDIUM = '0 2px 10px rgba(0,0,0,0.1)'
+SHADOW_HEAVY = '0 4px 16px rgba(0,0,0,0.2)'
 
 # Strip selector styles
 STRIP_SELECTOR = {
@@ -78,53 +118,6 @@ TOGGLE_BUTTON = {
     'boxShadow': '0 2px 4px rgba(0,0,0,0.2)'
 }
 
-# Graph styles
-GRAPH_CONTAINER = {
-    'position': 'relative',
-    'height': '800px',
-    'width': '100%',
-    'backgroundColor': '#f9f9f9',
-    'border': '1px solid #ddd',
-    'borderRadius': '5px',
-}
-
-PLACEHOLDER = {
-    'textAlign': 'center',
-    'color': '#666',
-    'fontSize': '18px'
-}
-
-LOADING = {
-    'position': 'absolute',
-    'top': '0',
-    'left': '0',
-    'width': '100%',
-    'height': '100%',
-    'backgroundColor': 'rgba(255, 255, 255, 0.7)',
-    'zIndex': '100',
-    'display': 'flex',
-    'justifyContent': 'center',
-    'alignItems': 'center'
-}
-
-# Container styles
-AVERAGES_CONTAINER = {
-    'padding': '20px',
-    'backgroundColor': 'white',
-    'border': '1px solid #ddd',
-    'borderRadius': '5px',
-    'margin': '20px 0',
-}
-
-FLEX_CONTAINER = {
-    'display': 'block',
-    '@media (min-width: 992px)': {
-        'display': 'flex',
-        'gap': '20px',
-        'alignItems': 'flex-start'
-    }
-}
-
 # Base graph styles
 BASE_GRAPH = {
     'height': '800px',
@@ -164,49 +157,6 @@ BASE_POPUP = {
 HIDDEN_POPUP = {
     **BASE_POPUP,
     'transform': 'translateY(100%)'
-}
-
-# Calculation result styles
-CALCULATION_CONTAINER = {
-    'backgroundColor': '#f8f9fa',
-    'padding': '15px',
-    'borderRadius': '5px',
-    'marginBottom': '15px'
-}
-
-CALCULATION_HEADER = {
-    'marginBottom': '10px'
-}
-
-CALCULATION_SECTION = {
-    'marginBottom': '10px'
-}
-
-# Strip averages toggle styles
-STRIP_TOGGLE_BUTTON = {
-    'backgroundColor': 'transparent',
-    'border': 'none',
-    'padding': '8px 0',
-    'cursor': 'pointer',
-    'display': 'flex',
-    'alignItems': 'center',
-    'width': '100%',
-    'color': '#333',
-    'marginBottom': '8px'
-}
-
-STRIP_AVERAGES_CONTENT = {
-    'maxHeight': '300px',
-    'overflowY': 'auto',
-    'display': 'none',
-    'padding': '10px',
-    'backgroundColor': '#fff',
-    'borderRadius': '4px',
-    'border': '1px solid #eee'
-}
-
-STRIP_AVERAGE_ITEM = {
-    'marginBottom': '4px'
 }
 
 # Click catcher style
