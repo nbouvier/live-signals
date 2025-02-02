@@ -3,12 +3,27 @@ This module contains the calculation result component.
 """
 from dash import html, dcc
 from .calculation_result_style import *  # Import styles directly from the style file
+from data_processing import SELECTION_COLORS  # Import the colors
 
 def create_calculation_result(current_calcs, start_time, end_time, overall_avg, strip_averages, thickness=None):
     """Create a calculation result component."""
+    # Get the color for this calculation
+    color = SELECTION_COLORS[(current_calcs - 1) % len(SELECTION_COLORS)]
+    # Make the color more opaque for the indicator
+    opaque_color = color.replace('0.2)', '0.8)')
+    
     return html.Div([
         html.Hr(style=DIVIDER),
         html.Div([
+            html.Div(style={
+                'width': '20px',
+                'height': '20px',
+                'backgroundColor': opaque_color,
+                'borderRadius': '50%',
+                'display': 'inline-block',
+                'marginRight': '10px',
+                'verticalAlign': 'middle'
+            }),
             html.Strong("Calculation Time: "),
             html.Span(f"Calculation #{current_calcs}", style={'color': '#666'})
         ], style=HEADER),

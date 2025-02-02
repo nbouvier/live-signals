@@ -6,7 +6,7 @@ import numpy as np
 from dash import Input, Output, State, ctx, html, ALL
 import dash
 import styles
-from data_processing import create_figure
+from data_processing import create_figure, SELECTION_COLORS
 from components.calculation_result import create_calculation_result
 from components.fit_graph import create_fit_graph
 from models import CalculationResult
@@ -37,7 +37,7 @@ def register_callbacks(app, time_values, raw_strip_resp):
         
         # Handle strip selection changes
         return (
-            create_figure(time_values, raw_strip_resp, selected_strips),
+            create_figure(time_values, raw_strip_resp, selected_strips, calculation_results),
             styles.BASE_GRAPH,  # Show graph
             dict(styles.BASE_PLACEHOLDER, **{'display': 'none'}),  # Hide placeholder
             create_fit_graph(calculation_results)  # Add fit graph
@@ -86,10 +86,14 @@ def register_callbacks(app, time_values, raw_strip_resp):
             overall_avg = np.mean([avg for _, avg in strip_averages])
             
             # Store the calculation result
-            calculation_results.append(CalculationResult(overall_average=overall_avg))
-
-            # Print the calculation results for debugging
-            print(f"Calculation results: {calculation_results}")
+            current_calcs = len(calculation_results)
+            new_color = SELECTION_COLORS[current_calcs % len(SELECTION_COLORS)]
+            calculation_results.append(CalculationResult(
+                overall_average=overall_avg,
+                start_time=start_time,
+                end_time=end_time,
+                color=new_color
+            ))
             
             # Get the current number of calculations
             current_calcs = len(calculation_results)
@@ -145,9 +149,6 @@ def register_callbacks(app, time_values, raw_strip_resp):
             if index < len(calculation_results):
                 # Convert to float with 2 decimal places if value is not None
                 calculation_results[index].thickness = round(float(value), 2) if value is not None else None
-
-        # Print updated calculation results for debugging
-        print(f"Updated calculation results: {calculation_results}")
         
         # Return float values with 2 decimal places
         return [round(float(v), 2) if v is not None else None for v in values]

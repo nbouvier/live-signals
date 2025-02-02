@@ -5,6 +5,15 @@ This module contains functions for reading and processing binary data files.
 import numpy as np
 import plotly.graph_objects as go
 
+# Define colors for selections
+SELECTION_COLORS = [
+    'rgba(128, 128, 128, 0.2)',  # Gray
+    'rgba(100, 149, 237, 0.2)',  # Cornflower Blue
+    'rgba(144, 238, 144, 0.2)',  # Light Green
+    'rgba(255, 182, 193, 0.2)',  # Light Pink
+    'rgba(255, 218, 185, 0.2)'   # Peach
+]
+
 def read_bin_file(zdata):
     """Read and process binary data file."""
     # correspondence of QDC number and strip number file
@@ -33,8 +42,8 @@ def read_bin_file(zdata):
             
     return time_values, raw_strip_resp
 
-def create_figure(time_values, raw_strip_resp, selected_strips=None):
-    """Create a plotly figure with the strip responses."""
+def create_figure(time_values, raw_strip_resp, selected_strips=None, calculation_results=None):
+    """Create a plotly figure with the strip responses and selection rectangles."""
     # Create figure with single plot (no subplots)
     fig = go.Figure()
 
@@ -47,6 +56,32 @@ def create_figure(time_values, raw_strip_resp, selected_strips=None):
                 name=f'Strip {strip_num}',
                 mode='lines'
             )
+    
+    # Add rectangles for previous selections
+    if calculation_results:
+        for idx, result in enumerate(calculation_results):
+            if result.start_time is not None and result.end_time is not None:
+                # Use existing color or assign a new one
+                if result.color is None:
+                    result.color = SELECTION_COLORS[idx % len(SELECTION_COLORS)]
+                
+                # Get y-range for the rectangle
+                y_min = min(raw_strip_resp[selected_strips, :].min() if selected_strips else raw_strip_resp[18:153, :].min(),
+                          raw_strip_resp[selected_strips, :].mean() if selected_strips else raw_strip_resp[18:153, :].mean())
+                y_max = max(raw_strip_resp[selected_strips, :].max() if selected_strips else raw_strip_resp[18:153, :].max(),
+                          raw_strip_resp[selected_strips, :].mean() if selected_strips else raw_strip_resp[18:153, :].mean())
+                
+                # Add selection rectangle
+                fig.add_shape(
+                    type="rect",
+                    x0=result.start_time,
+                    x1=result.end_time,
+                    y0=y_min,
+                    y1=y_max,
+                    fillcolor=result.color,
+                    line=dict(width=0),
+                    layer="below"
+                )
 
     # Update layout
     fig.update_layout(
