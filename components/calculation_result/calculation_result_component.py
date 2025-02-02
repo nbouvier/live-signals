@@ -15,44 +15,60 @@ def create_calculation_result(calculation_result):
     opaque_color = calculation_result.color.replace('0.2)', '0.8)')
     
     return html.Div([
-        html.Hr(style=DIVIDER),
+        # Header with overall average and delete button
         html.Div([
-            # Left side with color indicator and title
+            # Left side with overall average
             html.Div([
-                html.Div(style={
-                    'width': '20px',
-                    'height': '20px',
-                    'backgroundColor': opaque_color,
-                    'borderRadius': '50%',
-                    'display': 'inline-block',
-                    'marginRight': '10px',
-                    'verticalAlign': 'middle'
-                }),
-                html.Strong("Time Range: "),
-                html.Span(f"{calculation_result.start_time:.1f}ms - {calculation_result.end_time:.1f}ms", 
-                         style={'color': '#666'})
-            ], style={'display': 'inline-block'}),
-            # Delete button on the right
+                html.Div([
+                    html.Span("Average ", style={'fontSize': '20px', 'fontWeight': 'bold'}),
+                    html.Span(f"{calculation_result.overall_average:.2f}", 
+                              style={'fontSize': '20px', 'marginLeft': '4px', 'fontWeight': 'bold'})
+                ]),
+
+				# Color indicator square
+				html.Div(style={
+					'width': '12px',
+					'height': '12px',
+					'backgroundColor': opaque_color,
+					'marginLeft': '8px',
+					'display': 'inline-block',
+					'verticalAlign': 'middle'
+				})
+            ], style={'display': 'flex', 'alignItems': 'center'}),
+            
+            # Delete button
             html.Button(
-                html.I(className="fas fa-trash", style={'color': '#dc3545'}),
+                html.I(className="fas fa-trash"),
                 id={'type': 'delete-calculation', 'index': calculation_result.id},
                 style={
-                    'float': 'right',
-                    'border': 'none',
-                    'background': 'none',
+                    'border': '1px solid #dc3545',
+                    'borderRadius': '4px',
+                    'backgroundColor': 'transparent',
+                    'color': '#dc3545',
+                    'width': '32px',
+                    'height': '32px',
+                    'padding': '4px',
                     'cursor': 'pointer',
-                    'padding': '5px',
-                    'marginTop': '-5px'
+                    'transition': 'all 0.3s',
+                    ':hover': {
+                        'backgroundColor': '#dc3545',
+                        'color': 'white'
+                    }
                 }
             )
         ], style=HEADER),
+
+        # Time range subtitle with color indicator
         html.Div([
-            html.Strong("Overall Average: "),
-            html.Span(f"{calculation_result.overall_average:.2f}", 
-                     id={'type': 'overall-average', 'index': calculation_result.id})
-        ], style=SECTION),
+            html.Span(
+                f"{calculation_result.start_time:.1f}ms - {calculation_result.end_time:.1f}ms",
+                style={'color': '#666', 'fontSize': '14px'}
+            )
+        ], style=TIME_RANGE),
+        
+        # Thickness input
         html.Div([
-            html.Strong("Thickness: "),
+            html.Strong("Thickness: ", style={'color': '#666'}),
             dcc.Input(
                 id={'type': 'thickness-input', 'index': calculation_result.id},
                 type='number',
@@ -63,12 +79,13 @@ def create_calculation_result(calculation_result):
             ),
             html.Span("cm", style=UNIT_LABEL)
         ], style=SECTION),
+        
         # Collapsible section for individual averages
         html.Div([
             # Toggle button with arrow
             html.Button([
                 html.I(className="fas fa-chevron-right", style=TOGGLE_ICON),
-                html.Strong("Individual Strip Averages")
+                html.Strong("Individual Strip Averages", style={'color': '#666'})
             ],
             id={'type': 'toggle-strip-averages', 'index': calculation_result.id},
             style=TOGGLE_BUTTON),

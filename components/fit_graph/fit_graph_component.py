@@ -29,12 +29,13 @@ def create_fit_graph(calculation_results):
                   for r in calculation_results 
                   if r.thickness is not None]
     
-    if not valid_pairs:
+    if len(valid_pairs) < 2:
         return html.Div(
             "No data points available for fitting", 
             style=NO_DATA_MESSAGE
         )
-    
+
+	# Extract thicknesses and averages
     thicknesses, averages = zip(*valid_pairs)
     thicknesses = np.array(thicknesses)
     averages = np.array(averages)

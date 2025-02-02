@@ -224,15 +224,6 @@ def register_callbacks(app, time_values, raw_strip_resp):
         return current_style, {'display': 'none'}, styles.TOGGLE_BUTTON
 
     @app.callback(
-        Output('selection-indicator', 'style'),
-        [Input('strip-responses-graph', 'selectedData')]
-    )
-    def update_selection_indicator(selected_data):
-        return dict(styles.SELECTION_INDICATOR, **{
-            'backgroundColor': 'green' if selected_data else 'red'
-        })
-
-    @app.callback(
         [Output({'type': 'strip-averages-content', 'index': dash.MATCH}, 'style'),
          Output({'type': 'toggle-strip-averages', 'index': dash.MATCH}, 'children')],
         Input({'type': 'toggle-strip-averages', 'index': dash.MATCH}, 'n_clicks'),

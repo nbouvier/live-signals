@@ -2,76 +2,77 @@
 This module contains styles for the calculation result component.
 """
 
-from styles import (
-    BACKGROUND_COLOR,
-    BORDER_RADIUS,
-    BORDER_STYLE,
-    SPACING_SMALL,
-    SPACING_MEDIUM,
-    SPACING_LARGE,
-    MUTED_TEXT_COLOR,
-    TRANSITION_NORMAL
-)
-
 CONTAINER = {
-    'backgroundColor': BACKGROUND_COLOR,
-    'padding': SPACING_MEDIUM,
-    'borderRadius': BORDER_RADIUS,
-    'marginBottom': SPACING_MEDIUM
+    'backgroundColor': 'white',
+    'borderRadius': '8px',
+    'padding': '15px',
+    'marginBottom': '15px',
+    'boxShadow': '0 2px 4px rgba(0, 0, 0, 0.1)',
+    'transition': 'box-shadow 0.3s',
+    ':hover': {
+        'boxShadow': '0 4px 8px rgba(0, 0, 0, 0.15)'
+    }
 }
 
 HEADER = {
-    'marginBottom': SPACING_MEDIUM
+    'display': 'flex',
+    'justifyContent': 'space-between',
+    'alignItems': 'flex-start'
+}
+
+TIME_RANGE = {
+    'display': 'flex',
+    'alignItems': 'center',
+	'marginTop': '-8px',
+    'marginBottom': '15px'
 }
 
 SECTION = {
-    'marginBottom': SPACING_MEDIUM
-}
-
-DIVIDER = {
-    'margin': f'{SPACING_MEDIUM} 0'
+    'marginBottom': '15px',
+    'display': 'flex',
+    'alignItems': 'center',
+    'gap': '8px'
 }
 
 THICKNESS_INPUT = {
-    'marginLeft': SPACING_SMALL,
-    'width': '100px',
-    'padding': SPACING_SMALL,
-    'borderRadius': BORDER_RADIUS,
-    'border': BORDER_STYLE
+    'width': '80px',
+    'padding': '4px 8px',
+    'border': '1px solid #ccc',
+    'borderRadius': '4px',
+    'fontSize': '14px'
 }
 
 UNIT_LABEL = {
-    'marginLeft': SPACING_SMALL,
-    'color': MUTED_TEXT_COLOR
+    'color': '#666',
+    'fontSize': '14px'
 }
 
 TOGGLE_BUTTON = {
+    'width': '100%',
+    'textAlign': 'left',
+    'padding': '8px',
     'backgroundColor': 'transparent',
     'border': 'none',
-    'padding': f'{SPACING_SMALL} 0',
     'cursor': 'pointer',
     'display': 'flex',
     'alignItems': 'center',
-    'width': '100%',
-    'color': MUTED_TEXT_COLOR,
-    'marginBottom': SPACING_SMALL
+    'gap': '8px'
 }
 
 TOGGLE_ICON = {
-    'marginRight': SPACING_SMALL,
-    'transition': f'transform {TRANSITION_NORMAL}'
+    'transition': 'transform 0.3s'
 }
 
 AVERAGES_CONTENT = {
-    'maxHeight': '300px',
-    'overflowY': 'auto',
     'display': 'none',
-    'padding': SPACING_MEDIUM,
-    'backgroundColor': 'white',
-    'borderRadius': BORDER_RADIUS,
-    'border': BORDER_STYLE
+    'padding': '10px',
+    'backgroundColor': '#f8f9fa',
+    'borderRadius': '4px',
+    'marginTop': '8px'
 }
 
 AVERAGE_ITEM = {
-    'marginBottom': SPACING_SMALL
+    'padding': '4px 0',
+    'color': '#666',
+    'fontSize': '14px'
 } 

@@ -12,49 +12,38 @@ from styles import (
 )
 
 CONTAINER = {
-    'flex': '0 0 300px'
-}
-
-HEADER = {
-    'marginTop': '0',
-    'marginBottom': SPACING_MEDIUM
-}
-
-CONTENT = {
-    'marginBottom': SPACING_MEDIUM
-}
-
-INDICATOR_CONTAINER = {
+    'width': '400px',
+    'minWidth': '400px',
+    'backgroundColor': 'white',
+    'padding': '20px',
+    'borderRadius': '8px',
+    'boxShadow': '0 2px 4px rgba(0, 0, 0, 0.1)',
     'display': 'flex',
-    'alignItems': 'center',
-    'marginBottom': SPACING_MEDIUM
-}
-
-SELECTION_INDICATOR = {
-    'width': '20px',
-    'height': '20px',
-    'borderRadius': '50%',
-    'display': 'inline-block',
-    'marginRight': SPACING_MEDIUM
-}
-
-INDICATOR_LABEL = {
-    'fontSize': FONT_SIZE_NORMAL
+    'flexDirection': 'column',
+    'gap': '20px'
 }
 
 CALCULATE_BUTTON = {
+    'display': 'flex',
+    'justifyContent': 'center',
     'backgroundColor': PRIMARY_COLOR,
     'color': 'white',
-    'padding': f'{SPACING_SMALL} {SPACING_MEDIUM}',
+    'padding': '10px 20px',
     'border': 'none',
-    'borderRadius': BORDER_RADIUS,
+    'borderRadius': '4px',
     'cursor': 'pointer',
+    'fontSize': '16px',
+    'transition': 'background-color 0.3s',
     'width': '100%',
+    'marginBottom': '10px'
+}
+
+AVERAGES_CONTENT = {
     'display': 'flex',
-    'alignItems': 'center',
-    'justifyContent': 'center',
-    'gap': SPACING_SMALL,
-    'fontSize': FONT_SIZE_NORMAL
+    'flexDirection': 'column',
+    'gap': '10px',
+    'maxHeight': 'calc(100vh - 200px)',
+    'overflowY': 'auto'
 }
 
 BUTTON_ICON = {
