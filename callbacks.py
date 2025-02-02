@@ -51,10 +51,9 @@ def register_callbacks(app, time_values, raw_strip_resp):
         [Input('calc-button', 'n_clicks')],
         [State('strip-selector', 'value'),
          State('strip-responses-graph', 'selectedData'),
-         State('strip-responses-graph', 'relayoutData'),
          State('averages-content', 'children')]
     )
-    def update_averages(n_clicks, selected_strips, selected_data, relayout_data, existing_content):
+    def update_averages(n_clicks, selected_strips, selected_data, existing_content):
         if not n_clicks:  # Skip initial callback
             return None, {'display': 'none'}, None, {'display': 'none'}
 
@@ -65,13 +64,6 @@ def register_callbacks(app, time_values, raw_strip_resp):
             elif selected_data and 'points' in selected_data:
                 x_values = [point['x'] for point in selected_data['points']]
                 range_bounds = [min(x_values), max(x_values)]
-            elif relayout_data and 'xaxis.range[0]' in relayout_data:
-                range_bounds = [
-                    relayout_data['xaxis.range[0]'],
-                    relayout_data['xaxis.range[1]']
-                ]
-            elif relayout_data and 'xaxis.range' in relayout_data:
-                range_bounds = relayout_data['xaxis.range']
             else:
                 return (
                     existing_content,  # Keep existing content unchanged
@@ -220,21 +212,11 @@ def register_callbacks(app, time_values, raw_strip_resp):
 
     @app.callback(
         Output('selection-indicator', 'style'),
-        [Input('strip-responses-graph', 'selectedData'),
-         Input('strip-responses-graph', 'relayoutData')]
+        [Input('strip-responses-graph', 'selectedData')]
     )
-    def update_selection_indicator(selected_data, relayout_data):
-        # Check if there's an active selection either through selectedData
-        # or through the range selector in relayoutData
-        selection_active = False
-        
-        if selected_data:
-            selection_active = True
-        elif relayout_data and ('xaxis.range[0]' in relayout_data or 'xaxis.range' in relayout_data):
-            selection_active = True
-        
+    def update_selection_indicator(selected_data):
         return dict(styles.SELECTION_INDICATOR, **{
-            'backgroundColor': 'green' if selection_active else 'red'
+            'backgroundColor': 'green' if selected_data else 'red'
         })
 
     @app.callback(
