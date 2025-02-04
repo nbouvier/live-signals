@@ -42,6 +42,21 @@ BUTTON = {
     'fontSize': FONT_SIZE_NORMAL
 }
 
+SELECT_ALL_BUTTON = {
+    **BUTTON,
+    'backgroundColor': SECONDARY_COLOR
+}
+
+UNSELECT_ALL_BUTTON = {
+    **BUTTON,
+    'backgroundColor': WARNING_COLOR
+}
+
+SELECT_BUTTON = {
+    **BUTTON,
+    'backgroundColor': PRIMARY_COLOR
+}
+
 BUTTON_CONTAINER = {
     'display': 'flex',
     'gap': SPACING_MEDIUM,
@@ -80,11 +95,6 @@ TOGGLE_BUTTON = {
     'cursor': 'pointer',
     'fontSize': FONT_SIZE_NORMAL,
     'boxShadow': SHADOW_MEDIUM
-}
-
-UNSELECT_BUTTON = {
-    **BUTTON,
-    'backgroundColor': WARNING_COLOR
 }
 
 STRIP_LABEL = {

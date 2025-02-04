@@ -4,7 +4,7 @@ This module contains the Dash layout components for the application.
 
 from dash import html, dcc
 import styles
-from components.strip_selector import create_strip_selector_panel
+from components.strip_selector import create_strip_selector
 from components.graph_display import create_graph_display
 from components.averages_panel import create_averages_panel
 from components.popup_message import create_popup_message
@@ -29,8 +29,8 @@ def create_layout():
             style=styles.TOGGLE_BUTTON
         ),
         
-        # Strip selection panel
-        create_strip_selector_panel(),
+        # Strip selection
+        create_strip_selector(),
         
         # Main content
         html.Div([

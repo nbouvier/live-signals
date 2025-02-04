@@ -4,8 +4,8 @@ This module contains the strip selector component.
 from dash import html, dcc
 from .strip_selector_style import *  # Import styles directly from the style file
 
-def create_strip_selector_panel():
-    """Create the strip selector panel component."""
+def create_strip_selector():
+    """Create the strip selector component."""
     return html.Div([
         html.Div([
             html.H3('Strip Selection', style={'marginBottom': '10px'}),
@@ -14,14 +14,24 @@ def create_strip_selector_panel():
                     'Select All', 
                     id='select-all-button', 
                     n_clicks=0,
-                    style=BUTTON
+                    style=SELECT_ALL_BUTTON
                 ),
                 html.Button(
                     'Unselect All', 
                     id='unselect-all-button', 
                     n_clicks=0,
-                    style=UNSELECT_BUTTON
+                    style=UNSELECT_ALL_BUTTON
                 ),
+				html.Button(
+					"Odd Strips",
+					id='select-odd-button',
+					style=SELECT_BUTTON
+				),
+				html.Button(
+					"Even Strips",
+					id='select-even-button',
+					style=SELECT_BUTTON
+				)
             ], style=BUTTON_CONTAINER),
             dcc.Checklist(
                 id='strip-selector',
