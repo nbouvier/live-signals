@@ -10,7 +10,7 @@ from components.averages_panel import create_averages_panel
 from components.popup_message import create_popup_message
 from components.fit_graph import create_fit_graph
 
-def create_layout(time_values, raw_strip_resp, create_figure):
+def create_layout():
     """Create the main application layout."""
     return html.Div([
         # URL Location component for page initialization
@@ -36,7 +36,7 @@ def create_layout(time_values, raw_strip_resp, create_figure):
         html.Div([
             # Flex container for graph and averages
             html.Div([
-                create_graph_display(time_values, raw_strip_resp, create_figure),
+                create_graph_display(),
                 create_averages_panel()
             ], style={'display': 'flex', 'gap': '20px', 'width': '100%'}),
             

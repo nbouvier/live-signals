@@ -2,64 +2,120 @@
 This module contains all the callback functions for the Dash application.
 """
 
+import base64
 import numpy as np
 from dash import Input, Output, State, ctx, html, ALL
 import dash
 import styles
-from data_processing import create_figure
+from data_processing import create_figure, read_bin_file
 from components.calculation_result import create_calculation_result
 from components.fit_graph import create_fit_graph
 from models import CalculationResult
 
-def register_callbacks(app, time_values, raw_strip_resp):
+def register_callbacks(app):
     """Register all callbacks for the application."""
     
-    # Global list to store calculation results
+    # Global variables to store data
+    time_values = None
+    raw_strip_resp = None
     calculation_results = []
-    
-    @app.callback(
-        [Output('strip-responses-graph', 'figure'),
-         Output('strip-responses-graph', 'style'),
-         Output('graph-placeholder', 'style'),
-         Output('fit-graph-container', 'children'),
-         Output('averages-content', 'children')],
-        Input('url', 'pathname')
-    )
-    def initialize_page(pathname):
-        """Reset everything when the page loads."""
-        # Clear all calculations
-        calculation_results.clear()
-        CalculationResult.reset_id_counter()
-        
-        return (
-            create_figure(time_values, raw_strip_resp, list(range(18, 153)), []),  # Empty figure with no selections
-            styles.BASE_GRAPH,
-            dict(styles.BASE_PLACEHOLDER, **{'display': 'none'}),
-            create_fit_graph([]),  # Empty fit graph
-            None  # Clear calculation panel
-        )
     
     @app.callback(
         [Output('strip-responses-graph', 'figure', allow_duplicate=True),
          Output('strip-responses-graph', 'style', allow_duplicate=True),
-         Output('graph-placeholder', 'style', allow_duplicate=True)],
+         Output('loaded-file-info', 'children', allow_duplicate=True),
+         Output('graph-placeholder', 'style', allow_duplicate=True),
+         Output('averages-content', 'children')],
+        Input('url', 'pathname'),
+        prevent_initial_call=True
+    )
+    def initialize_page(pathname):
+        """Reset everything when the page loads."""
+        nonlocal time_values, raw_strip_resp
+        
+        # Clear all data
+        time_values = None
+        raw_strip_resp = None
+        calculation_results.clear()
+        CalculationResult.reset_id_counter()
+        
+        # Reset the display
+        return (
+            {},  # Empty figure
+            dict(styles.BASE_GRAPH, **{'display': 'none'}),  # Hide graph
+            None,  # Clear file info
+            dict(styles.BASE_PLACEHOLDER, **{'display': 'block'}),  # Show upload placeholder
+            None  # Clear calculations
+        )
+    
+    @app.callback(
+        [Output('strip-responses-graph', 'figure'),
+         Output('strip-responses-graph', 'style'),
+         Output('loaded-file-info', 'children'),
+         Output('graph-placeholder', 'style')],
+        Input('upload-data', 'contents'),
+        State('upload-data', 'filename')
+    )
+    def update_data(contents, filename):
+        """Handle file upload and update the graph."""
+        if contents is None:
+            return dash.no_update, dash.no_update, dash.no_update, dash.no_update
+
+        nonlocal time_values, raw_strip_resp
+        
+        try:
+            # Decode the file contents
+            content_type, content_string = contents.split(',')
+            decoded = base64.b64decode(content_string)
+            
+            # Convert to numpy array
+            dt = np.dtype("uint16")
+            zdata = np.frombuffer(decoded, dt)
+            
+            # Process the data
+            time_values, raw_strip_resp = read_bin_file(zdata)
+            
+            # Create the initial figure
+            figure = create_figure(time_values, raw_strip_resp, list(range(18, 153)), [])
+            
+            # Create file info display
+            file_info = html.Div([
+                html.I(className="fas fa-file-binary", style={'color': styles.MUTED_TEXT_COLOR}),
+                html.Span(filename)
+            ])
+            
+            return (
+                figure,  # Update graph
+                dict(styles.BASE_GRAPH, **{'display': 'block'}),  # Show graph
+                file_info,  # Show file info
+                dict(styles.BASE_PLACEHOLDER, **{'display': 'none'})  # Hide placeholder
+            )
+            
+        except Exception as e:
+            print(f"Error processing file: {e}")
+            return dash.no_update, dash.no_update, dash.no_update, dash.no_update
+
+    @app.callback(
+        [Output('strip-responses-graph', 'figure', allow_duplicate=True),
+         Output('strip-responses-graph', 'style', allow_duplicate=True)],
         Input('strip-selector', 'value'),
         prevent_initial_call=True
     )
     def update_figure(selected_strips):
+        if time_values is None or raw_strip_resp is None:
+            return dash.no_update, dash.no_update
+            
         # Handle empty strip selection
         if not selected_strips:
             return (
-                create_figure(time_values, raw_strip_resp, list(range(18, 153)), []),  # Empty figure with no selections
-                styles.BASE_GRAPH,
-                dict(styles.BASE_PLACEHOLDER, **{'display': 'none'})
+                create_figure(time_values, raw_strip_resp, [], []),  # Empty figure with no strips
+                dict(styles.BASE_GRAPH, **{'display': 'block'})
             )
         
         # Handle strip selection changes
         return (
             create_figure(time_values, raw_strip_resp, selected_strips, calculation_results),
-            styles.BASE_GRAPH,  # Show graph
-            dict(styles.BASE_PLACEHOLDER, **{'display': 'none'})  # Hide placeholder
+            dict(styles.BASE_GRAPH, **{'display': 'block'})
         )
 
     @app.callback(
