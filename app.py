@@ -18,10 +18,7 @@ def main():
     )
 
     # Create the layout
-    app.layout = create_layout()
-
-    # Register callbacks
-    register_callbacks(app)
+    app.layout = create_layout(app)
 
     # Run the app
     if __name__ == '__main__':

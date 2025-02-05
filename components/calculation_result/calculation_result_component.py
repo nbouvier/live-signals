@@ -2,15 +2,20 @@
 This module contains the calculation result component.
 """
 from dash import html, dcc
-from .calculation_result_style import *  # Import styles directly from the style file
+from .calculation_result_callbacks import register_callbacks
+from .calculation_result_style import *
 
-def create_calculation_result(calculation_result):
+
+def create_calculation_result(app, calculation_result):
     """
     Create a calculation result component.
     
     Args:
         calculation_result: The CalculationResult object containing all the data
     """
+
+    register_callbacks(app)
+
     # Make the color more opaque for the indicator
     opaque_color = calculation_result.color.replace('0.2)', '0.8)')
     

@@ -2,10 +2,14 @@
 This module contains the graph display component.
 """
 from dash import html, dcc
-from .graph_display_style import *  # Import styles directly from the style file
+from .graph_display_callbacks import register_callbacks
+from .graph_display_style import *
 
-def create_graph_display():
+def create_graph_display(app):
     """Create the graph display component."""
+
+    register_callbacks(app)
+
     return html.Div([
         # Graph container
         html.Div([

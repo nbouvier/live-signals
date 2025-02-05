@@ -2,13 +2,18 @@
 This module contains the strip selector component.
 """
 from dash import html, dcc
-from .strip_selector_style import *  # Import styles directly from the style file
+from .strip_selector_callbacks import register_callbacks
+from .strip_selector_style import *
 
-def create_strip_selector():
+def create_strip_selector(app):
     """Create the strip selector component."""
+
+    register_callbacks(app)
+
     return html.Div([
         html.Div([
             html.H3('Strip Selection', style={'marginBottom': '10px'}),
+
             html.Div([
                 html.Button(
                     'Select All', 
