@@ -44,187 +44,187 @@ SHADOW_HEAVY = '0 4px 16px rgba(0,0,0,0.2)'
 
 # Strip selector styles
 STRIP_SELECTOR = {
-    'display': 'grid',
-    'gridTemplateColumns': 'repeat(auto-fill, minmax(100px, 1fr))',
-    'gap': '5px',
-    'maxHeight': 'calc(100vh - 190px)',
-    'overflowY': 'auto',
-    'padding': '10px',
-    'border': '1px solid #ddd',
-    'borderRadius': '5px',
-    'backgroundColor': '#f9f9f9',
-    'margin': '10px 0'
+	'display': 'grid',
+	'gridTemplateColumns': 'repeat(auto-fill, minmax(100px, 1fr))',
+	'gap': '5px',
+	'maxHeight': 'calc(100vh - 190px)',
+	'overflowY': 'auto',
+	'padding': '10px',
+	'border': '1px solid #ddd',
+	'borderRadius': '5px',
+	'backgroundColor': '#f9f9f9',
+	'margin': '10px 0'
 }
 
 # Button styles
 BUTTON = {
-    'backgroundColor': '#4CAF50',
-    'color': 'white',
-    'padding': '10px 20px',
-    'border': 'none',
-    'borderRadius': '4px',
-    'margin': '5px',
-    'cursor': 'pointer',
-    'fontSize': '14px'
+	'backgroundColor': '#4CAF50',
+	'color': 'white',
+	'padding': '10px 20px',
+	'border': 'none',
+	'borderRadius': '4px',
+	'margin': '5px',
+	'cursor': 'pointer',
+	'fontSize': '14px'
 }
 
 BUTTON_CONTAINER = {
-    'display': 'flex',
-    'gap': '10px',
-    'marginBottom': '10px'
+	'display': 'flex',
+	'gap': '10px',
+	'marginBottom': '10px'
 }
 
 # Overlay styles
 OVERLAY = {
-    'position': 'fixed',
-    'top': '0',
-    'left': '-400px',
-    'height': '100vh',
-    'width': '400px',
-    'backgroundColor': 'white',
-    'boxShadow': SHADOW_MEDIUM,
-    'transition': f'left {TRANSITION_NORMAL} ease-in-out',
-    'zIndex': Z_INDEX_OVERLAY,
-    'padding': f'{SPACING_MEDIUM} {SPACING_MEDIUM} 60px {SPACING_MEDIUM}',
-    'overflow': 'hidden'
+	'position': 'fixed',
+	'top': '0',
+	'left': '-400px',
+	'height': '100vh',
+	'width': '400px',
+	'backgroundColor': 'white',
+	'boxShadow': SHADOW_MEDIUM,
+	'transition': f'left {TRANSITION_NORMAL} ease-in-out',
+	'zIndex': Z_INDEX_OVERLAY,
+	'padding': f'{SPACING_MEDIUM} {SPACING_MEDIUM} 60px {SPACING_MEDIUM}',
+	'overflow': 'hidden'
 }
 
 OVERLAY_VISIBLE = {
-    **OVERLAY,
-    'left': '0'
+	**OVERLAY,
+	'left': '0'
 }
 
 # Toggle button
 TOGGLE_BUTTON = {
-    'position': 'fixed',
-    'top': SPACING_MEDIUM,
-    'left': SPACING_MEDIUM,
-    'zIndex': Z_INDEX_OVERLAY - 2,
-    'backgroundColor': PRIMARY_COLOR,
-    'color': 'white',
-    'padding': f'{SPACING_MEDIUM} {SPACING_LARGE}',
-    'border': 'none',
-    'borderRadius': BORDER_RADIUS,
-    'cursor': 'pointer',
-    'fontSize': FONT_SIZE_NORMAL,
-    'boxShadow': SHADOW_MEDIUM,
-    'display': 'flex',
-    'alignItems': 'center'
+	'position': 'fixed',
+	'top': SPACING_MEDIUM,
+	'left': SPACING_MEDIUM,
+	'zIndex': Z_INDEX_OVERLAY - 2,
+	'backgroundColor': PRIMARY_COLOR,
+	'color': 'white',
+	'padding': f'{SPACING_MEDIUM} {SPACING_LARGE}',
+	'border': 'none',
+	'borderRadius': BORDER_RADIUS,
+	'cursor': 'pointer',
+	'fontSize': FONT_SIZE_NORMAL,
+	'boxShadow': SHADOW_MEDIUM,
+	'display': 'flex',
+	'alignItems': 'center'
 }
 
 # Base graph styles
 BASE_GRAPH = {
-    'height': '800px',
-    'width': '100%'
+	'height': '800px',
+	'width': '100%'
 }
 
 BASE_PLACEHOLDER = {
-    'height': '800px',
-    'width': '100%',
-    'backgroundColor': '#f9f9f9',
-    'border': '1px solid #ddd',
-    'borderRadius': '5px',
-    'display': 'flex',
-    'justifyContent': 'center',
-    'alignItems': 'center',
-    'color': '#666',
-    'fontSize': '18px'
+	'height': '800px',
+	'width': '100%',
+	'backgroundColor': '#f9f9f9',
+	'border': '1px solid #ddd',
+	'borderRadius': '5px',
+	'display': 'flex',
+	'justifyContent': 'center',
+	'alignItems': 'center',
+	'color': '#666',
+	'fontSize': '18px'
 }
 
 # Popup styles
 BASE_POPUP = {
-    'position': 'fixed',
-    'top': '20px',
-    'left': '50%',
-    'transform': 'translateX(-50%)',
-    'backgroundColor': 'white',
-    'padding': SPACING_MEDIUM,
-    'borderRadius': BORDER_RADIUS,
-    'boxShadow': SHADOW_MEDIUM,
-    'zIndex': Z_INDEX_OVERLAY + 1,
-    'display': 'flex',
-    'alignItems': 'center',
-    'gap': SPACING_MEDIUM
+	'position': 'fixed',
+	'top': '20px',
+	'left': '50%',
+	'transform': 'translateX(-50%)',
+	'backgroundColor': 'white',
+	'padding': SPACING_MEDIUM,
+	'borderRadius': BORDER_RADIUS,
+	'boxShadow': SHADOW_MEDIUM,
+	'zIndex': Z_INDEX_OVERLAY + 1,
+	'display': 'flex',
+	'alignItems': 'center',
+	'gap': SPACING_MEDIUM
 }
 
 HIDDEN_POPUP = {
-    **BASE_POPUP,
-    'display': 'none'
+	**BASE_POPUP,
+	'display': 'none'
 }
 
 # Click catcher style
 CLICK_CATCHER = {
-    'position': 'fixed',
-    'top': '0',
-    'left': '0',
-    'width': '100vw',
-    'height': '100vh',
-    'backgroundColor': 'rgba(0, 0, 0, 0.5)',
-    'zIndex': Z_INDEX_OVERLAY - 1
+	'position': 'fixed',
+	'top': '0',
+	'left': '0',
+	'width': '100vw',
+	'height': '100vh',
+	'backgroundColor': 'rgba(0, 0, 0, 0.5)',
+	'zIndex': Z_INDEX_OVERLAY - 1
 }
 
 # Close button style
 CLOSE_BUTTON = {
-    'backgroundColor': 'transparent',
-    'border': 'none',
-    'color': MUTED_TEXT_COLOR,
-    'cursor': 'pointer',
-    'padding': '4px',
-    'display': 'flex',
-    'alignItems': 'center',
-    'justifyContent': 'center',
-    'transition': f'color {TRANSITION_NORMAL}',
-    ':hover': {
-        'color': WARNING_COLOR
-    }
+	'backgroundColor': 'transparent',
+	'border': 'none',
+	'color': MUTED_TEXT_COLOR,
+	'cursor': 'pointer',
+	'padding': '4px',
+	'display': 'flex',
+	'alignItems': 'center',
+	'justifyContent': 'center',
+	'transition': f'color {TRANSITION_NORMAL}',
+	':hover': {
+		'color': WARNING_COLOR
+	}
 }
 
 # Error message style
 ERROR_MESSAGE = {
-    'color': '#ff3333',
-    'fontWeight': 'bold'
+	'color': '#ff3333',
+	'fontWeight': 'bold'
 }
 
 # Selection indicator styles
 SELECTION_INDICATOR = {
-    'width': '20px',
-    'height': '20px',
-    'borderRadius': '50%',
-    'display': 'inline-block',
-    'marginRight': '10px'
+	'width': '20px',
+	'height': '20px',
+	'borderRadius': '50%',
+	'display': 'inline-block',
+	'marginRight': '10px'
 } 
 
 
 FILE_CARD = {
-    'padding': '8px 12px',
-    'backgroundColor': 'white',
-    'borderRadius': BORDER_RADIUS,
-    'border': BORDER_STYLE,
-    'fontSize': '14px',
-    'display': 'flex',
-    'alignItems': 'center',
-    'gap': '8px',
-    'position': 'relative',
-    'paddingRight': '100px'  # Space for time offset input
+	'padding': '8px 12px',
+	'backgroundColor': 'white',
+	'borderRadius': BORDER_RADIUS,
+	'border': BORDER_STYLE,
+	'fontSize': '14px',
+	'display': 'flex',
+	'alignItems': 'center',
+	'gap': '8px',
+	'position': 'relative',
+	'paddingRight': '100px'  # Space for time offset input
 }
 
 TIME_OFFSET_INPUT = {
-    'width': '80px',
-    'padding': '4px 8px',
-    'border': BORDER_STYLE,
-    'borderRadius': BORDER_RADIUS,
-    'position': 'absolute',
-    'right': '8px',
-    'top': '50%',
-    'transform': 'translateY(-50%)'
+	'width': '80px',
+	'padding': '4px 8px',
+	'border': BORDER_STYLE,
+	'borderRadius': BORDER_RADIUS,
+	'position': 'absolute',
+	'right': '8px',
+	'top': '50%',
+	'transform': 'translateY(-50%)'
 } 
 
 # Layout styles
 MAIN_CONTENT = {
-    'marginLeft': '60px',  # Space for toggle button
-    'marginRight': '20px',
-    'width': 'calc(100% - 80px)',  # Account for margins
-    'display': 'flex',
-    'flexDirection': 'column',
-    'gap': '20px'
+	'marginLeft': '60px',  # Space for toggle button
+	'marginRight': '20px',
+	'width': 'calc(100% - 80px)',  # Account for margins
+	'display': 'flex',
+	'flexDirection': 'column',
+	'gap': '20px'
 } 
