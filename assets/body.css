@@ -6,3 +6,13 @@ body {
     padding: 0;
     background-color: white;
 }
+
+.strip-dropdown-item:hover {
+    background-color: rgba(0, 123, 255, 0.1)!important;
+    font-weight: bold;
+}
+
+.strip-tag:hover {
+    background-color: rgba(255, 0, 0, 0.3)!important;
+    color: red!important;
+}

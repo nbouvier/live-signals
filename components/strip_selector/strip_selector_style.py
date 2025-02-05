@@ -2,28 +2,11 @@
 This module contains styles for the strip selector component.
 """
 
-from styles import (
-	PRIMARY_COLOR,
-	SECONDARY_COLOR,
-	WARNING_COLOR,
-	BACKGROUND_COLOR,
-	BORDER_RADIUS,
-	BORDER_STYLE,
-	SPACING_SMALL,
-	SPACING_MEDIUM,
-	SPACING_LARGE,
-	FONT_SIZE_NORMAL,
-	Z_INDEX_OVERLAY,
-	TRANSITION_NORMAL,
-	SHADOW_MEDIUM
-)
+from styles import *
 
 STRIP_SELECTOR = {
-	'display': 'grid',
-	'gridTemplateColumns': 'repeat(auto-fill, minmax(100px, 1fr))',
-	'gap': SPACING_SMALL,
+	'width': '100%',
 	'maxHeight': 'calc(100vh - 190px)',
-	'overflowY': 'auto',
 	'padding': SPACING_MEDIUM,
 	'border': BORDER_STYLE,
 	'borderRadius': BORDER_RADIUS,
@@ -34,17 +17,15 @@ STRIP_SELECTOR = {
 BUTTON = {
 	'backgroundColor': SECONDARY_COLOR,
 	'color': 'white',
-	'padding': f'{SPACING_MEDIUM} {SPACING_LARGE}',
 	'border': 'none',
 	'borderRadius': BORDER_RADIUS,
-	'margin': SPACING_SMALL,
 	'cursor': 'pointer',
-	'fontSize': FONT_SIZE_NORMAL
+	'fontSize': FONT_SIZE_SMALL
 }
 
 SELECT_ALL_BUTTON = {
 	**BUTTON,
-	'backgroundColor': SECONDARY_COLOR
+	'backgroundColor': 'green'
 }
 
 UNSELECT_ALL_BUTTON = {
@@ -59,8 +40,8 @@ SELECT_BUTTON = {
 
 BUTTON_CONTAINER = {
 	'display': 'flex',
-	'gap': SPACING_MEDIUM,
-	'marginBottom': SPACING_MEDIUM
+	'gap': SPACING_SMALL,
+	'marginBottom': SPACING_SMALL
 }
 
 OVERLAY = {
@@ -106,4 +87,108 @@ STRIP_LABEL = {
 	'cursor': 'pointer',
 	'transition': f'background-color {TRANSITION_NORMAL}',
 	':hover': {'backgroundColor': '#e6e6e6'}
-} 
+}
+
+DROPDOWN_STYLE = {
+	'width': '100%',
+	'backgroundColor': 'white',
+	'borderRadius': BORDER_RADIUS,
+	'fontSize': FONT_SIZE_NORMAL
+}
+
+SELECTED_STRIPS_CONTAINER = {
+	'display': 'flex',
+	'flexWrap': 'wrap',
+	'gap': SPACING_SMALL,
+	'paddingLeft': SPACING_UNIT,
+	'overflowY': 'auto',
+	'height': '110px',
+	'marginBottom': SPACING_MEDIUM
+}
+
+SELECTED_STRIP_TAG = {
+	'display': 'flex',
+	'justifyContent': 'center',
+	'backgroundColor': 'rgba(51, 51, 51, 0.1)',
+	'borderRadius': BORDER_RADIUS,
+	'padding': f'{SPACING_UNIT} {SPACING_SMALL}',
+	'display': 'flex',
+	'alignItems': 'center',
+	'gap': SPACING_SMALL,
+	'fontSize': FONT_SIZE_NORMAL,
+	'color': '#666',
+	'fontWeight': 'bold',
+	'fontSize': FONT_SIZE_NORMAL,
+	'cursor': 'pointer',
+	'width': '30px',
+}
+
+CUSTOM_DROPDOWN_CONTAINER = {
+	'position': 'relative',
+	'width': '100%',
+	'marginBottom': SPACING_MEDIUM
+}
+
+CUSTOM_DROPDOWN_INPUT_CONTAINER = {
+	'width': '100%',
+	'position': 'relative',
+	'cursor': 'pointer',
+	'zIndex': Z_INDEX_OVERLAY
+}
+
+CUSTOM_DROPDOWN_INPUT = {
+	'width': '100%',
+	'padding': f'{SPACING_MEDIUM} {SPACING_LARGE}',
+	'paddingRight': '30px',  # Space for the arrow
+	'border': BORDER_STYLE,
+	'borderRadius': BORDER_RADIUS,
+	'fontSize': FONT_SIZE_NORMAL,
+	'backgroundColor': 'white',
+	'cursor': 'pointer',
+	'outline': 'none',
+	'boxSizing': 'border-box'
+}
+
+
+DROPDOWN_ARROW = {
+	'position': 'absolute',
+	'right': SPACING_MEDIUM,
+	'top': '50%',
+	'transform': 'translateY(-50%)',
+	'pointerEvents': 'none',
+	'color': '#666'
+}
+
+CUSTOM_DROPDOWN_LIST = {
+	'position': 'absolute',
+	'top': 'calc(100% + 4px)',
+	'left': '0',
+	'right': '0',
+	'maxHeight': '300px',
+	'overflowY': 'auto',
+	'backgroundColor': 'white',
+	'border': BORDER_STYLE,
+	'borderRadius': BORDER_RADIUS,
+	'boxShadow': SHADOW_MEDIUM,
+	'display': 'block',
+	'zIndex': Z_INDEX_OVERLAY
+}
+
+CUSTOM_DROPDOWN_ITEM = {
+	'padding': SPACING_MEDIUM,
+	'cursor': 'pointer',
+	'transition': f'background-color {TRANSITION_NORMAL}',
+	'backgroundColor': 'white',
+	'hover': {
+		'backgroundColor': f'{PRIMARY_COLOR}11'
+	}
+}
+
+STRIP_DROPDOWN_BACKGROUND = {
+	'height': '100vh',
+	'width': '100vw',
+	'position': 'fixed',
+	'top': 0,
+	'left': 0,
+	'zIndex': f'calc({Z_INDEX_OVERLAY} - 1)'
+}

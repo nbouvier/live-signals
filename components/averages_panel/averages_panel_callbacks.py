@@ -21,7 +21,7 @@ def register_averages_panel_callbacks(app):
 		 Output('close-popup', 'style'),
 		 Output('strip-responses-graph', 'figure', allow_duplicate=True)],
 		[Input('calc-button', 'n_clicks')],
-		[State('strip-selector', 'value'),
+		[State('strip-selector', 'data'),
 		 State('strip-responses-graph', 'selectedData'),
 		 State('averages-content', 'children')],
 		prevent_initial_call=True
@@ -115,7 +115,7 @@ def register_averages_panel_callbacks(app):
 		[Output('strip-responses-graph', 'figure', allow_duplicate=True),
 		 Output('averages-content', 'children', allow_duplicate=True)],
 		Input({'type': 'delete-calculation', 'index': ALL}, 'n_clicks'),
-		[State('strip-selector', 'value'),
+		[State('strip-selector', 'data'),
 		 State('averages-content', 'children')],
 		prevent_initial_call=True
 	)

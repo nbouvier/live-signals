@@ -7,40 +7,30 @@ from .strip_selector_style import *
 def strip_selector(app):
 	"""Create the strip selector component."""
 	return html.Div([
-		html.H3('Strip Selection', style={'marginBottom': '10px'}),
-
 		html.Div([
-			html.Button(
-				'Select All', 
-				id='select-all-button',
-				style=SELECT_ALL_BUTTON
-			),
-			html.Button(
-				'Unselect All', 
-				id='unselect-all-button',
-				style=UNSELECT_ALL_BUTTON
-			),
-			html.Button(
-				"Odd Strips",
-				id='select-odd-button',
-				style=SELECT_BUTTON
-			),
-			html.Button(
-				"Even Strips",
-				id='select-even-button',
-				style=SELECT_BUTTON
-			)
+			html.Button('All', id='all-strip-button', style=SELECT_ALL_BUTTON),
+			html.Button('None', id='no-strip-button', style=UNSELECT_ALL_BUTTON),
+			html.Button("Even", id='even-strip-button', style=SELECT_BUTTON),
+			html.Button("Odd", id='odd-strip-button', style=SELECT_BUTTON)
 		], style=BUTTON_CONTAINER),
 		
-		dcc.Checklist(
-			id='strip-selector',
-			options=[
-				{'label': f'Strip {i}', 'value': i} 
-				for i in range(18, 153)
-			],
-			value=list(range(18, 153)),
-			inline=True,
-			labelStyle=STRIP_LABEL,
-			style=STRIP_SELECTOR
-		)
-	], id='strip-selection-panel') 
+		html.Div([
+			html.Div([
+				dcc.Input(
+					id='strip-search-input',
+					type='text',
+					placeholder='Search strips...',
+					style=CUSTOM_DROPDOWN_INPUT,
+					autoComplete='off'
+				),
+				html.Div('▼', style=DROPDOWN_ARROW)
+			], id='strip-search-input-container', style=CUSTOM_DROPDOWN_INPUT_CONTAINER),
+			html.Div(id='strip-dropdown-list'),
+			html.Div(id='strip-dropdown-background')
+		], style=CUSTOM_DROPDOWN_CONTAINER),
+
+		html.Div(id='selected-strips-display', style=SELECTED_STRIPS_CONTAINER),
+
+		# Hidden input to store selected values
+		dcc.Store(id='strip-selector', data=list(range(18, 153)))
+	]) 

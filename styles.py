@@ -60,8 +60,10 @@ SIDE_PANEL = {
 	'position': 'fixed',
 	'top': 0,
 	'height': '100vh',
-	'overflowY': 'auto'
+	'overflowY': 'auto',
+	'zIndex': 1
 }
+
 
 LEFT_PANEL = {
 	**SIDE_PANEL,
@@ -266,3 +268,8 @@ MAIN_CONTENT = {
 	'flexDirection': 'column',
 	'gap': '20px'
 } 
+
+# Hidden style
+HIDDEN = {
+	'display': 'none'
+}

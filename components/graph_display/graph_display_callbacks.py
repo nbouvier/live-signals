@@ -21,7 +21,7 @@ def register_graph_display_callbacks(app):
 		[Input('upload-data', 'contents'),
 		 Input('add-file', 'contents'),
 		 Input({'type': 'time-offset', 'index': ALL}, 'value'),
-		 Input('strip-selector', 'value')],
+		 Input('strip-selector', 'data')],
 		[State('upload-data', 'filename'),
 		 State('add-file', 'filename'),
 		 State({'type': 'time-offset', 'index': ALL}, 'id')],
