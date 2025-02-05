@@ -6,6 +6,39 @@ from dataclasses import dataclass, field
 from typing import Optional, List, Tuple
 
 @dataclass
+class FileData:
+    """
+    Data structure to store file data.
+    
+    Attributes:
+        filename: Name of the uploaded file
+        time_values: List of time values
+        raw_strip_resp: 2D array of strip responses
+        time_offset: Time offset in milliseconds
+        id: Auto-generated unique identifier
+    """
+    filename: str
+    time_values: List[float]
+    raw_strip_resp: List[List[float]]
+    time_offset: float = 0
+    
+    # Auto-generated fields
+    id: int = field(init=False)
+    
+    # Class variables
+    _next_id = 0
+    
+    def __post_init__(self):
+        # Assign the next ID and increment it
+        self.id = FileData._next_id
+        FileData._next_id += 1
+    
+    @classmethod
+    def reset_id_counter(cls):
+        """Reset the ID counter back to 0."""
+        cls._next_id = 0
+
+@dataclass
 class CalculationResult:
     """
     Data structure to store calculation results.

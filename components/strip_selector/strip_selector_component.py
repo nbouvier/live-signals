@@ -12,26 +12,24 @@ def create_strip_selector():
             html.Div([
                 html.Button(
                     'Select All', 
-                    id='select-all-button', 
-                    n_clicks=0,
+                    id='select-all-button',
                     style=SELECT_ALL_BUTTON
                 ),
                 html.Button(
                     'Unselect All', 
-                    id='unselect-all-button', 
-                    n_clicks=0,
+                    id='unselect-all-button',
                     style=UNSELECT_ALL_BUTTON
                 ),
-				html.Button(
-					"Odd Strips",
-					id='select-odd-button',
-					style=SELECT_BUTTON
-				),
-				html.Button(
-					"Even Strips",
-					id='select-even-button',
-					style=SELECT_BUTTON
-				)
+                html.Button(
+                    "Odd Strips",
+                    id='select-odd-button',
+                    style=SELECT_BUTTON
+                ),
+                html.Button(
+                    "Even Strips",
+                    id='select-even-button',
+                    style=SELECT_BUTTON
+                )
             ], style=BUTTON_CONTAINER),
             dcc.Checklist(
                 id='strip-selector',

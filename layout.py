@@ -1,46 +1,51 @@
 """
-This module contains the Dash layout components for the application.
+This module contains the layout of the application.
 """
 
 from dash import html, dcc
 import styles
-from components.strip_selector import create_strip_selector
 from components.graph_display import create_graph_display
+from components.strip_selector import create_strip_selector
 from components.averages_panel import create_averages_panel
-from components.popup_message import create_popup_message
 from components.fit_graph import create_fit_graph
 
 def create_layout():
-    """Create the main application layout."""
+    """Create the application layout."""
     return html.Div([
         # URL Location component for page initialization
-        dcc.Location(id='url'),
-        
-        # Click catcher
-        html.Div(id='click-catcher', style=dict(styles.CLICK_CATCHER, **{'display': 'none'})),
-        
-        # Popup message
-        create_popup_message(),
-        
-        # Toggle button
-        html.Button(
-            '☰ Strip Selection', 
-            id='toggle-strip-selection',
-            style=styles.TOGGLE_BUTTON
-        ),
-        
-        # Strip selection
-        create_strip_selector(),
+        dcc.Location(id='url', refresh=False),
         
         # Main content
         html.Div([
-            # Flex container for graph and averages
-            html.Div([
-                create_graph_display(),
-                create_averages_panel()
-            ], style={'display': 'flex', 'gap': '20px', 'width': '100%'}),
+            # Graph display
+            create_graph_display(),
             
-            # Fit graph container
-            html.Div(id='fit-graph-container')
+            # Fit graph
+            html.Div(id='fit-graph-container'),
             
-        ], style={'marginLeft': '60px', 'marginRight': '20px', 'width': 'calc(100% - 80px)'})]) 
+            # Averages panel
+            create_averages_panel()
+        ], style=styles.MAIN_CONTENT),
+        
+        # Strip selection panel
+        create_strip_selector(),
+        
+        # Click catcher for closing panels
+        html.Div(id='click-catcher', style={'display': 'none'}),
+        
+        # Toggle button for strip selection
+        html.Button([
+            html.I(className="fas fa-bars", style={'marginRight': '8px'}),
+            "Strip Selection"
+        ], id='toggle-strip-selection', n_clicks=0, style=styles.TOGGLE_BUTTON),
+        
+        # Popup message
+        html.Div([
+            html.Div(id='popup-message-content'),
+            html.Button(
+                html.I(className="fas fa-times"),
+                id='close-popup',
+                style=styles.CLOSE_BUTTON
+            )
+        ], id='popup-message', style=styles.HIDDEN_POPUP)
+    ]) 

@@ -2,42 +2,39 @@
 This module contains all the callback functions for the Dash application.
 """
 
-import base64
 import numpy as np
-from dash import Input, Output, State, ctx, html, ALL
+from dash import Input, Output, State, ctx, html, ALL, dcc
 import dash
 import styles
-from data_processing import create_figure, read_bin_file
+from data_processing import create_figure, read_bin_file, process_file, create_multi_file_figure
 from components.calculation_result import create_calculation_result
 from components.fit_graph import create_fit_graph
-from models import CalculationResult
+from models import CalculationResult, FileData
 
 def register_callbacks(app):
     """Register all callbacks for the application."""
     
     # Global variables to store data
-    time_values = None
-    raw_strip_resp = None
+    loaded_files = []  # List of FileData objects
     calculation_results = []
     
     @app.callback(
-        [Output('strip-responses-graph', 'figure', allow_duplicate=True),
-         Output('strip-responses-graph', 'style', allow_duplicate=True),
-         Output('loaded-file-info', 'children', allow_duplicate=True),
-         Output('graph-placeholder', 'style', allow_duplicate=True),
-         Output('averages-content', 'children')],
-        Input('url', 'pathname'),
-        prevent_initial_call=True
+        [Output('strip-responses-graph', 'figure'),
+         Output('strip-responses-graph', 'style'),
+         Output('loaded-files-list', 'children'),
+         Output('graph-placeholder', 'style'),
+         Output('averages-content', 'children'),
+         Output('fit-graph-container', 'children'),
+         Output('strip-selection-panel', 'style')],
+        Input('url', 'pathname')
     )
     def initialize_page(pathname):
         """Reset everything when the page loads."""
-        nonlocal time_values, raw_strip_resp
-        
         # Clear all data
-        time_values = None
-        raw_strip_resp = None
+        loaded_files.clear()
         calculation_results.clear()
         CalculationResult.reset_id_counter()
+        FileData.reset_id_counter()
         
         # Reset the display
         return (
@@ -45,77 +42,94 @@ def register_callbacks(app):
             dict(styles.BASE_GRAPH, **{'display': 'none'}),  # Hide graph
             None,  # Clear file info
             dict(styles.BASE_PLACEHOLDER, **{'display': 'block'}),  # Show upload placeholder
-            None  # Clear calculations
+            None,  # Clear calculations
+            None,  # Clear fit graph
+            styles.OVERLAY  # Reset strip selection panel position
         )
-    
-    @app.callback(
-        [Output('strip-responses-graph', 'figure'),
-         Output('strip-responses-graph', 'style'),
-         Output('loaded-file-info', 'children'),
-         Output('graph-placeholder', 'style')],
-        Input('upload-data', 'contents'),
-        State('upload-data', 'filename')
-    )
-    def update_data(contents, filename):
-        """Handle file upload and update the graph."""
-        if contents is None:
-            return dash.no_update, dash.no_update, dash.no_update, dash.no_update
-
-        nonlocal time_values, raw_strip_resp
-        
-        try:
-            # Decode the file contents
-            content_type, content_string = contents.split(',')
-            decoded = base64.b64decode(content_string)
-            
-            # Convert to numpy array
-            dt = np.dtype("uint16")
-            zdata = np.frombuffer(decoded, dt)
-            
-            # Process the data
-            time_values, raw_strip_resp = read_bin_file(zdata)
-            
-            # Create the initial figure
-            figure = create_figure(time_values, raw_strip_resp, list(range(18, 153)), [])
-            
-            # Create file info display
-            file_info = html.Div([
-                html.I(className="fas fa-file-binary", style={'color': styles.MUTED_TEXT_COLOR}),
-                html.Span(filename)
-            ])
-            
-            return (
-                figure,  # Update graph
-                dict(styles.BASE_GRAPH, **{'display': 'block'}),  # Show graph
-                file_info,  # Show file info
-                dict(styles.BASE_PLACEHOLDER, **{'display': 'none'})  # Hide placeholder
-            )
-            
-        except Exception as e:
-            print(f"Error processing file: {e}")
-            return dash.no_update, dash.no_update, dash.no_update, dash.no_update
 
     @app.callback(
         [Output('strip-responses-graph', 'figure', allow_duplicate=True),
-         Output('strip-responses-graph', 'style', allow_duplicate=True)],
-        Input('strip-selector', 'value'),
+         Output('strip-responses-graph', 'style', allow_duplicate=True),
+         Output('loaded-files-list', 'children', allow_duplicate=True),
+         Output('graph-placeholder', 'style', allow_duplicate=True)],
+        [Input('upload-data', 'contents'),
+         Input('add-file', 'contents'),
+         Input({'type': 'time-offset', 'index': ALL}, 'value'),
+         Input('strip-selector', 'value')],
+        [State('upload-data', 'filename'),
+         State('add-file', 'filename'),
+         State({'type': 'time-offset', 'index': ALL}, 'id')],
         prevent_initial_call=True
     )
-    def update_figure(selected_strips):
-        if time_values is None or raw_strip_resp is None:
-            return dash.no_update, dash.no_update
-            
-        # Handle empty strip selection
-        if not selected_strips:
-            return (
-                create_figure(time_values, raw_strip_resp, [], []),  # Empty figure with no strips
-                dict(styles.BASE_GRAPH, **{'display': 'block'})
-            )
+    def update_data(contents, add_contents, time_offsets, selected_strips, filename, add_filename, offset_ids):
+        """Handle file upload and update the graph."""
+        ctx_triggered = ctx.triggered_id
         
-        # Handle strip selection changes
+        if ctx_triggered == 'upload-data' and contents:
+            # Clear existing data for initial upload
+            loaded_files.clear()
+            calculation_results.clear()
+            CalculationResult.reset_id_counter()
+            FileData.reset_id_counter()
+            
+            try:
+                # Process the file
+                file_data = process_file(contents, filename)
+                loaded_files.append(file_data)
+            except Exception as e:
+                print(f"Error processing file: {e}")
+                return dash.no_update, dash.no_update, dash.no_update, dash.no_update
+                
+        elif isinstance(ctx_triggered, dict) and ctx_triggered.get('type') == 'time-offset':
+            # Update time offset for a file
+            file_index = ctx_triggered['index']
+            if file_index < len(loaded_files):
+                try:
+                    loaded_files[file_index].time_offset = float(time_offsets[file_index]) if time_offsets[file_index] else 0
+                except ValueError:
+                    pass
+                    
+        elif ctx_triggered == 'add-file' and add_contents:
+            try:
+                # Process and add new file
+                file_data = process_file(add_contents, add_filename)
+                loaded_files.append(file_data)
+            except Exception as e:
+                print(f"Error processing file: {e}")
+                return dash.no_update, dash.no_update, dash.no_update, dash.no_update
+        
+        if not loaded_files:
+            return dash.no_update, dash.no_update, dash.no_update, dash.no_update
+            
+        # Create file cards with time offset inputs
+        file_cards = []
+        for file_data in loaded_files:
+            file_cards.append(html.Div([
+                html.Div([
+                    html.Span(f"File {file_data.id}", style={'color': styles.MUTED_TEXT_COLOR, 'fontSize': '12px', 'marginBottom': '4px'}),
+                    html.Div([
+                        html.I(className="fas fa-file-binary", style={'color': styles.MUTED_TEXT_COLOR}),
+                        html.Span(file_data.filename)
+                    ])
+                ]),
+                dcc.Input(
+                    id={'type': 'time-offset', 'index': file_data.id},
+                    type='number',
+                    placeholder='Offset (ms)',
+                    value=file_data.time_offset,
+                    step=1,
+                    style=styles.TIME_OFFSET_INPUT
+                )
+            ], style=styles.FILE_CARD))
+        
+        # Create figure with all files
+        figure = create_multi_file_figure(loaded_files, selected_strips or [], calculation_results)
+        
         return (
-            create_figure(time_values, raw_strip_resp, selected_strips, calculation_results),
-            dict(styles.BASE_GRAPH, **{'display': 'block'})
+            figure,
+            dict(styles.BASE_GRAPH, **{'display': 'block'}),
+            file_cards,
+            dict(styles.BASE_PLACEHOLDER, **{'display': 'none'})
         )
 
     @app.callback(
@@ -152,23 +166,37 @@ def register_callbacks(app):
                 
             start_time, end_time = range_bounds
             
-            # Calculate averages
-            start_idx = np.searchsorted(time_values, start_time)
-            end_idx = np.searchsorted(time_values, end_time)
+            # Calculate averages for each file
+            all_strip_averages = []
+            overall_averages = []
             
-            strip_averages = []
-            for strip_num in selected_strips:
-                strip_avg = np.mean(raw_strip_resp[strip_num, start_idx:end_idx])
-                strip_averages.append((strip_num, strip_avg))
+            for file_data in loaded_files:
+                # Adjust time range for this file's offset
+                adjusted_start = start_time - file_data.time_offset
+                adjusted_end = end_time - file_data.time_offset
+                
+                # Find indices in the adjusted time range
+                start_idx = np.searchsorted(file_data.time_values, adjusted_start)
+                end_idx = np.searchsorted(file_data.time_values, adjusted_end)
+                
+                # Calculate strip averages for this file
+                file_strip_averages = []
+                for strip_num in selected_strips:
+                    strip_avg = np.mean(file_data.raw_strip_resp[strip_num, start_idx:end_idx])
+                    file_strip_averages.append((strip_num, strip_avg))
+                
+                all_strip_averages.extend(file_strip_averages)
+                overall_averages.append(np.mean([avg for _, avg in file_strip_averages]))
             
-            overall_avg = np.mean([avg for _, avg in strip_averages])
+            # Calculate the overall average across all files
+            overall_avg = np.mean(overall_averages)
             
-            # Store the calculation result
+            # Store the calculation result with combined averages
             calculation_results.append(CalculationResult(
                 overall_average=overall_avg,
                 start_time=start_time,
                 end_time=end_time,
-                strip_averages=strip_averages
+                strip_averages=all_strip_averages
             ))
             
             # Create new calculation result
@@ -189,7 +217,7 @@ def register_callbacks(app):
                     all_calculations = existing_calculations + [new_calculation]
             
             # Update graph with new calculation result
-            updated_figure = create_figure(time_values, raw_strip_resp, selected_strips, calculation_results)
+            updated_figure = create_multi_file_figure(loaded_files, selected_strips, calculation_results)
             
             return html.Div(all_calculations), {'display': 'none'}, None, {'display': 'none'}, updated_figure
             
@@ -265,39 +293,44 @@ def register_callbacks(app):
         return list(range(18, 153))  # Default case
 
     @app.callback(
-        [Output('strip-selection-panel', 'style'),
-         Output('click-catcher', 'style'),
-         Output('toggle-strip-selection', 'style')],
+        [Output('strip-selection-panel', 'style', allow_duplicate=True),
+         Output('click-catcher', 'style', allow_duplicate=True),
+         Output('toggle-strip-selection', 'style', allow_duplicate=True)],
         [Input('toggle-strip-selection', 'n_clicks'),
          Input('click-catcher', 'n_clicks')],
-        [State('strip-selection-panel', 'style')]
+        [State('strip-selection-panel', 'style')],
+        prevent_initial_call=True
     )
     def toggle_strip_selection(toggle_clicks, catcher_clicks, current_style):
+        """Toggle the strip selection panel visibility."""
         ctx = dash.callback_context
+
+        # Initial state
         if not ctx.triggered:
             return styles.OVERLAY, {'display': 'none'}, styles.TOGGLE_BUTTON
         
         button_id = ctx.triggered[0]['prop_id'].split('.')[0]
         
+        # Handle toggle button click
         if button_id == 'toggle-strip-selection':
-            if current_style == styles.OVERLAY:
-                # Show menu
+            # If panel is hidden (or initial state), show it
+            if not current_style or current_style == styles.OVERLAY:
                 return styles.OVERLAY_VISIBLE, styles.CLICK_CATCHER, dict(styles.TOGGLE_BUTTON, **{'display': 'none'})
-            else:
-                # Hide menu
-                return styles.OVERLAY, {'display': 'none'}, styles.TOGGLE_BUTTON
+            # If panel is visible, hide it
+            return styles.OVERLAY, {'display': 'none'}, styles.TOGGLE_BUTTON
+            
+        # Handle click catcher (clicking outside panel)
         elif button_id == 'click-catcher':
-            # Hide menu
             return styles.OVERLAY, {'display': 'none'}, styles.TOGGLE_BUTTON
         
-        return current_style, {'display': 'none'}, styles.TOGGLE_BUTTON
+        # Default case: no change
+        return dash.no_update, dash.no_update, dash.no_update
 
     @app.callback(
         [Output({'type': 'strip-averages-content', 'index': dash.MATCH}, 'style'),
          Output({'type': 'toggle-strip-averages', 'index': dash.MATCH}, 'children')],
         Input({'type': 'toggle-strip-averages', 'index': dash.MATCH}, 'n_clicks'),
-        State({'type': 'strip-averages-content', 'index': dash.MATCH}, 'style'),
-        prevent_initial_call=True
+        State({'type': 'strip-averages-content', 'index': dash.MATCH}, 'style')
     )
     def toggle_strip_averages(n_clicks, current_style):
         if n_clicks is None:
@@ -382,4 +415,5 @@ def register_callbacks(app):
 
     # Function to get stored calculation results (can be used by other callbacks)
     def get_calculation_results():
-        return calculation_results 
+        return calculation_results
+

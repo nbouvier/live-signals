@@ -62,17 +62,28 @@ UPLOAD_ICON = {
 FILES_CONTAINER = {
     'marginTop': '10px',
     'display': 'flex',
-    'flexWrap': 'wrap',
+    'alignItems': 'center',
     'gap': '10px'
 }
 
-FILE_INFO = {
+FILES_LIST = {
+    'display': 'flex',
+    'flexWrap': 'wrap',
+    'gap': '10px',
+    'flex': '1'
+}
+
+ADD_FILE_BUTTON = {
     'padding': '8px 12px',
-    'backgroundColor': 'white',
+    'backgroundColor': PRIMARY_COLOR,
+    'color': 'white',
+    'border': 'none',
     'borderRadius': BORDER_RADIUS,
-    'border': BORDER_STYLE,
-    'fontSize': '14px',
+    'cursor': 'pointer',
     'display': 'flex',
     'alignItems': 'center',
-    'gap': '8px'
-} 
+    'transition': 'all 0.3s ease',
+    ':hover': {
+        'backgroundColor': '#0056b3'
+    }
+}

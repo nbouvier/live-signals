@@ -3,18 +3,18 @@ This module contains global style variables used across the application.
 """
 
 # Color palette
-PRIMARY_COLOR = '#2196F3'
-SECONDARY_COLOR = '#4CAF50'
+PRIMARY_COLOR = '#007bff'
+SECONDARY_COLOR = '#6c757d'
 DANGER_COLOR = '#ff3333'
-WARNING_COLOR = '#f44336'
-BACKGROUND_COLOR = '#f9f9f9'
+WARNING_COLOR = '#dc3545'
+BACKGROUND_COLOR = '#f8f9fa'
 TEXT_COLOR = '#333'
-MUTED_TEXT_COLOR = '#666'
+MUTED_TEXT_COLOR = '#6c757d'
 
 # Border styles
 BORDER_RADIUS = '4px'
 BORDER_COLOR = '#ddd'
-BORDER_STYLE = f'1px solid {BORDER_COLOR}'
+BORDER_STYLE = '1px solid #dee2e6'
 
 # Spacing
 SPACING_UNIT = '4px'
@@ -25,7 +25,7 @@ SPACING_LARGE = '24px'
 # Font sizes
 FONT_SIZE_SMALL = '12px'
 FONT_SIZE_NORMAL = '14px'
-FONT_SIZE_LARGE = '18px'
+FONT_SIZE_LARGE = '16px'
 
 # Z-index layers
 Z_INDEX_OVERLAY = 1000
@@ -39,7 +39,7 @@ TRANSITION_SLOW = '0.5s'
 
 # Common styles
 SHADOW_LIGHT = '0 2px 4px rgba(0,0,0,0.1)'
-SHADOW_MEDIUM = '0 2px 10px rgba(0,0,0,0.1)'
+SHADOW_MEDIUM = '0 2px 4px rgba(0, 0, 0, 0.1)'
 SHADOW_HEAVY = '0 4px 16px rgba(0,0,0,0.2)'
 
 # Strip selector styles
@@ -82,40 +82,34 @@ OVERLAY = {
     'height': '100vh',
     'width': '400px',
     'backgroundColor': 'white',
-    'boxShadow': '2px 0 10px rgba(0,0,0,0.1)',
-    'transition': 'left 0.3s ease-in-out',
-    'zIndex': '1000',
-    'padding': '20px 20px 60px 20px',
+    'boxShadow': SHADOW_MEDIUM,
+    'transition': f'left {TRANSITION_NORMAL} ease-in-out',
+    'zIndex': Z_INDEX_OVERLAY,
+    'padding': f'{SPACING_MEDIUM} {SPACING_MEDIUM} 60px {SPACING_MEDIUM}',
     'overflow': 'hidden'
 }
 
 OVERLAY_VISIBLE = {
-    'position': 'fixed',
-    'top': '0',
-    'left': '0',
-    'height': '100vh',
-    'width': '400px',
-    'backgroundColor': 'white',
-    'boxShadow': '2px 0 10px rgba(0,0,0,0.1)',
-    'transition': 'left 0.3s ease-in-out',
-    'zIndex': '1000',
-    'padding': '20px 20px 60px 20px',
-    'overflow': 'hidden'
+    **OVERLAY,
+    'left': '0'
 }
 
+# Toggle button
 TOGGLE_BUTTON = {
     'position': 'fixed',
-    'top': '20px',
-    'left': '20px',
-    'zIndex': '1001',
-    'backgroundColor': '#2196F3',
+    'top': SPACING_MEDIUM,
+    'left': SPACING_MEDIUM,
+    'zIndex': Z_INDEX_OVERLAY - 2,
+    'backgroundColor': PRIMARY_COLOR,
     'color': 'white',
-    'padding': '10px 20px',
+    'padding': f'{SPACING_MEDIUM} {SPACING_LARGE}',
     'border': 'none',
-    'borderRadius': '4px',
+    'borderRadius': BORDER_RADIUS,
     'cursor': 'pointer',
-    'fontSize': '14px',
-    'boxShadow': '0 2px 4px rgba(0,0,0,0.2)'
+    'fontSize': FONT_SIZE_NORMAL,
+    'boxShadow': SHADOW_MEDIUM,
+    'display': 'flex',
+    'alignItems': 'center'
 }
 
 # Base graph styles
@@ -139,47 +133,50 @@ BASE_PLACEHOLDER = {
 
 # Popup styles
 BASE_POPUP = {
-    'display': 'block',
     'position': 'fixed',
-    'bottom': '20px',
-    'right': '20px',
+    'top': '20px',
+    'left': '50%',
+    'transform': 'translateX(-50%)',
     'backgroundColor': 'white',
-    'padding': '20px',
-    'borderRadius': '5px',
-    'boxShadow': '0 2px 10px rgba(0,0,0,0.1)',
-    'zIndex': 1000,
-    'textAlign': 'center',
-    'transition': 'transform 0.3s ease-out',
-    'transform': 'translateY(0)',
-    'border': '2px solid #ff3333'
+    'padding': SPACING_MEDIUM,
+    'borderRadius': BORDER_RADIUS,
+    'boxShadow': SHADOW_MEDIUM,
+    'zIndex': Z_INDEX_OVERLAY + 1,
+    'display': 'flex',
+    'alignItems': 'center',
+    'gap': SPACING_MEDIUM
 }
 
 HIDDEN_POPUP = {
     **BASE_POPUP,
-    'transform': 'translateY(100%)'
+    'display': 'none'
 }
 
 # Click catcher style
 CLICK_CATCHER = {
-    'display': 'block',
     'position': 'fixed',
-    'top': 0,
-    'left': 0,
-    'width': '100%',
-    'height': '100%',
-    'backgroundColor': 'rgba(0,0,0,0.3)',
-    'zIndex': 999
+    'top': '0',
+    'left': '0',
+    'width': '100vw',
+    'height': '100vh',
+    'backgroundColor': 'rgba(0, 0, 0, 0.5)',
+    'zIndex': Z_INDEX_OVERLAY - 1
 }
 
 # Close button style
 CLOSE_BUTTON = {
-    'backgroundColor': '#ff3333',
-    'color': 'white',
+    'backgroundColor': 'transparent',
     'border': 'none',
-    'padding': '8px 16px',
-    'borderRadius': '4px',
+    'color': MUTED_TEXT_COLOR,
     'cursor': 'pointer',
-    'display': 'block'
+    'padding': '4px',
+    'display': 'flex',
+    'alignItems': 'center',
+    'justifyContent': 'center',
+    'transition': f'color {TRANSITION_NORMAL}',
+    ':hover': {
+        'color': WARNING_COLOR
+    }
 }
 
 # Error message style
@@ -195,4 +192,39 @@ SELECTION_INDICATOR = {
     'borderRadius': '50%',
     'display': 'inline-block',
     'marginRight': '10px'
+} 
+
+
+FILE_CARD = {
+    'padding': '8px 12px',
+    'backgroundColor': 'white',
+    'borderRadius': BORDER_RADIUS,
+    'border': BORDER_STYLE,
+    'fontSize': '14px',
+    'display': 'flex',
+    'alignItems': 'center',
+    'gap': '8px',
+    'position': 'relative',
+    'paddingRight': '100px'  # Space for time offset input
+}
+
+TIME_OFFSET_INPUT = {
+    'width': '80px',
+    'padding': '4px 8px',
+    'border': BORDER_STYLE,
+    'borderRadius': BORDER_RADIUS,
+    'position': 'absolute',
+    'right': '8px',
+    'top': '50%',
+    'transform': 'translateY(-50%)'
+} 
+
+# Layout styles
+MAIN_CONTENT = {
+    'marginLeft': '60px',  # Space for toggle button
+    'marginRight': '20px',
+    'width': 'calc(100% - 80px)',  # Account for margins
+    'display': 'flex',
+    'flexDirection': 'column',
+    'gap': '20px'
 } 

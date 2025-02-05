@@ -32,8 +32,18 @@ def create_graph_display():
             ], id='graph-placeholder', style=BASE_PLACEHOLDER)
         ], style=CONTAINER),
         
-        # Loaded files section
+        # Files section
         html.Div([
-            html.Div(id='loaded-file-info', style=FILE_INFO)
+            # Loaded files list
+            html.Div(id='loaded-files-list', style=FILES_LIST),
+            # Add file button
+            dcc.Upload(
+                id='add-file',
+                children=html.Button([
+                    html.I(className="fas fa-plus", style={'marginRight': '8px'}),
+                    "Add File"
+                ], style=ADD_FILE_BUTTON),
+                style={'display': 'inline-block'}
+            )
         ], style=FILES_CONTAINER)
     ]) 
