@@ -6,7 +6,7 @@ import numpy as np
 from dash import Input, Output, State, ctx, html, ALL, dcc
 import dash
 import styles
-from data_processing import create_figure, read_bin_file, process_file, create_multi_file_figure
+from components.graph_display import create_multi_file_figure
 from components.calculation_result import create_calculation_result
 from models import CalculationResult, FileData
 from state import AppState
@@ -99,7 +99,7 @@ def register_callbacks(app):
 					all_calculations = existing_calculations + [new_calculation]
 			
 			# Update graph with new calculation result
-			updated_figure = create_multi_file_figure(AppState.loaded_files, selected_strips, AppState.calculation_results)
+			updated_figure = create_multi_file_figure(selected_strips)
 			
 			return html.Div(all_calculations), {'display': 'none'}, None, {'display': 'none'}, updated_figure
 			
@@ -153,6 +153,6 @@ def register_callbacks(app):
 			new_calc = create_calculation_result(app, result)
 			updated_calculations.append(new_calc)
 		
-		# Update the graph and calculation panel
-		updated_figure = create_figure(AppState.loaded_files, selected_strips, AppState.calculation_results)
+		# Update graph with new calculation result
+		updated_figure = create_multi_file_figure(selected_strips)
 		return updated_figure, html.Div(updated_calculations) if updated_calculations else None

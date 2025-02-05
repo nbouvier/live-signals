@@ -4,7 +4,6 @@ Main application file that initializes and runs the Dash application.
 
 import numpy as np
 from dash import Dash
-from data_processing import read_bin_file
 from layout import create_layout
 from callbacks import register_callbacks
 

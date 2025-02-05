@@ -6,7 +6,6 @@ import numpy as np
 from dash import Input, Output, State, ctx, html, ALL, dcc
 import dash
 import styles
-from data_processing import create_figure, read_bin_file, process_file, create_multi_file_figure
 from components.fit_graph import create_fit_graph
 from models import CalculationResult, FileData
 from state import AppState

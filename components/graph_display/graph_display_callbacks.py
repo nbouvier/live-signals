@@ -6,7 +6,7 @@ import numpy as np
 from dash import Input, Output, State, ctx, html, ALL, dcc
 import dash
 import styles
-from data_processing import create_figure, read_bin_file, process_file, create_multi_file_figure
+from .graph_display_logic import process_file, create_multi_file_figure
 from models import CalculationResult, FileData
 from state import AppState
 
@@ -84,7 +84,7 @@ def register_callbacks(app):
 			], style=styles.FILE_CARD))
 		
 		# Create figure with all files
-		figure = create_multi_file_figure(AppState.loaded_files, selected_strips or [], AppState.calculation_results)
+		figure = create_multi_file_figure(selected_strips or [])
 		
 		return (
 			figure,
