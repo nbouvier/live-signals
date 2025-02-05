@@ -5,14 +5,14 @@ This module contains all the callback functions for the Dash application.
 import numpy as np
 from dash import Input, Output, State, ctx, html, ALL, dcc
 import dash
-import styles
 from .fit_graph_logic import create_fit_graph, calc_mu, exponential_model
+from .fit_graph_style import *
 from models import CalculationResult, FileData
 from state import AppState
 
-def register_callbacks(app):
+def register_fit_graph_callbacks(app):
 	"""Register fit graph callbacks."""
-
+	
 	@app.callback(
 		[Output('fit-graph', 'figure', allow_duplicate=True),
 		 Output('fit-graph-placeholder', 'children')],
@@ -22,8 +22,11 @@ def register_callbacks(app):
 	)
 	def update_fit_graph(thickness_values, delete_clicks):
 		"""Update fit graph when thickness values change or calculations are deleted."""
+
+		state = AppState.get_instance()
+		
 		# Only show calculations that have thickness values
-		filtered_results = [calc for calc in AppState.calculation_results if calc.thickness is not None]
+		filtered_results = [calc for calc in state.calculation_results if calc.thickness is not None]
 
 		# Extract valid thickness-average pairs
 		valid_pairs = [(r.thickness, r.overall_average) 

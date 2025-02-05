@@ -45,6 +45,8 @@ def process_file(contents, filename):
 
 def create_multi_file_figure(selected_strips):
 	"""Create a figure with multiple files."""
+	state = AppState.get_instance()
+
 	fig = go.Figure()
 	
 	# Add traces for each file, sorted by strip number
@@ -53,7 +55,7 @@ def create_multi_file_figure(selected_strips):
 	sorted_strips = sorted(selected_strips)
 	
 	for strip_num in sorted_strips:
-		for file_data in AppState.loaded_files:
+		for file_data in state.loaded_files:
 			# Add time offset to each time value
 			adjusted_time = [t + file_data.time_offset for t in file_data.time_values]
 			traces.append({
@@ -68,14 +70,14 @@ def create_multi_file_figure(selected_strips):
 		fig.add_scatter(**trace)
 	
 	# Add rectangles for calculations (if needed)
-	if AppState.calculation_results:
-		for result in AppState.calculation_results:
+	if state.calculation_results:
+		for result in state.calculation_results:
 			if result.start_time is not None and result.end_time is not None:
 				# Get y-range for the rectangle
-				y_min = min(min(f.raw_strip_resp[sorted_strips, :].min() for f in AppState.loaded_files),
-						  min(f.raw_strip_resp[sorted_strips, :].mean() for f in AppState.loaded_files))
-				y_max = max(max(f.raw_strip_resp[sorted_strips, :].max() for f in AppState.loaded_files),
-						  max(f.raw_strip_resp[sorted_strips, :].mean() for f in AppState.loaded_files))
+				y_min = min(min(f.raw_strip_resp[sorted_strips, :].min() for f in state.loaded_files),
+						  min(f.raw_strip_resp[sorted_strips, :].mean() for f in state.loaded_files))
+				y_max = max(max(f.raw_strip_resp[sorted_strips, :].max() for f in state.loaded_files),
+						  max(f.raw_strip_resp[sorted_strips, :].mean() for f in state.loaded_files))
 				
 				fig.add_shape(
 					type="rect",

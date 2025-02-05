@@ -10,9 +10,9 @@ from .graph_display_logic import process_file, create_multi_file_figure
 from models import CalculationResult, FileData
 from state import AppState
 
-def register_callbacks(app):
+def register_graph_display_callbacks(app):
 	"""Register graph display callbacks."""
-
+	
 	@app.callback(
 		[Output('strip-responses-graph', 'figure', allow_duplicate=True),
 		 Output('strip-responses-graph', 'style', allow_duplicate=True),
@@ -29,42 +29,42 @@ def register_callbacks(app):
 	)
 	def update_data(contents, add_contents, time_offsets, selected_strips, filename, add_filename, offset_ids):
 		"""Handle file upload and update the graph."""
-		ctx_triggered = ctx.triggered_id
 		
-		if ctx_triggered == 'upload-data' and contents:			
+		state = AppState.get_instance()
+
+		if ctx.triggered_id == 'upload-data' and contents:			
 			try:
 				# Process the file
 				file_data = process_file(contents, filename)
-				AppState.loaded_files.append(file_data)
+				state.loaded_files.append(file_data)
 			except Exception as e:
 				print(f"Error processing file: {e}")
 				return dash.no_update, dash.no_update, dash.no_update, dash.no_update
 				
-
-		elif isinstance(ctx_triggered, dict) and ctx_triggered.get('type') == 'time-offset':
+		elif isinstance(ctx.triggered_id, dict) and ctx.triggered_id.get('type') == 'time-offset':
 			# Update time offset for a file
-			file_index = ctx_triggered['index']
-			if file_index < len(AppState.loaded_files):
+			file_index = ctx.triggered_id['index']
+			if file_index < len(state.loaded_files):
 				try:
-					loaded_files[file_index].time_offset = float(time_offsets[file_index]) if time_offsets[file_index] else 0
+					state.loaded_files[file_index].time_offset = float(time_offsets[file_index]) if time_offsets[file_index] else 0
 				except ValueError:
 					pass
 					
-		elif ctx_triggered == 'add-file' and add_contents:
+		elif ctx.triggered_id == 'add-file' and add_contents:
 			try:
 				# Process and add new file
 				file_data = process_file(add_contents, add_filename)
-				AppState.loaded_files.append(file_data)
+				state.loaded_files.append(file_data)
 			except Exception as e:
 				print(f"Error processing file: {e}")
 				return dash.no_update, dash.no_update, dash.no_update, dash.no_update
-		
-		if not AppState.loaded_files:
+
+		if not state.loaded_files:
 			return dash.no_update, dash.no_update, dash.no_update, dash.no_update
-			
+
 		# Create file cards with time offset inputs
 		file_cards = []
-		for file_data in AppState.loaded_files:
+		for file_data in state.loaded_files:
 			file_cards.append(html.Div([
 				html.Div([
 					html.Span(f"File {file_data.id}", style={'color': styles.MUTED_TEXT_COLOR, 'fontSize': '12px', 'marginBottom': '4px'}),
@@ -82,7 +82,7 @@ def register_callbacks(app):
 					style=styles.TIME_OFFSET_INPUT
 				)
 			], style=styles.FILE_CARD))
-		
+
 		# Create figure with all files
 		figure = create_multi_file_figure(selected_strips or [])
 		

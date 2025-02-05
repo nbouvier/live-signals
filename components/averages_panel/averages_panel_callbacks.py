@@ -11,9 +11,9 @@ from components.calculation_result import calculation_result
 from models import CalculationResult, FileData
 from state import AppState
 
-def register_callbacks(app):
+def register_averages_panel_callbacks(app):
 	"""Register averages panel callbacks."""
-
+	
 	@app.callback(
 		[Output('averages-content', 'children', allow_duplicate=True),
 		 Output('popup-message', 'style'),
@@ -27,9 +27,6 @@ def register_callbacks(app):
 		prevent_initial_call=True
 	)
 	def update_averages(n_clicks, selected_strips, selected_data, existing_content):
-		if not n_clicks:  # Skip initial callback
-			return None, {'display': 'none'}, None, {'display': 'none'}, dash.no_update
-
 		try:
 			# Get time range
 			if selected_data and 'range' in selected_data:
@@ -45,14 +42,15 @@ def register_callbacks(app):
 					styles.CLOSE_BUTTON,
 					dash.no_update
 				)
-				
+			
 			start_time, end_time = range_bounds
+			state = AppState.get_instance()
 			
 			# Calculate averages for each file
 			all_strip_averages = []
 			overall_averages = []
 			
-			for file_data in AppState.loaded_files:
+			for file_data in state.loaded_files:
 				# Adjust time range for this file's offset
 				adjusted_start = start_time - file_data.time_offset
 				adjusted_end = end_time - file_data.time_offset
@@ -74,7 +72,7 @@ def register_callbacks(app):
 			overall_avg = np.mean(overall_averages)
 			
 			# Store the calculation result with combined averages
-			AppState.calculation_results.append(CalculationResult(
+			state.calculation_results.append(CalculationResult(
 				overall_average=overall_avg,
 				start_time=start_time,
 				end_time=end_time,
@@ -82,7 +80,7 @@ def register_callbacks(app):
 			))
 			
 			# Create new calculation result
-			new_calculation = calculation_result(app, AppState.calculation_results[-1])
+			new_calculation = calculation_result(app, state.calculation_results[-1])
 			
 			# Create new list of calculations
 			if existing_content is None:
@@ -123,20 +121,18 @@ def register_callbacks(app):
 	)
 	def delete_calculation(delete_clicks, selected_strips, existing_content):
 		"""Delete a calculation when the trash button is clicked."""
+
+		state = AppState.get_instance()
+		
 		if not any(click for click in delete_clicks if click):
 			return dash.no_update, dash.no_update
-		
-		# Find which calculation was deleted
-		ctx_triggered = ctx.triggered_id
-		if ctx_triggered is None:
-			return dash.no_update, dash.no_update
 			
-		deleted_id = ctx_triggered['index']
+		deleted_id = ctx.triggered_id['index']
 		
 		# Find and remove the calculation with matching ID
-		for i, calc in enumerate(AppState.calculation_results):
+		for i, calc in enumerate(state.calculation_results):
 			if calc.id == deleted_id:
-				AppState.calculation_results.pop(i)
+				state.calculation_results.pop(i)
 				break
 
 		# Update the calculation display
@@ -149,9 +145,8 @@ def register_callbacks(app):
 		
 		# Recreate all calculation displays
 		updated_calculations = []
-		for result in AppState.calculation_results:
-			new_calc = calculation_result(app, result)
-			updated_calculations.append(new_calc)
+		for result in state.calculation_results:
+			updated_calculations.append(calculation_result(app, result))
 		
 		# Update graph with new calculation result
 		updated_figure = create_multi_file_figure(selected_strips)

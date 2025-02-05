@@ -2,14 +2,10 @@
 This module contains the strip selector component.
 """
 from dash import html, dcc
-from .strip_selector_callbacks import register_callbacks
 from .strip_selector_style import *
 
 def strip_selector(app):
 	"""Create the strip selector component."""
-
-	register_callbacks(app)
-
 	return html.Div([
 		html.H3('Strip Selection', style={'marginBottom': '10px'}),
 

@@ -7,22 +7,21 @@ import dash
 import styles
 from models import CalculationResult, FileData
 
-def register_callbacks(app):
+def register_strip_selector_callbacks(app):
 	"""Register strip selector callbacks."""
-
+	
 	@app.callback(
 		Output('strip-selector', 'value'),
 		[Input('select-all-button', 'n_clicks'),
 		 Input('unselect-all-button', 'n_clicks'),
 		 Input('select-odd-button', 'n_clicks'),
 		 Input('select-even-button', 'n_clicks')],
-		[State('strip-selector', 'options')]
+		[State('strip-selector', 'options')],
+		prevent_initial_call=True
 	)
 	def update_strip_selection(select_clicks, unselect_clicks, odd_clicks, even_clicks, options):
-		ctx = dash.callback_context
-		if not ctx.triggered:
-			return list(range(18, 153))  # Default to all selected
-		
+		"""Update the strip selection when the buttons are clicked."""
+
 		button_id = ctx.triggered[0]['prop_id'].split('.')[0]
 		all_strips = [opt['value'] for opt in options]
 		

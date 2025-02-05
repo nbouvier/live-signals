@@ -9,9 +9,9 @@ import styles
 from models import CalculationResult, FileData
 from state import AppState
 
-def register_callbacks(app):
+def register_calculation_result_callbacks(app):
 	"""Register calculation result callbacks."""
-
+	
 	@app.callback(
 		Output({'type': 'thickness-input', 'index': ALL}, 'value'),
 		Input({'type': 'thickness-input', 'index': ALL}, 'value'),
@@ -19,6 +19,7 @@ def register_callbacks(app):
 	)
 	def update_thickness(values, ids):
 		"""Update thickness values when they change."""
+
 		if not values or not ids:
 			return dash.no_update
 
@@ -42,6 +43,8 @@ def register_callbacks(app):
 		State({'type': 'strip-averages-content', 'index': dash.MATCH}, 'style')
 	)
 	def toggle_strip_averages(n_clicks, current_style):
+		"""Toggle strip averages content when the button is clicked."""
+
 		if n_clicks is None:
 			return dash.no_update, dash.no_update
 		

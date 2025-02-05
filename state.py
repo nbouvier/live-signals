@@ -1,4 +1,5 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import List
 from models import FileData, CalculationResult
 
 @dataclass
@@ -10,15 +11,29 @@ class AppState:
 		loaded_files: List of FileData objects
 		calculation_results: List of CalculationResult objects
 	"""    
-	# Class variables
-	loaded_files = []  # 
-	calculation_results = []
+	_instance = None
+	
+	loaded_files: List[FileData] = field(default_factory=list)
+	calculation_results: List[CalculationResult] = field(default_factory=list)
+	
+	def __new__(cls):
+		if cls._instance is None:
+			cls._instance = super().__new__(cls)
+			cls._instance.loaded_files = []
+			cls._instance.calculation_results = []
+		return cls._instance
 	
 	@classmethod
-	def reset(cls):
+	def get_instance(cls):
+		"""Get the singleton instance of AppState."""
+		if cls._instance is None:
+			cls._instance = cls()
+		return cls._instance
+	
+	def reset(self):
 		"""Reset the application state."""
-		cls.loaded_files.clear()
+		self.loaded_files.clear()
 		FileData.reset_id_counter()
 		
-		cls.calculation_results.clear()
+		self.calculation_results.clear()
 		CalculationResult.reset_id_counter()
