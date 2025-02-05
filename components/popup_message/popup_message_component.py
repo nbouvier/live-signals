@@ -5,7 +5,7 @@ from dash import html
 from .popup_message_callbacks import register_callbacks
 from .popup_message_style import *
 
-def create_popup_message():
+def popup_message():
 	"""Create the popup message component."""
 
 	register_callbacks(app)

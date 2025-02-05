@@ -1,7 +1,9 @@
+from dash import html, dcc
 import numpy as np
 import plotly.graph_objects as go
 from scipy.optimize import curve_fit
 from state import AppState
+from .fit_graph_style import *
 
 def exponential_model(x, a, b):
 	"""Exponential decay model function."""
@@ -18,35 +20,7 @@ def calc_mu(thicknesses, averages):
 	except:
 		return None, None
 
-def create_fit_graph():
-	# Extract valid thickness-average pairs
-	valid_pairs = [(r.thickness, r.overall_average) 
-				  for r in AppState.calculation_results 
-				  if r.thickness is not None]
-
-	if len(valid_pairs) < 2:
-		return html.Div(
-			"No data points available for fitting", 
-			style=NO_DATA_MESSAGE
-		)
-
-	# Extract thicknesses and averages
-	thicknesses, averages = zip(*valid_pairs)
-	thicknesses = np.array(thicknesses)
-	averages = np.array(averages)
-	
-	# Calculate fit
-	a, b = calc_mu(thicknesses, averages)
-	if a is None or b is None:
-		return html.Div(
-			"Unable to calculate exponential fit", 
-			style=NO_DATA_MESSAGE
-		)
-	
-	# Generate points for the fit line
-	x_fit = np.linspace(0, max(thicknesses), 100)
-	y_fit = exponential_model(x_fit, a, b)
-	
+def create_fit_graph(thicknesses, averages, x_fit, y_fit):
 	# Create the figure
 	fig = go.Figure()
 	
@@ -84,3 +58,5 @@ def create_fit_graph():
 	# Update axes to show 2 decimal places
 	fig.update_xaxes(tickformat=".2f")
 	fig.update_yaxes(tickformat=".3f")
+
+	return fig;

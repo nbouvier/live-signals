@@ -6,7 +6,7 @@ from .calculation_result_callbacks import register_callbacks
 from .calculation_result_style import *
 
 
-def create_calculation_result(app, calculation_result):
+def calculation_result(app, calculation_result):
 	"""
 	Create a calculation result component.
 	

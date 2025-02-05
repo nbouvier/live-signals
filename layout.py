@@ -3,10 +3,11 @@ This module contains the layout of the application.
 """
 
 from dash import html, dcc
-import styles
-from components.graph_display import create_graph_display
-from components.strip_selector import create_strip_selector
-from components.averages_panel import create_averages_panel
+from styles import *
+from components.fit_graph import fit_graph
+from components.graph_display import graph_display
+from components.strip_selector import strip_selector
+from components.averages_panel import averages_panel
 from callbacks import register_callbacks
 
 def create_layout(app):
@@ -17,30 +18,22 @@ def create_layout(app):
 	return html.Div([
 		# URL Location component for page initialization
 		dcc.Location(id='url', refresh=False),
-		
-		# Main content
+
+		# Left panel - Strip selector
 		html.Div([
-			# Graph display
-			create_graph_display(app),
+			strip_selector(app)
+		], style=LEFT_PANEL),
+		
+		# Center panel - Graph display
+		html.Div([
+			graph_display(app),
+			fit_graph(app)
+		], style=CENTER_PANEL),
 			
-			# Fit graph
-			html.Div(id='fit-graph-container'),
-			
-			# Averages panel
-			create_averages_panel(app)
-		], style=styles.MAIN_CONTENT),
-		
-		# Strip selection panel
-		create_strip_selector(app),
-		
-		# Click catcher for closing panels
-		html.Div(id='click-catcher', style={'display': 'none'}),
-		
-		# Toggle button for strip selection
-		html.Button([
-			html.I(className="fas fa-bars", style={'marginRight': '8px'}),
-			"Strip Selection"
-		], id='toggle-strip-selection', n_clicks=0, style=styles.TOGGLE_BUTTON),
+		# Right panel - Averages panel
+		html.Div([
+			averages_panel(app)
+		], style=RIGHT_PANEL),
 		
 		# Popup message
 		html.Div([
@@ -48,7 +41,7 @@ def create_layout(app):
 			html.Button(
 				html.I(className="fas fa-times"),
 				id='close-popup',
-				style=styles.CLOSE_BUTTON
+				style=CLOSE_BUTTON
 			)
-		], id='popup-message', style=styles.HIDDEN_POPUP)
-	]) 
+		], id='popup-message', style=HIDDEN_POPUP)
+	], style=MAIN_CONTAINER)

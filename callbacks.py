@@ -18,8 +18,7 @@ def register_callbacks(app):
 		 Output('loaded-files-list', 'children'),
 		 Output('graph-placeholder', 'style'),
 		 Output('averages-content', 'children'),
-		 Output('fit-graph-container', 'children'),
-		 Output('strip-selection-panel', 'style')],
+		 Output('fit-graph', 'figure')],
 		Input('url', 'pathname')
 	)
 	def initialize_page(pathname):
@@ -34,5 +33,4 @@ def register_callbacks(app):
 			dict(styles.BASE_PLACEHOLDER, **{'display': 'block'}),  # Show upload placeholder
 			None,  # Clear calculations
 			None,  # Clear fit graph
-			styles.OVERLAY  # Reset strip selection panel position
 		)

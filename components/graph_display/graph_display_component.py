@@ -5,7 +5,7 @@ from dash import html, dcc
 from .graph_display_callbacks import register_callbacks
 from .graph_display_style import *
 
-def create_graph_display(app):
+def graph_display(app):
 	"""Create the graph display component."""
 
 	register_callbacks(app)

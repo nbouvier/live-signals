@@ -42,18 +42,56 @@ SHADOW_LIGHT = '0 2px 4px rgba(0,0,0,0.1)'
 SHADOW_MEDIUM = '0 2px 4px rgba(0, 0, 0, 0.1)'
 SHADOW_HEAVY = '0 4px 16px rgba(0,0,0,0.2)'
 
+# Layout styles
+MAIN_CONTAINER = {
+	'height': '100vh',
+	'width': '100vw',
+	'margin': 0,
+	'padding': 0,
+	'background-color': 'white'
+}
+
+SIDE_PANEL = {
+	'width': '300px',
+	'minWidth': '300px',
+	'backgroundColor': BACKGROUND_COLOR,
+	'borderRadius': BORDER_RADIUS,
+	'padding': SPACING_MEDIUM,
+	'position': 'fixed',
+	'top': 0,
+	'height': '100vh',
+	'overflowY': 'auto'
+}
+
+LEFT_PANEL = {
+	**SIDE_PANEL,
+	'left': 0
+}
+
+RIGHT_PANEL = {
+	**SIDE_PANEL,
+	'right': 0
+}
+
+CENTER_PANEL = {
+	'flex': '1',
+	'display': 'flex',
+	'flexDirection': 'column',
+	'gap': SPACING_MEDIUM,
+	'minWidth': '0',  # Prevents flex items from overflowing
+	'marginLeft': '300px',  # Width of left panel
+	'marginRight': '300px',  # Width of right panel
+	'padding': SPACING_MEDIUM
+}
+
 # Strip selector styles
 STRIP_SELECTOR = {
 	'display': 'grid',
-	'gridTemplateColumns': 'repeat(auto-fill, minmax(100px, 1fr))',
+	'gridTemplateColumns': 'repeat(auto-fill, minmax(80px, 1fr))',
 	'gap': '5px',
-	'maxHeight': 'calc(100vh - 190px)',
 	'overflowY': 'auto',
-	'padding': '10px',
-	'border': '1px solid #ddd',
-	'borderRadius': '5px',
-	'backgroundColor': '#f9f9f9',
-	'margin': '10px 0'
+	'padding': '10px 0',
+	'backgroundColor': BACKGROUND_COLOR
 }
 
 # Button styles

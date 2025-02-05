@@ -1,19 +1,21 @@
 """
 This module contains the fit graph component.
 """
+
 from dash import html, dcc
 from .fit_graph_callbacks import register_callbacks
 from .fit_graph_logic import create_fit_graph
 from .fit_graph_style import *
 
-def create_fit_graph(app, calculation_results):
+def fit_graph(app):
 	"""Create the exponential fit graph component."""
 
-	register_callbacks(app)
+	#register_callbacks(app)
 	
 	return html.Div([
+		html.Div(id='fit-graph-placeholder'),
 		dcc.Graph(
-			figure=create_fit_graph(),
+			id="fit-graph",
 			style=GRAPH
 		)
-	], style=CONTAINER) 
+	], id='fit-graph-container', style=CONTAINER) 

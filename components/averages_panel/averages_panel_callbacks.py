@@ -7,7 +7,7 @@ from dash import Input, Output, State, ctx, html, ALL, dcc
 import dash
 import styles
 from components.graph_display import create_multi_file_figure
-from components.calculation_result import create_calculation_result
+from components.calculation_result import calculation_result
 from models import CalculationResult, FileData
 from state import AppState
 
@@ -82,7 +82,7 @@ def register_callbacks(app):
 			))
 			
 			# Create new calculation result
-			new_calculation = create_calculation_result(app, AppState.calculation_results[-1])
+			new_calculation = calculation_result(app, AppState.calculation_results[-1])
 			
 			# Create new list of calculations
 			if existing_content is None:
@@ -150,7 +150,7 @@ def register_callbacks(app):
 		# Recreate all calculation displays
 		updated_calculations = []
 		for result in AppState.calculation_results:
-			new_calc = create_calculation_result(app, result)
+			new_calc = calculation_result(app, result)
 			updated_calculations.append(new_calc)
 		
 		# Update graph with new calculation result

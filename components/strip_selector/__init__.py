@@ -2,4 +2,4 @@
 This module exports the strip selector component.
 """
 
-from .strip_selector_component import create_strip_selector 
+from .strip_selector_component import strip_selector 

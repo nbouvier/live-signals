@@ -2,7 +2,6 @@
 This module contains all the callback functions for the Dash application.
 """
 
-import numpy as np
 from dash import Input, Output, State, ctx, html, ALL, dcc
 import dash
 import styles
@@ -10,40 +9,6 @@ from models import CalculationResult, FileData
 
 def register_callbacks(app):
 	"""Register strip selector callbacks."""
-
-	@app.callback(
-		[Output('strip-selection-panel', 'style', allow_duplicate=True),
-		 Output('click-catcher', 'style', allow_duplicate=True),
-		 Output('toggle-strip-selection', 'style', allow_duplicate=True)],
-		[Input('toggle-strip-selection', 'n_clicks'),
-		 Input('click-catcher', 'n_clicks')],
-		[State('strip-selection-panel', 'style')],
-		prevent_initial_call=True
-	)
-	def toggle_strip_selection(toggle_clicks, catcher_clicks, current_style):
-		"""Toggle the strip selection panel visibility."""
-		ctx = dash.callback_context
-
-		# Initial state
-		if not ctx.triggered:
-			return styles.OVERLAY, {'display': 'none'}, styles.TOGGLE_BUTTON
-		
-		button_id = ctx.triggered[0]['prop_id'].split('.')[0]
-		
-		# Handle toggle button click
-		if button_id == 'toggle-strip-selection':
-			# If panel is hidden (or initial state), show it
-			if not current_style or current_style == styles.OVERLAY:
-				return styles.OVERLAY_VISIBLE, styles.CLICK_CATCHER, dict(styles.TOGGLE_BUTTON, **{'display': 'none'})
-			# If panel is visible, hide it
-			return styles.OVERLAY, {'display': 'none'}, styles.TOGGLE_BUTTON
-			
-		# Handle click catcher (clicking outside panel)
-		elif button_id == 'click-catcher':
-			return styles.OVERLAY, {'display': 'none'}, styles.TOGGLE_BUTTON
-		
-		# Default case: no change
-		return dash.no_update, dash.no_update, dash.no_update
 
 	@app.callback(
 		Output('strip-selector', 'value'),

@@ -5,7 +5,7 @@ from dash import html
 from .averages_panel_callbacks import register_callbacks
 from .averages_panel_style import *
 
-def create_averages_panel(app):
+def averages_panel(app):
 	"""Create the averages panel component."""
 
 	register_callbacks(app)
