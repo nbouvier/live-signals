@@ -4,10 +4,11 @@ This module contains the layout of the application.
 
 from dash import html, dcc
 from styles import *
+from components.averages_panel import averages_panel
+from components.file_selector import file_selector
 from components.fit_graph import fit_graph
 from components.graph_display import graph_display
 from components.strip_selector import strip_selector
-from components.averages_panel import averages_panel
 from callbacks import register_callbacks
 
 def create_layout(app):
@@ -21,6 +22,7 @@ def create_layout(app):
 
 		# Left panel - Strip selector
 		html.Div([
+			file_selector(app),
 			strip_selector(app),
 			averages_panel(app)
 		], style=SIDE_PANEL),

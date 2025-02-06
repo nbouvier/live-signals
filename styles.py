@@ -52,8 +52,11 @@ MAIN_CONTAINER = {
 }
 
 SIDE_PANEL = {
-	'width': '300px',
-	'minWidth': '300px',
+	'display': 'flex',
+	'flexDirection': 'column',
+	'gap': '24px',
+	'width': '330px',
+	'minWidth': '330px',
 	'backgroundColor': BACKGROUND_COLOR,
 	'padding': SPACING_MEDIUM,
 	'position': 'fixed',
@@ -61,7 +64,8 @@ SIDE_PANEL = {
 	'left': 0,
 	'height': '100vh',
 	'overflowY': 'auto',
-	'zIndex': 1
+	'zIndex': 1,
+	'boxSizing': 'border-box'
 }
 
 CENTER_PANEL = {
@@ -70,8 +74,9 @@ CENTER_PANEL = {
 	'flexDirection': 'column',
 	'gap': SPACING_MEDIUM,
 	'minWidth': '0',  # Prevents flex items from overflowing
-	'marginLeft': '300px',  # Width of left panel
-	'padding': SPACING_MEDIUM
+	'marginLeft': '330px',  # Width of left panel
+	'padding': SPACING_MEDIUM,
+	'boxSizing': 'border-box'
 }
 
 # Strip selector styles
@@ -120,25 +125,6 @@ OVERLAY = {
 OVERLAY_VISIBLE = {
 	**OVERLAY,
 	'left': '0'
-}
-
-# Base graph styles
-BASE_GRAPH = {
-	'height': '800px',
-	'width': '100%'
-}
-
-BASE_PLACEHOLDER = {
-	'height': '800px',
-	'width': '100%',
-	'backgroundColor': '#f9f9f9',
-	'border': '1px solid #ddd',
-	'borderRadius': '5px',
-	'display': 'flex',
-	'justifyContent': 'center',
-	'alignItems': 'center',
-	'color': '#666',
-	'fontSize': '18px'
 }
 
 # Popup styles
@@ -202,31 +188,6 @@ SELECTION_INDICATOR = {
 	'borderRadius': '50%',
 	'display': 'inline-block',
 	'marginRight': '10px'
-} 
-
-
-FILE_CARD = {
-	'padding': '8px 12px',
-	'backgroundColor': 'white',
-	'borderRadius': BORDER_RADIUS,
-	'border': BORDER_STYLE,
-	'fontSize': '14px',
-	'display': 'flex',
-	'alignItems': 'center',
-	'gap': '8px',
-	'position': 'relative',
-	'paddingRight': '100px'  # Space for time offset input
-}
-
-TIME_OFFSET_INPUT = {
-	'width': '80px',
-	'padding': '4px 8px',
-	'border': BORDER_STYLE,
-	'borderRadius': BORDER_RADIUS,
-	'position': 'absolute',
-	'right': '8px',
-	'top': '50%',
-	'transform': 'translateY(-50%)'
 } 
 
 # Layout styles

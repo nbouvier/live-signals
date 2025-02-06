@@ -2,25 +2,18 @@
 This module contains styles for the averages panel component.
 """
 
-from styles import (
-	PRIMARY_COLOR,
-	SPACING_MEDIUM,
-	SPACING_SMALL,
-	SPACING_LARGE,
-	FONT_SIZE_NORMAL,
-	BORDER_RADIUS
-)
+from styles import *
 
 CALCULATE_BUTTON = {
 	'display': 'flex',
 	'justifyContent': 'center',
 	'backgroundColor': PRIMARY_COLOR,
 	'color': 'white',
-	'padding': '10px 20px',
+	'padding': f'{SPACING_SMALL} {SPACING_MEDIUM}',
 	'border': 'none',
-	'borderRadius': '4px',
+	'borderRadius': BORDER_RADIUS,
 	'cursor': 'pointer',
-	'fontSize': '16px',
+	'fontSize': FONT_SIZE_LARGE,
 	'transition': 'background-color 0.3s',
 	'width': '100%',
 	'marginBottom': '10px'
@@ -29,9 +22,7 @@ CALCULATE_BUTTON = {
 AVERAGES_CONTENT = {
 	'display': 'flex',
 	'flexDirection': 'column',
-	'gap': '10px',
-	'maxHeight': 'calc(100vh - 200px)',
-	'overflowY': 'auto'
+	'gap': '10px'
 }
 
 BUTTON_ICON = {

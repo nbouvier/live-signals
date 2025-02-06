@@ -2,14 +2,15 @@
 This module contains styles for the calculation result component.
 """
 
+from styles import *
+
 CONTAINER = {
 	'display': 'flex',
 	'justifyContent': 'space-between',
 	'backgroundColor': 'rgba(188, 188, 188, 0.1)',
 	'borderRadius': '6px',
 	'border': '1px solid #ddd',
-	'color': '#444',
-	'boxShadow': '0 2px 4px rgba(0, 0, 0, 0.1)'
+	'color': '#444'
 }
 
 HEADER = {
@@ -31,10 +32,10 @@ THICKNESS_CONTAINER = {
 
 THICKNESS_INPUT = {
 	'width': '80px',
-	'padding': '4px 8px',
+	'padding': f'{SPACING_UNIT} {SPACING_SMALL}',
 	'border': '1px solid #ccc',
-	'borderRadius': '4px',
-	'fontSize': '14px'
+	'borderRadius': BORDER_RADIUS,
+	'fontSize': FONT_SIZE_NORMAL
 }
 
 INDIVIDUAL_AVERAGES_BUTTON = {

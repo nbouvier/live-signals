@@ -87,8 +87,7 @@ SELECTED_STRIPS_CONTAINER = {
 	'gap': SPACING_SMALL,
 	'paddingLeft': SPACING_UNIT,
 	'overflowY': 'auto',
-	'height': '110px',
-	'marginBottom': SPACING_MEDIUM
+	'maxHeight': '110px'
 }
 
 SELECTED_STRIP_TAG = {

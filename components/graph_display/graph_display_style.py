@@ -2,14 +2,7 @@
 This module contains styles for the graph display component.
 """
 
-from styles import (
-	BACKGROUND_COLOR,
-	BORDER_STYLE,
-	BORDER_RADIUS,
-	MUTED_TEXT_COLOR,
-	FONT_SIZE_LARGE,
-	PRIMARY_COLOR
-)
+from styles import *
 
 BASE_GRAPH = {
 	'height': '800px',
@@ -57,33 +50,4 @@ UPLOAD_ICON = {
 	'fontSize': '48px',
 	'color': MUTED_TEXT_COLOR,
 	'marginBottom': '10px'
-}
-
-FILES_CONTAINER = {
-	'marginTop': '10px',
-	'display': 'flex',
-	'alignItems': 'center',
-	'gap': '10px'
-}
-
-FILES_LIST = {
-	'display': 'flex',
-	'flexWrap': 'wrap',
-	'gap': '10px',
-	'flex': '1'
-}
-
-ADD_FILE_BUTTON = {
-	'padding': '8px 12px',
-	'backgroundColor': PRIMARY_COLOR,
-	'color': 'white',
-	'border': 'none',
-	'borderRadius': BORDER_RADIUS,
-	'cursor': 'pointer',
-	'display': 'flex',
-	'alignItems': 'center',
-	'transition': 'all 0.3s ease',
-	':hover': {
-		'backgroundColor': '#0056b3'
-	}
 }

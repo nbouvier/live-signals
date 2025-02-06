@@ -87,7 +87,7 @@ def calculation_result(app, calculation_result):
 		html.Button(
 			html.I(className="fas fa-trash"),
 			id={'type': 'delete-calculation', 'index': calculation_result.id},
-			className='delete-average-button',
+			className='delete-button',
 			style={
 				'border': '1px solid #dc3545',
 				'borderTopRightRadius': '4px',
@@ -97,11 +97,7 @@ def calculation_result(app, calculation_result):
 				'width': '32px',
 				'padding': '4px',
 				'cursor': 'pointer',
-				'transition': 'all 0.3s',
-				':hover': {
-					'backgroundColor': '#dc3545',
-					'color': 'white'
-				}
+				'transition': 'all 0.3s'
 			}
 		)
 	], style=CONTAINER) 
