@@ -55,24 +55,13 @@ SIDE_PANEL = {
 	'width': '300px',
 	'minWidth': '300px',
 	'backgroundColor': BACKGROUND_COLOR,
-	'borderRadius': BORDER_RADIUS,
 	'padding': SPACING_MEDIUM,
 	'position': 'fixed',
 	'top': 0,
+	'left': 0,
 	'height': '100vh',
 	'overflowY': 'auto',
 	'zIndex': 1
-}
-
-
-LEFT_PANEL = {
-	**SIDE_PANEL,
-	'left': 0
-}
-
-RIGHT_PANEL = {
-	**SIDE_PANEL,
-	'right': 0
 }
 
 CENTER_PANEL = {
@@ -82,7 +71,6 @@ CENTER_PANEL = {
 	'gap': SPACING_MEDIUM,
 	'minWidth': '0',  # Prevents flex items from overflowing
 	'marginLeft': '300px',  # Width of left panel
-	'marginRight': '300px',  # Width of right panel
 	'padding': SPACING_MEDIUM
 }
 
@@ -132,24 +120,6 @@ OVERLAY = {
 OVERLAY_VISIBLE = {
 	**OVERLAY,
 	'left': '0'
-}
-
-# Toggle button
-TOGGLE_BUTTON = {
-	'position': 'fixed',
-	'top': SPACING_MEDIUM,
-	'left': SPACING_MEDIUM,
-	'zIndex': Z_INDEX_OVERLAY - 2,
-	'backgroundColor': PRIMARY_COLOR,
-	'color': 'white',
-	'padding': f'{SPACING_MEDIUM} {SPACING_LARGE}',
-	'border': 'none',
-	'borderRadius': BORDER_RADIUS,
-	'cursor': 'pointer',
-	'fontSize': FONT_SIZE_NORMAL,
-	'boxShadow': SHADOW_MEDIUM,
-	'display': 'flex',
-	'alignItems': 'center'
 }
 
 # Base graph styles

@@ -21,19 +21,15 @@ def create_layout(app):
 
 		# Left panel - Strip selector
 		html.Div([
-			strip_selector(app)
-		], style=LEFT_PANEL),
-		
+			strip_selector(app),
+			averages_panel(app)
+		], style=SIDE_PANEL),
+
 		# Center panel - Graph display
 		html.Div([
 			graph_display(app),
 			fit_graph(app)
 		], style=CENTER_PANEL),
-			
-		# Right panel - Averages panel
-		html.Div([
-			averages_panel(app)
-		], style=RIGHT_PANEL),
 		
 		# Popup message
 		html.Div([

@@ -5,6 +5,7 @@ body {
     margin: 0;
     padding: 0;
     background-color: white;
+    font-family: 'Arial', 'Helvetica',sans-serif;
 }
 
 .strip-dropdown-item:hover {
@@ -15,4 +16,9 @@ body {
 .strip-tag:hover {
     background-color: rgba(255, 0, 0, 0.3)!important;
     color: red!important;
+}
+
+.delete-average-button:hover {
+    background-color: rgb(220, 53, 69)!important;
+    color: white!important;
 }

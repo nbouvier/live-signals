@@ -99,7 +99,7 @@ def register_averages_panel_callbacks(app):
 			# Update graph with new calculation result
 			updated_figure = create_multi_file_figure(selected_strips)
 			
-			return html.Div(all_calculations), {'display': 'none'}, None, {'display': 'none'}, updated_figure
+			return all_calculations, {'display': 'none'}, None, {'display': 'none'}, updated_figure
 			
 		except Exception as e:
 			print(f"Debug - Error: {e}")

@@ -11,18 +11,6 @@ from styles import (
 	BORDER_RADIUS
 )
 
-CONTAINER = {
-	'width': '400px',
-	'minWidth': '400px',
-	'backgroundColor': 'white',
-	'padding': '20px',
-	'borderRadius': '8px',
-	'boxShadow': '0 2px 4px rgba(0, 0, 0, 0.1)',
-	'display': 'flex',
-	'flexDirection': 'column',
-	'gap': '20px'
-}
-
 CALCULATE_BUTTON = {
 	'display': 'flex',
 	'justifyContent': 'center',

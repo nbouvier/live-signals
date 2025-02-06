@@ -63,21 +63,6 @@ OVERLAY_VISIBLE = {
 	'left': '0'
 }
 
-TOGGLE_BUTTON = {
-	'position': 'fixed',
-	'top': SPACING_MEDIUM,
-	'left': SPACING_MEDIUM,
-	'zIndex': Z_INDEX_OVERLAY + 1,
-	'backgroundColor': PRIMARY_COLOR,
-	'color': 'white',
-	'padding': f'{SPACING_MEDIUM} {SPACING_LARGE}',
-	'border': 'none',
-	'borderRadius': BORDER_RADIUS,
-	'cursor': 'pointer',
-	'fontSize': FONT_SIZE_NORMAL,
-	'boxShadow': SHADOW_MEDIUM
-}
-
 STRIP_LABEL = {
 	'display': 'block',
 	'padding': SPACING_SMALL,

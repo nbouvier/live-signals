@@ -3,15 +3,13 @@ This module contains styles for the calculation result component.
 """
 
 CONTAINER = {
-	'backgroundColor': 'white',
-	'borderRadius': '8px',
-	'padding': '15px',
-	'marginBottom': '15px',
-	'boxShadow': '0 2px 4px rgba(0, 0, 0, 0.1)',
-	'transition': 'box-shadow 0.3s',
-	':hover': {
-		'boxShadow': '0 4px 8px rgba(0, 0, 0, 0.15)'
-	}
+	'display': 'flex',
+	'justifyContent': 'space-between',
+	'backgroundColor': 'rgba(188, 188, 188, 0.1)',
+	'borderRadius': '6px',
+	'border': '1px solid #ddd',
+	'color': '#444',
+	'boxShadow': '0 2px 4px rgba(0, 0, 0, 0.1)'
 }
 
 HEADER = {
@@ -21,17 +19,14 @@ HEADER = {
 }
 
 TIME_RANGE = {
-	'display': 'flex',
-	'alignItems': 'center',
-	'marginTop': '-8px',
-	'marginBottom': '15px'
+	'color': '#666',
+	'font-size': '12px'
 }
 
-SECTION = {
-	'marginBottom': '15px',
+THICKNESS_CONTAINER = {
 	'display': 'flex',
-	'alignItems': 'center',
-	'gap': '8px'
+	'flexDirection': 'column',
+	'gap': '2px'
 }
 
 THICKNESS_INPUT = {
@@ -42,12 +37,7 @@ THICKNESS_INPUT = {
 	'fontSize': '14px'
 }
 
-UNIT_LABEL = {
-	'color': '#666',
-	'fontSize': '14px'
-}
-
-TOGGLE_BUTTON = {
+INDIVIDUAL_AVERAGES_BUTTON = {
 	'width': '100%',
 	'textAlign': 'left',
 	'padding': '8px',
