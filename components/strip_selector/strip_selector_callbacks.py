@@ -130,7 +130,7 @@ def register_strip_selector_callbacks(app):
 			html.Div(
 				strip,
 				id={'type': 'strip-tag', 'index': strip},
-				className='strip-tag',
+				className='delete-button',
 				style=SELECTED_STRIP_TAG
 			)
 			for strip in selected_strips

@@ -33,7 +33,7 @@ FILE_CARD = {
 	'backgroundColor': 'rgba(188, 188, 188, 0.1)',
 	'borderRadius': '6px',
 	'border': '1px solid #ddd',
-	'color': '#444',
+	'color': '#444'
 }
 
 FILE_CARD_BODY = {
