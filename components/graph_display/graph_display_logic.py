@@ -58,35 +58,14 @@ def create_multi_file_figure(selected_strips):
 			text="Strip responses over time",
 			font=dict(weight='bold', color='#666', size=20)
 		),
-		xaxis=dict(
-			title=dict(text="Time (ms)", font=dict(weight='bold', color='#666')),
-			rangeselector=dict(
-				buttons=list([
-					dict(count=1, label="1s", step="second", stepmode="backward"),
-					dict(count=5, label="5s", step="second", stepmode="backward"),
-					dict(count=10, label="10s", step="second", stepmode="backward"),
-					dict(step="all", label="All")
-				])
-			),
-			domain=[0, 0.95]
-		),
+		xaxis=dict(title=dict(text="Time (ms)", font=dict(weight='bold', color='#666'))),
 		yaxis=dict(title=dict(text="Strip response (qdc)", font=dict(weight='bold', color='#666'))),
 		hovermode='x unified',
 		showlegend=True,
-		legend=dict(
-			x=1,
-			y=1,
-			xanchor='left',
-			yanchor='top',
-			traceorder='normal'  # Keep traces in the order they were added
-		),
-		height=800,
+		legend=dict(x=0.99, y=0.95, xanchor='right', yanchor='top'),
+		height=400,
 		dragmode='select',
-		selectdirection='h',
-		modebar=dict(
-			remove=['lasso2d']
-		),
-		margin=dict(r=50)
+		selectdirection='h'
 	)
 	
 	return fig

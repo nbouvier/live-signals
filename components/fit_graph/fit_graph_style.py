@@ -2,48 +2,28 @@
 This module contains styles for the fit graph component.
 """
 
-from styles import (
-	MUTED_TEXT_COLOR,
-	SPACING_MEDIUM,
-	FONT_SIZE_NORMAL
-)
+from styles import *
 
-CONTAINER = {
-	'marginTop': SPACING_MEDIUM
+GRAPH_CONTAINER = {
+	'display': 'flex',
+	'alignItems': 'center',
+	'justifyContent': 'center',
+	'height': '400px',
+	'minHeight': '400px',
+	'padding': '20px 60px',
+	'backgroundColor': BACKGROUND_COLOR,
+	'border': BORDER_STYLE,
+	'borderRadius': BORDER_RADIUS,
+	'color': MUTED_TEXT_COLOR,
+	'fontSize': FONT_SIZE_LARGE
 }
 
 GRAPH = {
-	'height': '400px'
+	'display': 'block'
 }
 
-NO_DATA_MESSAGE = {
-	'textAlign': 'center',
-	'color': MUTED_TEXT_COLOR,
-	'marginTop': SPACING_MEDIUM,
-	'fontSize': FONT_SIZE_NORMAL
+GRAPH_PLACEHOLDER = {
+	'display': 'flex',
+	'justifyContent': 'center',
+	'alignItems': 'center'
 }
-
-LEGEND = {
-	'yanchor': 'top',
-	'y': 0.99,
-	'xanchor': 'right',
-	'x': 0.99
-}
-
-MARGIN = {
-	'l': 50,
-	'r': 50,
-	't': 50,
-	'b': 50
-}
-
-EXPERIMENTAL_MARKER = {
-	'color': 'orange',
-	'symbol': 'triangle-up',
-	'size': 10
-}
-
-FIT_LINE = {
-	'color': 'black',
-	'dash': 'dash'
-} 

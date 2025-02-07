@@ -27,7 +27,7 @@ def create_fit_graph(thicknesses, averages, x_fit, y_fit, mu):
 		y=averages,
 		mode='markers',
 		name='Experimental',
-		marker=EXPERIMENTAL_MARKER,
+		marker=dict(color='orange', symbol='triangle-up', size=10),
 		hovertemplate="Thickness: %{x:.2f} cm<br>Response: %{y:.3f}<extra></extra>"
 	))
 	
@@ -37,18 +37,20 @@ def create_fit_graph(thicknesses, averages, x_fit, y_fit, mu):
 		y=y_fit,
 		mode='lines',
 		name='Exponential fit',
-		line=FIT_LINE,
+		line=dict(color='black', dash='dash'),
 		hovertemplate="Thickness: %{x:.2f} cm<br>Response: %{y:.3f}<extra></extra>"
 	))
 	
 	# Update layout
 	fig.update_layout(
-		title=f'Exponential Fit (μ = {mu:.3f} cm⁻¹)',
-		xaxis_title='Thickness (cm)',
-		yaxis_title='Response / Response step 0',
+		title=dict(
+			text=f'Exponential Fit (μ = {mu:.3f} cm⁻¹)',
+			font=dict(weight='bold', color='#666', size=20)
+		),
+		xaxis=dict(title=dict(text='Thickness (cm)', font=dict(weight='bold', color='#666'))),
+		yaxis=dict(title=dict(text='Response / Response step 0', font=dict(weight='bold', color='#666'))),
 		showlegend=True,
-		legend=LEGEND,
-		margin=MARGIN,
+		legend=dict(x=0.99, y=0.95, xanchor='right', yanchor='top'),
 		height=400
 	)
 	
