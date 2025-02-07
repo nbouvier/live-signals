@@ -44,6 +44,8 @@ SHADOW_HEAVY = '0 4px 16px rgba(0,0,0,0.2)'
 
 # Layout styles
 MAIN_CONTAINER = {
+	'display': 'flex',
+	'boxSizing': 'border-box',
 	'height': '100vh',
 	'width': '100vw',
 	'margin': 0,
@@ -55,28 +57,23 @@ SIDE_PANEL = {
 	'display': 'flex',
 	'flexDirection': 'column',
 	'gap': '24px',
-	'width': '330px',
-	'minWidth': '330px',
+	'width': '335px',
+	'minWidth': '335px',
 	'backgroundColor': BACKGROUND_COLOR,
 	'padding': SPACING_MEDIUM,
-	'position': 'fixed',
-	'top': 0,
-	'left': 0,
-	'height': '100vh',
-	'overflowY': 'auto',
+	'border': '1px solid #ddd',
 	'zIndex': 1,
 	'boxSizing': 'border-box'
 }
 
 CENTER_PANEL = {
-	'flex': '1',
 	'display': 'flex',
 	'flexDirection': 'column',
+	'flex': '1',
 	'gap': SPACING_MEDIUM,
-	'minWidth': '0',  # Prevents flex items from overflowing
-	'marginLeft': '330px',  # Width of left panel
 	'padding': SPACING_MEDIUM,
-	'boxSizing': 'border-box'
+	'boxSizing': 'border-box',
+	'overflowY': 'scroll'
 }
 
 # Strip selector styles
