@@ -27,3 +27,11 @@ body {
     border-color: rgb(220, 53, 69)!important;
     color: white!important;
 }
+
+.graph-container > div{
+    flex: 1;
+}
+
+.graph .main-svg {
+    background-color: transparent!important;
+}

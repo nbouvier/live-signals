@@ -54,9 +54,12 @@ def create_multi_file_figure(selected_strips):
 	
 	# Update layout
 	fig.update_layout(
-		title_x=0.5,
+		title=dict(
+			text="Strip responses over time",
+			font=dict(weight='bold', color='#666', size=20)
+		),
 		xaxis=dict(
-			title="Time (ms)",
+			title=dict(text="Time (ms)", font=dict(weight='bold', color='#666')),
 			rangeselector=dict(
 				buttons=list([
 					dict(count=1, label="1s", step="second", stepmode="backward"),
@@ -67,7 +70,7 @@ def create_multi_file_figure(selected_strips):
 			),
 			domain=[0, 0.95]
 		),
-		yaxis_title="Strip response",
+		yaxis=dict(title=dict(text="Strip response (qdc)", font=dict(weight='bold', color='#666'))),
 		hovermode='x unified',
 		showlegend=True,
 		legend=dict(

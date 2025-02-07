@@ -44,9 +44,4 @@ def register_graph_display_callbacks(app):
 		# Create figure with all files
 		figure = create_multi_file_figure(selected_strips or [])
 		
-		return (
-			figure,
-			dict(BASE_GRAPH, **{'display': 'block'}),
-			dict(BASE_PLACEHOLDER, **{'display': 'none'})
-		)
-
+		return figure, GRAPH, HIDDEN
