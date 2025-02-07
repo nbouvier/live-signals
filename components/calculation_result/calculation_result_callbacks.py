@@ -3,7 +3,7 @@ This module contains all the callback functions for the Dash application.
 """
 
 import numpy as np
-from dash import Input, Output, State, ctx, html, ALL, dcc
+from dash import Input, Output, State, ctx, html, ALL, dcc, no_update
 import dash
 import styles
 from models import CalculationResult, FileData
@@ -13,28 +13,24 @@ def register_calculation_result_callbacks(app):
 	"""Register calculation result callbacks."""
 	
 	@app.callback(
-		Output({'type': 'thickness-input', 'index': ALL}, 'value'),
-		Input({'type': 'thickness-input', 'index': ALL}, 'value'),
-		State({'type': 'thickness-input', 'index': ALL}, 'id')
+		[],
+		Input({'type': 'thickness-input', 'index': ALL}, 'value')
 	)
-	def update_thickness(values, ids):
+	def update_thickness(values):
 		"""Update thickness values when they change."""
+		state = AppState.get_instance()
 
-		if not values or not ids:
-			return dash.no_update
+		# Get updated thickness id
+		updated_id = ctx.triggered_id['index']
 
-		# Update thickness values in our calculation results
-		for value, id_dict in zip(values, ids):
-			calc_id = id_dict['index']
-			# Find the calculation with matching ID
-			for calc in AppState.calculation_results:
-				if calc.id == calc_id:
-					# Convert to float with 2 decimal places if value is not None
-					calc.thickness = round(float(value), 2) if value is not None else None
-					break
-		
-		# Return float values with 2 decimal places
-		return [round(float(v), 2) if v is not None else None for v in values]
+		# Get the corresponding value
+		value = [value for i, value in enumerate(values) if updated_id == ctx.inputs_list[0][i]['id']['index']][0]
+
+		# Update calculation result's thickness
+		for calc in state.calculation_results:
+			if calc.id == updated_id:
+				calc.thickness = value
+				break
 
 	@app.callback(
 		[Output({'type': 'strip-averages-content', 'index': dash.MATCH}, 'style'),

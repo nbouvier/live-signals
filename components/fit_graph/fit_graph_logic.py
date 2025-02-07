@@ -11,16 +11,13 @@ def exponential_model(x, a, b):
 
 def calc_mu(thicknesses, averages):
 	"""Calculate the exponential fit parameters."""
-	if len(thicknesses) < 2:  # Need at least 2 points for a fit
-		return None, None
-	
 	try:
 		popt, pcov = curve_fit(exponential_model, thicknesses, averages, p0=(1, 1))
 		return popt[0], popt[1]  # a, b parameters
 	except:
 		return None, None
 
-def create_fit_graph(thicknesses, averages, x_fit, y_fit):
+def create_fit_graph(thicknesses, averages, x_fit, y_fit, mu):
 	# Create the figure
 	fig = go.Figure()
 	
@@ -46,7 +43,7 @@ def create_fit_graph(thicknesses, averages, x_fit, y_fit):
 	
 	# Update layout
 	fig.update_layout(
-		title=f'Exponential Fit (μ = {b:.3f} cm⁻¹)',
+		title=f'Exponential Fit (μ = {mu:.3f} cm⁻¹)',
 		xaxis_title='Thickness (cm)',
 		yaxis_title='Response / Response step 0',
 		showlegend=True,

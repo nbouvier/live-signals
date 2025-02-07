@@ -24,28 +24,20 @@ def register_fit_graph_callbacks(app):
 		"""Update fit graph when thickness values change or calculations are deleted."""
 
 		state = AppState.get_instance()
-		
-		# Only show calculations that have thickness values
-		filtered_results = [calc for calc in state.calculation_results if calc.thickness is not None]
 
-		# Extract valid thickness-average pairs
-		valid_pairs = [(r.thickness, r.overall_average) 
-						for r in filtered_results 
-						if r.thickness is not None]
-
-		if len(valid_pairs) < 2:
+		if len(state.calculation_results) < 2:
 			return (
 				None,
 				html.Div("No data points available for fitting", style=NO_DATA_MESSAGE)
 			)
 
 		# Extract thicknesses and averages
-		thicknesses, averages = zip(*valid_pairs)
-		thicknesses = np.array(thicknesses)
-		averages = np.array(averages)
-		
+		thicknesses = [r.thickness for r in state.calculation_results]
+		averages = [r.overall_average for r in state.calculation_results]
+
 		# Calculate fit
 		a, b = calc_mu(thicknesses, averages)
+
 		if a is None or b is None:
 			return (
 				None,
@@ -57,6 +49,6 @@ def register_fit_graph_callbacks(app):
 		y_fit = exponential_model(x_fit, a, b)
 
 		return (
-			create_fit_graph(thicknesses, averages, x_fit, y_fit),
+			create_fit_graph(thicknesses, averages, x_fit, y_fit, b),
 			None
 		)

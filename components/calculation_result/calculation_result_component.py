@@ -55,6 +55,7 @@ def calculation_result(app, calculation_result):
 						placeholder='...',
 						value=calculation_result.thickness,
 						step=0.01,
+						debounce=True,
 						style=THICKNESS_INPUT
 					)
 				], style=THICKNESS_CONTAINER)

@@ -56,9 +56,7 @@ class CalculationResult:
 	start_time: float
 	end_time: float
 	strip_averages: List[Tuple[int, float]] = field(default_factory=list)
-	
-	# Optional fields
-	thickness: Optional[float] = None
+	thickness: float = 1
 	
 	# Auto-generated fields
 	id: int = field(init=False)
