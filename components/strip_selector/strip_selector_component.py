@@ -32,5 +32,5 @@ def strip_selector(app):
 		html.Div(id='selected-strips-display', style=SELECTED_STRIPS_CONTAINER),
 
 		# Hidden input to store selected values
-		dcc.Store(id='strip-selector', data=list(range(18, 153)))
+		dcc.Store(id='strip-selector', data=[])
 	]) 
