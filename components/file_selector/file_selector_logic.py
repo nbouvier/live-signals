@@ -5,6 +5,7 @@ This module contains functions for reading and processing binary data files.
 import base64
 import numpy as np
 from models import FileData
+from pathlib import Path
 
 def process_file(contents, filename):
 	"""Process uploaded file and return FileData object."""
@@ -16,9 +17,9 @@ def process_file(contents, filename):
 	zdata = np.frombuffer(decoded, dt)
 
 	# correspondence of QDC number and strip number file
-	correspondence_table_file = r"C:\Users\nelbo\Bureau\Github\nbouvier\live-signals\data\add_piste.txt"
-	pf = open(correspondence_table_file, "r")
-	correspondence_table = pf.readlines()
+	correspondence_table_path = Path(__file__).parent / "../../data/add_piste.txt"
+	with correspondence_table_path.open("r") as file:
+		correspondence_table = file.readlines()
 
 	# number of measurements
 	nb_mes = np.size(zdata) // 309
