@@ -5,6 +5,7 @@ This module contains all the callback functions for the Dash application.
 from dash import Input, Output, State, ctx, html, ALL, dcc, no_update
 import dash
 from styles import PRIMARY_COLOR, HIDDEN
+from components.calculation_result import calculation_result
 from .strip_selector_style import *
 from state import AppState
 
@@ -128,13 +129,21 @@ def register_strip_selector_callbacks(app):
 		return selected_strips
 
 	@app.callback(
-		Output('selected-strips-display', 'children'),
-		Input('strip-selector', 'data')
+		[Output('selected-strips-display', 'children'),
+		 Output('averages-content', 'children', allow_duplicate=True)],
+		Input('strip-selector', 'data'),
+		prevent_initial_call=True
 	)
 	def update_selection_display(selected_strips):
 		"""Update the display of selected strips."""
+		state = AppState.get_instance()
+
+		if not selected_strips:
+			return no_update, no_update
+
+		# Update strips
 		selected_strips.sort()
-		return [
+		strips = [
 			html.Div(
 				strip,
 				id={'type': 'strip-tag', 'index': strip},
@@ -143,3 +152,11 @@ def register_strip_selector_callbacks(app):
 			)
 			for strip in selected_strips
 		]
+
+		# Update calculation results
+		calculation_results = []
+		for result in state.calculation_results:
+			result.update(state)
+			calculation_results.append(calculation_result(app, result))
+
+		return strips, calculation_results

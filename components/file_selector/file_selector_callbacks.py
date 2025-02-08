@@ -5,8 +5,10 @@ This module contains all the callback functions for the file selector component.
 from dash import Input, Output, State, ctx, html, ALL, dcc, no_update
 from .file_selector_logic import process_file
 from .file_selector_style import *
+from components.calculation_result import calculation_result
 from components.graph_display import create_multi_file_figure
 from state import AppState
+
 
 def register_file_selector_callbacks(app):
 	"""Register file selector callbacks."""
@@ -16,7 +18,8 @@ def register_file_selector_callbacks(app):
 		 Output('no-file', 'style', allow_duplicate=True),
 		 Output('add-file', 'contents'),
 		 Output('add-file', 'filename'),
-		 Output('add-file', 'last_modified'),],
+		 Output('add-file', 'last_modified'),
+		 Output('averages-content', 'children', allow_duplicate=True)],
 		Input('add-file', 'contents'),
 		[State('add-file', 'filename'),
 		 State('file-list', 'children')],
@@ -25,13 +28,15 @@ def register_file_selector_callbacks(app):
 	def add_file(content, filename, files):
 		state = AppState.get_instance()
 
-		# Process and create file data
+		# Process file
 		try:
 			file = process_file(content, filename)
-			state.loaded_files.append(file)
 		except Exception as e:
 			print(f"Error processing file: {e}")
-			return no_update, no_update, no_update, no_update, no_update
+			return no_update, no_update, no_update, no_update, no_update, no_update
+
+		# Update state
+		state.loaded_files.append(file)
 
 		# Shorten filename if too long for display
 		name = filename if len(filename) <= 20 else f"{filename[0:10]}...{filename[-10:]}"
@@ -67,13 +72,20 @@ def register_file_selector_callbacks(app):
 				)
 			], id={'type': 'file-card', 'index': file.id}, style=FILE_CARD)
 		)
+
+		# Update calculation results
+		calculation_results = []
+		for result in state.calculation_results:
+			result.update(state)
+			calculation_results.append(calculation_result(app, result))
 		
-		return files, HIDDEN, None, None, None
+		return files, HIDDEN, None, None, None, calculation_results
 	
 	@app.callback(
 		[Output('file-list', 'children', allow_duplicate=True),
 		 Output('no-file', 'style', allow_duplicate=True),
-		 Output('strip-responses-graph', 'figure', allow_duplicate=True)],
+		 Output('strip-responses-graph', 'figure', allow_duplicate=True),
+		 Output('averages-content', 'children', allow_duplicate=True)],
 		Input({'type': 'file-delete', 'index': ALL}, 'n_clicks'),
 		[State('file-list', 'children'),
 		 State('add-file', 'contents'),
@@ -91,7 +103,7 @@ def register_file_selector_callbacks(app):
 
 		# Do not trigger on file-card creation
 		if not n_click:
-			return no_update, no_update, no_update
+			return no_update, no_update, no_update, no_update
 
 		# Remove file from state
 		for i, file in enumerate(state.loaded_files):
@@ -104,6 +116,32 @@ def register_file_selector_callbacks(app):
 
 		# Update graph with new calculation result
 		graph = create_multi_file_figure(selected_strips)
+
+		# Update calculation results
+		calculation_results = []
+		for result in state.calculation_results:
+			result.update(state)
+			calculation_results.append(calculation_result(app, result))
 		
-		return files, no_update if files else NO_FILE, graph
+		return files, no_update if files else NO_FILE, graph, calculation_results
+	
+	@app.callback(
+		Output('averages-content', 'children', allow_duplicate=True),
+		Input({'type': 'time-offset', 'index': ALL}, 'value'),
+		prevent_initial_call=True
+	)
+	def update_offset(time_offsets):
+		state = AppState.get_instance()
+		
+		# Update time offset for a file
+		file_index = ctx.triggered_id['index']
+		state.loaded_files[file_index].time_offset = time_offsets[file_index]
+
+		# Update calculation results
+		calculation_results = []
+		for result in state.calculation_results:
+			result.update(state)
+			calculation_results.append(calculation_result(app, result))
+		
+		return calculation_results
 

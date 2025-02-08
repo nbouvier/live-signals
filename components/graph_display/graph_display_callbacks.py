@@ -26,18 +26,8 @@ def register_graph_display_callbacks(app):
 	)
 	def update_data(contents, time_offsets, selected_strips,  filename, offset_ids):
 		"""Handle file upload and update the graph."""
-		state = AppState.get_instance()
-				
-		if isinstance(ctx.triggered_id, dict) and ctx.triggered_id.get('type') == 'time-offset':
-			# Update time offset for a file
-			file_index = ctx.triggered_id['index']
-			if file_index < len(state.loaded_files):
-				try:
-					state.loaded_files[file_index].time_offset = float(time_offsets[file_index]) if time_offsets[file_index] else 0
-				except ValueError:
-					pass
-
-		if not state.loaded_files:
+		
+		if not AppState.get_instance().loaded_files:
 			return no_update, no_update, no_update
 
 		# Create figure with all files
