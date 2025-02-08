@@ -35,3 +35,7 @@ body {
 .graph .main-svg {
     background-color: transparent!important;
 }
+
+.modebar-group {
+    background-color: transparent!important;
+}

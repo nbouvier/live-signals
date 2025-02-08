@@ -48,14 +48,14 @@ def create_fit_graph(thicknesses, averages, x_fit, y_fit, mu):
 			font=dict(weight='bold', color='#666', size=20)
 		),
 		xaxis=dict(title=dict(text='Thickness (cm)', font=dict(weight='bold', color='#666'))),
-		yaxis=dict(title=dict(text='Response / Response step 0', font=dict(weight='bold', color='#666'))),
+		yaxis=dict(title=dict(text='Response average (qdc)', font=dict(weight='bold', color='#666'))),
 		showlegend=True,
-		legend=dict(x=0.99, y=0.95, xanchor='right', yanchor='top'),
-		height=400
+		height=400,
+		modebar_remove=['select2d', 'lasso2d']
 	)
 	
-	# Update axes to show 2 decimal places
+	# Update axes to show 2 decimal places for x and 0 decimal places for y
 	fig.update_xaxes(tickformat=".2f")
-	fig.update_yaxes(tickformat=".3f")
+	fig.update_yaxes(tickformat=".0f")
 
 	return fig;
