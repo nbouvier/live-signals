@@ -8,14 +8,11 @@ from state import AppState
 def create_multi_file_figure(selected_strips):
 	"""Create a figure with multiple files."""
 	state = AppState.get_instance()
-
-	fig = go.Figure()
+	
+	sorted_strips = sorted(selected_strips)
 	
 	# Add traces for each file, sorted by strip number
 	traces = []
-	# Sort selected strips numerically
-	sorted_strips = sorted(selected_strips)
-	
 	for strip_num in sorted_strips:
 		for file_data in state.loaded_files:
 			# Add time offset to each time value
@@ -26,6 +23,8 @@ def create_multi_file_figure(selected_strips):
 				'name': f'Strip {strip_num} - File {file_data.id}',
 				'mode': 'lines'
 			})
+
+	fig = go.Figure()
 	
 	# Add traces in order (they're already sorted by strip number)
 	for trace in traces:
