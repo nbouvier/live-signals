@@ -46,7 +46,7 @@ SHADOW_HEAVY = '0 4px 16px rgba(0,0,0,0.2)'
 MAIN_CONTAINER = {
 	'display': 'flex',
 	'boxSizing': 'border-box',
-	'height': '100vh',
+	'minHeight': '100vh',
 	'width': '100vw',
 	'margin': 0,
 	'padding': 0,
