@@ -7,6 +7,7 @@ import dash
 from styles import PRIMARY_COLOR, HIDDEN
 from models import CalculationResult, FileData
 from .strip_selector_style import *
+from state import AppState
 
 def register_strip_selector_callbacks(app):
 	"""Register strip selector callbacks."""
@@ -17,10 +18,9 @@ def register_strip_selector_callbacks(app):
 		 Output('strip-dropdown-background', 'style', allow_duplicate=True)],
 		[Input('strip-search-input', 'value'),
 		 Input('strip-search-input-container', 'n_clicks')],
-		State('strip-selector', 'data'),
 		prevent_initial_call=True
 	)
-	def filter_dropdown_list(search_value, n_clicks, selected_strips):
+	def filter_dropdown_list(search_value, n_clicks):
 		"""Update the dropdown list based on search input."""
 
 		trigger = ctx.triggered[0]['prop_id']
@@ -30,7 +30,7 @@ def register_strip_selector_callbacks(app):
 		matching_strips = [i for i in range(18, 153) if search in str(i)]
 
 		# Filter out already selected strips
-		available_strips = [strip for strip in matching_strips if strip not in selected_strips]
+		available_strips = [strip for strip in matching_strips if strip not in AppState.get_instance().selected_strips]
 
 		dropdown_items = [
 			html.Div(
@@ -91,6 +91,7 @@ def register_strip_selector_callbacks(app):
 	)
 	def update_store(select_clicks, unselect_clicks, odd_clicks, even_clicks, remove_n_clicks, select_n_clicks, current_value):
 		"""Update the strip selection when the buttons are clicked."""
+		state = AppState.get_instance()
 
 		# Prevent to triggers on strip-selector creation
 		if not ctx.triggered[0]['value']:
@@ -103,19 +104,27 @@ def register_strip_selector_callbacks(app):
 
 		if trigger == 'all-strip-button.n_clicks':
 			selected_strips = all_strips
+
 		elif trigger == 'no-strip-button.n_clicks':
 			selected_strips = []
-		elif trigger == 'odd-strip-button.n_clicks':
-			selected_strips = [strip for strip in all_strips if strip % 2 == 1]
+
 		elif trigger == 'even-strip-button.n_clicks':
 			selected_strips = [strip for strip in all_strips if strip % 2 == 0]
+
+		elif trigger == 'odd-strip-button.n_clicks':
+			selected_strips = [strip for strip in all_strips if strip % 2 == 1]
+
 		elif '.n_clicks' in trigger:
 			if 'strip-tag' in trigger:
 				strip_to_remove = int(eval(trigger.split('.')[0])['index'])
 				selected_strips = [strip for strip in current_value if strip != strip_to_remove]
+
 			elif 'select-strip' in trigger:
 				strip_to_add = int(eval(trigger.split('.')[0])['index'])
 				selected_strips = sorted(current_value + [strip_to_add])
+
+		# Update the state
+		state.selected_strips = selected_strips
 
 		return selected_strips
 
