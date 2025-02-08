@@ -5,7 +5,6 @@ This module contains all the callback functions for the Dash application.
 from dash import Input, Output, State, ctx, html, ALL, dcc, no_update
 import dash
 from styles import PRIMARY_COLOR, HIDDEN
-from models import CalculationResult, FileData
 from .strip_selector_style import *
 from state import AppState
 

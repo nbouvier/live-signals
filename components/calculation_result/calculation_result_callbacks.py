@@ -6,7 +6,6 @@ import numpy as np
 from dash import Input, Output, State, ctx, html, ALL, dcc, no_update
 import dash
 import styles
-from models import CalculationResult, FileData
 from state import AppState
 
 def register_calculation_result_callbacks(app):

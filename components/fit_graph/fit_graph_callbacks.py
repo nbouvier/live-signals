@@ -7,7 +7,6 @@ from dash import Input, Output, State, ctx, html, ALL, dcc, no_update
 import dash
 from .fit_graph_logic import create_fit_graph, calc_mu, exponential_model
 from .fit_graph_style import *
-from models import CalculationResult, FileData
 from state import AppState
 
 def register_fit_graph_callbacks(app):
@@ -31,7 +30,7 @@ def register_fit_graph_callbacks(app):
 
 		# Extract thicknesses and averages
 		thicknesses = [r.thickness for r in state.calculation_results]
-		averages = [r.overall_average for r in state.calculation_results]
+		averages = [r.average for r in state.calculation_results]
 
 		# Calculate fit
 		a, b = calc_mu(thicknesses, averages)

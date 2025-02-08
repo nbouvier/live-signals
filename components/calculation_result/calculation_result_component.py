@@ -1,9 +1,11 @@
 """
 This module contains the calculation result component.
 """
+
+import numpy as np
 from dash import html, dcc
 from .calculation_result_style import *
-
+from state import AppState
 
 def calculation_result(app, calculation_result):
 	"""
@@ -12,9 +14,6 @@ def calculation_result(app, calculation_result):
 	Args:
 		calculation_result: The CalculationResult object containing all the data
 	"""
-	# Make the color more opaque for the indicator
-	opaque_color = calculation_result.color.replace('0.2)', '0.8)')
-	
 	return html.Div([
 		html.Div([
 			# Header with overall average and delete button
@@ -23,14 +22,14 @@ def calculation_result(app, calculation_result):
 				html.Div([
 					html.Div([
 						html.Span(
-							f"{calculation_result.overall_average:.2f}",
+							f"{calculation_result.average:.2f}",
 							style={'fontSize': '16px', 'fontWeight': 'bold'}
 						),
 						html.Span("qdc", style={'fontSize': '12px', 'fontWeight': 'bold', 'marginLeft': '2px'}),
 						html.Div(style={
 							'width': '12px',
 							'height': '12px',
-							'backgroundColor': opaque_color,
+							'backgroundColor': calculation_result.color.replace('0.2)', '0.8)'),
 							'marginTop': '-2px',
 							'marginLeft': '10px',
 							'display': 'inline-block',

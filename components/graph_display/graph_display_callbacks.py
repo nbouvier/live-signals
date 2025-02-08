@@ -8,7 +8,6 @@ import dash
 from styles import *
 from .graph_display_logic import create_multi_file_figure
 from .graph_display_style import *
-from models import CalculationResult, FileData
 from state import AppState
 
 def register_graph_display_callbacks(app):

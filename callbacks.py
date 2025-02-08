@@ -6,7 +6,6 @@ import numpy as np
 from dash import Input, Output, State, ctx, html, ALL, dcc
 import dash
 import styles
-from models import CalculationResult, FileData
 from state import AppState
 from components.averages_panel import register_averages_panel_callbacks
 from components.calculation_result import register_calculation_result_callbacks

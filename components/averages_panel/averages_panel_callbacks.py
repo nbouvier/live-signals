@@ -8,7 +8,7 @@ import dash
 import styles
 from components.graph_display import create_multi_file_figure
 from components.calculation_result import calculation_result
-from models import CalculationResult, FileData
+from models import CalculationResult
 from state import AppState
 
 def register_averages_panel_callbacks(app):
@@ -28,7 +28,6 @@ def register_averages_panel_callbacks(app):
 	)
 	def add_average(n_clicks, selected_strips, selected_data, existing_content):
 		"""Add an average when the calculation button is clicked."""
-		state = AppState.get_instance()
 
 		# Handle no data selected
 		if not 'range' in selected_data:
@@ -42,44 +41,15 @@ def register_averages_panel_callbacks(app):
 
 		# Get time range
 		start_time, end_time = selected_data['range']['x']
-
-		# Calculate averages for each file
-		all_strip_averages, overall_averages = [], []
-		for file_data in state.loaded_files:
-			# Adjust time range for this file's offset
-			adjusted_start = start_time - file_data.time_offset
-			adjusted_end = end_time - file_data.time_offset
-			
-			# Find indices in the adjusted time range
-			start_idx = np.searchsorted(file_data.time_values, adjusted_start)
-			end_idx = np.searchsorted(file_data.time_values, adjusted_end)
-
-			# Stop if signal is not in range
-			if start_idx == end_idx:
-				continue
-
-			# Calculate strip averages for this file
-			file_strip_averages = []
-			for strip_num in selected_strips:
-				strip_avg = np.mean(file_data.raw_strip_resp[strip_num, start_idx:end_idx])
-				file_strip_averages.append((strip_num, strip_avg))
-			
-			all_strip_averages.extend(file_strip_averages)
-			overall_averages.append(np.mean([avg for _, avg in file_strip_averages]))
 		
-		# Calculate the overall average across all files
-		overall_avg = np.mean(overall_averages)
+		# Create a new calculation result
+		new_calculation_result = CalculationResult(AppState.get_instance(), start_time, end_time)
+
+		# Update the state
+		AppState.get_instance().calculation_results.append(new_calculation_result)
 		
-		# Store the calculation result with combined averages
-		state.calculation_results.append(CalculationResult(
-			overall_average=overall_avg,
-			start_time=start_time,
-			end_time=end_time,
-			strip_averages=all_strip_averages
-		))
-		
-		# Create new calculation result
-		new_calculation = calculation_result(app, state.calculation_results[-1])
+		# Create new calculation result element
+		new_calculation = calculation_result(app, new_calculation_result)
 		
 		# Create new list of calculations
 		if existing_content is None:
