@@ -2,7 +2,6 @@ from dash import html, dcc
 import numpy as np
 import plotly.graph_objects as go
 from scipy.optimize import curve_fit
-from state import AppState
 from .fit_graph_style import *
 
 def exponential_model(x, a, b):

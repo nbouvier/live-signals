@@ -6,7 +6,7 @@ from dash import html, dcc
 from styles import *
 from .fit_graph_style import *
 
-def fit_graph(app):
+def fit_graph():
 	"""Create the exponential fit graph component."""	
 	return html.Div([
 		dcc.Loading(

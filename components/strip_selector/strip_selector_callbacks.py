@@ -5,9 +5,10 @@ This module contains all the callback functions for the Dash application.
 from dash import Input, Output, State, ctx, html, ALL, dcc, no_update
 import dash
 from styles import PRIMARY_COLOR, HIDDEN
+from components.averages_panel import update_average
 from components.calculation_result import calculation_result
 from .strip_selector_style import *
-from state import AppState
+from stores import get_store_data
 
 def register_strip_selector_callbacks(app):
 	"""Register strip selector callbacks."""
@@ -18,9 +19,10 @@ def register_strip_selector_callbacks(app):
 		 Output('strip-dropdown-background', 'style', allow_duplicate=True)],
 		[Input('strip-search-input', 'value'),
 		 Input('strip-search-input-container', 'n_clicks')],
+		State('stores', 'children'),
 		prevent_initial_call=True
 	)
-	def filter_dropdown_list(search_value, n_clicks):
+	def filter_dropdown_list(search_value, n_clicks, stores):
 		"""Update the dropdown list based on search input."""
 
 		trigger = ctx.triggered[0]['prop_id']
@@ -30,7 +32,8 @@ def register_strip_selector_callbacks(app):
 		matching_strips = [i for i in range(18, 153) if search in str(i)]
 
 		# Filter out already selected strips
-		available_strips = [strip for strip in matching_strips if strip not in AppState.get_instance().selected_strips]
+		strips = get_store_data(stores, 'strip-store')
+		available_strips = [strip for strip in matching_strips if strip not in strips]
 
 		dropdown_items = [
 			html.Div(
@@ -51,16 +54,16 @@ def register_strip_selector_callbacks(app):
 		[Output('strip-dropdown-list', 'children', allow_duplicate=True),
 		 Output('strip-dropdown-list', 'style', allow_duplicate=True),
 		 Output('strip-dropdown-background', 'style', allow_duplicate=True)],
-		Input('strip-selector', 'data'),
+		Input('strip-store', 'data'),
 		State('strip-dropdown-list', 'children'),
 		prevent_initial_call=True
 	)
-	def remove_from_dropdown_list(data, options):
+	def remove_from_dropdown_list(strips, options):
 		"""Remove the selected strip from the dropdown list when clicked."""
 		if not options:
 			return no_update
 		
-		remaining_options = [option for option in options if option['props']['id']['index'] not in data]
+		remaining_options = [option for option in options if option['props']['id']['index'] not in strips]
 
 		return (
 			remaining_options,
@@ -79,84 +82,82 @@ def register_strip_selector_callbacks(app):
 		return HIDDEN, HIDDEN
 
 	@app.callback(
-		Output('strip-selector', 'data'),
+		Output('strip-store', 'data'),
 		[Input('all-strip-button', 'n_clicks'),
 		 Input('no-strip-button', 'n_clicks'),
 		 Input('odd-strip-button', 'n_clicks'),
 		 Input('even-strip-button', 'n_clicks'),
 		 Input({'type': 'strip-tag', 'index': ALL}, 'n_clicks'),
 		 Input({'type': 'select-strip', 'index': ALL}, 'n_clicks')],
-		State('strip-selector', 'data'),
+		State('stores', 'children'),
 		prevent_initial_call=True
 	)
-	def update_store(select_clicks, unselect_clicks, odd_clicks, even_clicks, remove_n_clicks, select_n_clicks, current_value):
+	def update_store(select_clicks, unselect_clicks, odd_clicks, even_clicks, remove_n_clicks, select_n_clicks, stores):
 		"""Update the strip selection when the buttons are clicked."""
-		state = AppState.get_instance()
 
-		# Prevent to triggers on strip-selector creation
+		strips = get_store_data(stores, 'strip-store')
+
+		# Prevent to triggers on strip-store creation
 		if not ctx.triggered[0]['value']:
-			return current_value
+			return no_update
 
 		trigger = ctx.triggered[0]['prop_id']
 		all_strips = list(range(18, 153))
 
-		selected_strips = current_value
-
 		if trigger == 'all-strip-button.n_clicks':
-			selected_strips = all_strips
+			strips = all_strips
 
 		elif trigger == 'no-strip-button.n_clicks':
-			selected_strips = []
+			strips = []
 
 		elif trigger == 'even-strip-button.n_clicks':
-			selected_strips = [strip for strip in all_strips if strip % 2 == 0]
+			strips = [strip for strip in all_strips if strip % 2 == 0]
 
 		elif trigger == 'odd-strip-button.n_clicks':
-			selected_strips = [strip for strip in all_strips if strip % 2 == 1]
+			strips = [strip for strip in all_strips if strip % 2 == 1]
 
 		elif '.n_clicks' in trigger:
 			if 'strip-tag' in trigger:
 				strip_to_remove = int(eval(trigger.split('.')[0])['index'])
-				selected_strips = [strip for strip in current_value if strip != strip_to_remove]
+				strips = [strip for strip in strips if strip != strip_to_remove]
 
 			elif 'select-strip' in trigger:
 				strip_to_add = int(eval(trigger.split('.')[0])['index'])
-				selected_strips = sorted(current_value + [strip_to_add])
+				strips.append(strip_to_add)
+				strips.sort()
 
-		# Update the state
-		state.selected_strips = selected_strips
-
-		return selected_strips
+		return strips
 
 	@app.callback(
 		[Output('selected-strips-display', 'children'),
 		 Output('averages-content', 'children', allow_duplicate=True)],
-		Input('strip-selector', 'data'),
+		Input('strip-store', 'data'),
+		State('stores', 'children'),
 		prevent_initial_call=True
 	)
-	def update_selection_display(selected_strips):
+	def update_selection_display(strips, stores):
 		"""Update the display of selected strips."""
-		state = AppState.get_instance()
 
-		if not selected_strips:
+		if strips is None:
 			return no_update, no_update
 
 		# Update strips
-		selected_strips.sort()
-		strips = [
+		strips.sort()
+		strips_html = [
 			html.Div(
 				strip,
 				id={'type': 'strip-tag', 'index': strip},
 				className='delete-button',
 				style=SELECTED_STRIP_TAG
 			)
-			for strip in selected_strips
+			for strip in strips
 		]
 
 		# Update calculation results
-		calculation_results = []
-		for result in state.calculation_results:
-			result.update(state)
-			calculation_results.append(calculation_result(app, result))
+		averages = get_store_data(stores, 'average-store')
+		calculation_results_html = []
+		for average in averages.values():
+			average = update_average(stores, average)
+			calculation_results_html.append(calculation_result(average))
 
-		return strips, calculation_results
+		return strips_html, calculation_results_html

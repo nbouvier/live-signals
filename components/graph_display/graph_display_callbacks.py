@@ -8,7 +8,7 @@ import dash
 from styles import *
 from .graph_display_logic import create_multi_file_figure
 from .graph_display_style import *
-from state import AppState
+from stores import get_store_data
 
 def register_graph_display_callbacks(app):
 	"""Register graph display callbacks."""
@@ -19,18 +19,22 @@ def register_graph_display_callbacks(app):
 		 Output('graph-placeholder', 'style', allow_duplicate=True)],
 		[Input('add-file', 'contents'),
 		 Input({'type': 'time-offset', 'index': ALL}, 'value'),
-		 Input('strip-selector', 'data')],
-		[State('add-file', 'filename'),
+		 Input('strip-store', 'data')],
+		[State('stores', 'children'),
+		 State('add-file', 'filename'),
 		 State({'type': 'time-offset', 'index': ALL}, 'id')],
 		prevent_initial_call=True
 	)
-	def update_data(contents, time_offsets, selected_strips,  filename, offset_ids):
+
+	def update_data(contents, time_offsets, strips, stores, filename, offset_ids):
 		"""Handle file upload and update the graph."""
+
+		files = get_store_data(stores, 'file-store')
 		
-		if not AppState.get_instance().loaded_files:
+		if not files:
 			return no_update, no_update, no_update
 
 		# Create figure with all files
-		figure = create_multi_file_figure(selected_strips or [])
+		figure = create_multi_file_figure(stores, strips or [])
 		
 		return figure, GRAPH, HIDDEN

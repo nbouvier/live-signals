@@ -4,11 +4,14 @@ This module contains functions for reading and processing binary data files.
 
 import base64
 import numpy as np
-from models import FileData
 from pathlib import Path
 
+file_id = 0
+
 def process_file(contents, filename):
-	"""Process uploaded file and return FileData object."""
+	"""Process uploaded bin file."""
+	global file_id
+
 	content_type, content_string = contents.split(',')
 	decoded = base64.b64decode(content_string)
 	
@@ -39,5 +42,13 @@ def process_file(contents, filename):
 				+ (zdata[4 + corresponding_QDC_num * 2 + event * 309])
 				>> 6
 			)
+
+	file_id += 1
 	
-	return FileData(filename, time_values, raw_strip_resp)
+	return dict(
+		id=file_id,
+		filename=filename,
+		time_values=time_values,
+		raw_strip_resp=raw_strip_resp,
+		time_offset=0
+	)

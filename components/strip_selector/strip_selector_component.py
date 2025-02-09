@@ -4,7 +4,7 @@ This module contains the strip selector component.
 from dash import html, dcc
 from .strip_selector_style import *
 
-def strip_selector(app):
+def strip_selector():
 	"""Create the strip selector component."""
 	return html.Div([
 		html.Div([
@@ -29,8 +29,9 @@ def strip_selector(app):
 			html.Div(id='strip-dropdown-background')
 		], style=CUSTOM_DROPDOWN_CONTAINER),
 
-		html.Div(id='selected-strips-display', style=SELECTED_STRIPS_CONTAINER),
-
-		# Hidden input to store selected values
-		dcc.Store(id='strip-selector', data=[])
+		html.Div(id='selected-strips-display', style=SELECTED_STRIPS_CONTAINER)
 	]) 
+
+def strip_store():
+	"""Create the strip store component."""
+	return dcc.Store(id='strip-store', data=[])

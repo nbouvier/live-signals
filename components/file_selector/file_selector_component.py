@@ -4,7 +4,7 @@ This module contains the graph display component.
 from dash import html, dcc
 from .file_selector_style import *
 
-def file_selector(app):
+def file_selector():
 	"""Create the file selector component."""
 	return html.Div([
 		# Add file button
@@ -20,3 +20,7 @@ def file_selector(app):
 		html.Div(id='file-list', style=FILES_LIST),
 		html.Div("No file loaded.", id='no-file', style=NO_FILE)
 	])
+
+def file_store():
+	"""Create the file store component."""
+	return dcc.Store(id='file-store', data={})

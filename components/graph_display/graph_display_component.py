@@ -5,7 +5,7 @@ from dash import html, dcc
 from styles import *
 from .graph_display_style import *
 
-def graph_display(app):
+def graph_display():
 	"""Create the graph display component."""
 	return html.Div([
 		dcc.Loading(
