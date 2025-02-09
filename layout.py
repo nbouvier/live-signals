@@ -5,7 +5,7 @@ This module contains the layout of the application.
 from dash import html, dcc
 from styles import *
 from components.averages_panel import average_store, averages_panel, register_averages_panel_callbacks
-from components.calculation_result import register_calculation_result_callbacks
+from components.average import register_average_callbacks
 from components.file_selector import file_store, file_selector, register_file_selector_callbacks
 from components.fit_graph import fit_graph, register_fit_graph_callbacks
 from components.graph_display import graph_display, register_graph_display_callbacks
@@ -16,7 +16,7 @@ def create_layout(app):
 	"""Create the application layout."""
 
 	register_averages_panel_callbacks(app)
-	register_calculation_result_callbacks(app)
+	register_average_callbacks(app)
 	register_file_selector_callbacks(app)
 	register_fit_graph_callbacks(app)
 	register_graph_display_callbacks(app)

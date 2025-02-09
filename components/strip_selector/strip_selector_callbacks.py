@@ -6,7 +6,7 @@ from dash import Input, Output, State, ctx, html, ALL, dcc, no_update
 import dash
 from styles import PRIMARY_COLOR, HIDDEN
 from components.averages_panel import update_average
-from components.calculation_result import calculation_result
+from components.average import average
 from .strip_selector_style import *
 from stores import get_store_data
 
@@ -153,11 +153,11 @@ def register_strip_selector_callbacks(app):
 			for strip in strips
 		]
 
-		# Update calculation results
+		# Update averages
 		averages = get_store_data(stores, 'average-store')
-		calculation_results_html = []
+		averages_html = []
 		for average in averages.values():
 			average = update_average(stores, average)
-			calculation_results_html.append(calculation_result(average))
+			averages_html.append(average(average))
 
-		return strips_html, calculation_results_html
+		return strips_html, averages_html

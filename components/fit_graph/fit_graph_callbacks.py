@@ -17,12 +17,12 @@ def register_fit_graph_callbacks(app):
 		 Output('fit-graph', 'style'),
 		 Output('fit-graph-placeholder', 'style')],
 		[Input({'type': 'thickness-input', 'index': ALL}, 'value'),
-		 Input({'type': 'delete-calculation', 'index': ALL}, 'n_clicks')],
+		 Input({'type': 'delete-average', 'index': ALL}, 'n_clicks')],
 		State('stores', 'children'),
 		prevent_initial_call=True
 	)
 	def update_fit_graph(thickness_values, delete_clicks, stores):
-		"""Update fit graph when thickness values change or calculations are deleted."""
+		"""Update fit graph."""
 
 		averages = get_store_data(stores, 'average-store')
 

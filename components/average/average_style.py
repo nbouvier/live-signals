@@ -1,5 +1,5 @@
 """
-This module contains styles for the calculation result component.
+This module contains styles for the average component.
 """
 
 from styles import *

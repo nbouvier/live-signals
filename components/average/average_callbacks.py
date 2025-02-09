@@ -8,8 +8,8 @@ import dash
 import styles
 from stores import get_store_data
 
-def register_calculation_result_callbacks(app):
-	"""Register calculation result callbacks."""
+def register_average_callbacks(app):
+	"""Register average callbacks."""
 	
 	@app.callback(
 		Output('average-store', 'data', allow_duplicate=True),
@@ -29,7 +29,7 @@ def register_calculation_result_callbacks(app):
 		# Get the corresponding value
 		value = [value for i, value in enumerate(values) if updated_id == ctx.inputs_list[0][i]['id']['index']][0]
 
-		# Update calculation result in store
+		# Update average in store
 		averages = get_store_data(stores, 'average-store')
 		averages[str(updated_id)]['thickness'] = value
 

@@ -1,13 +1,13 @@
 """
-This module contains the calculation result component.
+This module contains the average component.
 """
 
 import numpy as np
 from dash import html, dcc
-from .calculation_result_style import *
+from .average_style import *
 
-def calculation_result(calculation_result):
-	"""Create a calculation result component."""
+def average(average):
+	"""Create a average component."""
 	return html.Div([
 		html.Div([
 			# Header with overall average and delete button
@@ -16,14 +16,14 @@ def calculation_result(calculation_result):
 				html.Div([
 					html.Div([
 						html.Span(
-							f"{calculation_result['average']:.2f}",
+							f"{average['average']:.2f}",
 							style={'fontSize': '16px', 'fontWeight': 'bold'}
 						),
 						html.Span("qdc", style={'fontSize': '12px', 'fontWeight': 'bold', 'marginLeft': '2px'}),
 						html.Div(style={
 							'width': '12px',
 							'height': '12px',
-							'backgroundColor': calculation_result['color'].replace('0.2)', '0.8)'),
+							'backgroundColor': average['color'].replace('0.2)', '0.8)'),
 							'marginTop': '-2px',
 							'marginLeft': '10px',
 							'display': 'inline-block',
@@ -34,7 +34,7 @@ def calculation_result(calculation_result):
 
 					# Time range subtitle with color indicator
 					html.Span(
-						f"{calculation_result['start_time']:.1f}ms - {calculation_result['end_time']:.1f}ms",
+						f"{average['start_time']:.1f}ms - {average['end_time']:.1f}ms",
 						style=TIME_RANGE
 					)
 				]),
@@ -43,10 +43,10 @@ def calculation_result(calculation_result):
 				html.Div([
 					html.Span("Thickness: ", style={'fontSize': '10px', 'fontWeight': 'bold', 'color': '#666'}),
 					dcc.Input(
-						id={'type': 'thickness-input', 'index': calculation_result['id']},
+						id={'type': 'thickness-input', 'index': average['id']},
 						type='number',
 						placeholder='...',
-						value=calculation_result['thickness'],
+						value=average['thickness'],
 						step=0.01,
 						debounce=True,
 						style=THICKNESS_INPUT
@@ -61,7 +61,7 @@ def calculation_result(calculation_result):
 						html.I(className="fas fa-chevron-right", style=TOGGLE_ICON),
 						html.Span("Individual Strip Averages", style={'color': '#666', 'fontSize': '12px'})
 					],
-					id={'type': 'toggle-strip-averages', 'index': calculation_result['id']},
+					id={'type': 'toggle-strip-averages', 'index': average['id']},
 					style=INDIVIDUAL_AVERAGES_BUTTON
 				),
 
@@ -69,9 +69,9 @@ def calculation_result(calculation_result):
 				html.Div([
 						html.Div(f"Strip {strip_num}: {avg:.2f}", 
 								style=AVERAGE_ITEM)
-						for strip_num, avg in sorted(calculation_result['strip_averages'])
+						for strip_num, avg in sorted(average['strip_averages'])
 					],
-					id={'type': 'strip-averages-content', 'index': calculation_result['id']},
+					id={'type': 'strip-averages-content', 'index': average['id']},
 					style=AVERAGES_CONTENT
 				)
 			])
@@ -80,7 +80,7 @@ def calculation_result(calculation_result):
 		# Delete button
 		html.Button(
 			html.I(className="fas fa-trash"),
-			id={'type': 'delete-calculation', 'index': calculation_result['id']},
+			id={'type': 'delete-average', 'index': average['id']},
 			className='delete-button',
 			style={
 				'border': '1px solid #dc3545',
@@ -94,4 +94,4 @@ def calculation_result(calculation_result):
 				'transition': 'all 0.3s'
 			}
 		)
-	], id={'type': 'calculation-result', 'index': calculation_result['id']}, style=CONTAINER) 
+	], id={'type': 'average', 'index': average['id']}, style=CONTAINER) 

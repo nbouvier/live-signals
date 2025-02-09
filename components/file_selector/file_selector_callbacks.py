@@ -6,7 +6,7 @@ from dash import Input, Output, State, ctx, html, ALL, dcc, no_update
 from .file_selector_logic import process_file
 from .file_selector_style import *
 from components.averages_panel import update_average
-from components.calculation_result import calculation_result
+from components.average import average
 from components.graph_display import create_multi_file_figure
 from stores import get_store_data
 
@@ -75,14 +75,14 @@ def register_file_selector_callbacks(app):
 			], id={'type': 'file-card', 'index': file['id']}, style=FILE_CARD)
 		)
 
-		# Update calculation results
+		# Update averages
 		averages = get_store_data(stores, 'average-store')
-		calculation_results_html = []
+		averages_html = []
 		for average in averages.values():
 			average = update_average(stores, average)
-			calculation_results_html.append(calculation_result(average))
+			averages_html.append(average(average))
 		
-		return files, files_html, HIDDEN, None, None, None, calculation_results_html
+		return files, files_html, HIDDEN, None, None, None, averages_html
 	
 	@app.callback(
 		[Output('file-store', 'data', allow_duplicate=True),
@@ -114,18 +114,18 @@ def register_file_selector_callbacks(app):
 		# Remove file from display
 		files_html = [file for file in files_html if file['props']['id']['index'] != deleted_id]
 
-		# Update graph with new calculation result
+		# Update graph with new average
 		strips = get_store_data(stores, 'strip-store')
 		graph = create_multi_file_figure(stores, strips)
 
-		# Update calculation results
+		# Update averages
 		averages = get_store_data(stores, 'average-store')
-		calculation_results_html = []
+		averages_html = []
 		for average in averages.values():
 			average = update_average(stores, average)
-			calculation_results_html.append(calculation_result(average))
+			averages_html.append(average(average))
 		
-		return files, files_html, no_update if files else NO_FILE, graph, calculation_results_html
+		return files, files_html, no_update if files else NO_FILE, graph, averages_html
 	
 	@app.callback(
 		[Output('file-store', 'data', allow_duplicate=True),
@@ -135,6 +135,9 @@ def register_file_selector_callbacks(app):
 		prevent_initial_call=True
 	)
 	def update_offset(offsets, stores):
+		if not offsets:
+			return no_update, no_update
+
 		# Get the corresponding file index
 		file_id = ctx.triggered_id['index']
 
@@ -145,12 +148,12 @@ def register_file_selector_callbacks(app):
 		files = get_store_data(stores, 'file-store')
 		files[str(file_id)]['time_offset'] = offset
 
-		# Update calculation results
+		# Update averages
 		averages = get_store_data(stores, 'average-store')
-		calculation_results_html = []
+		averages_html = []
 		for average in averages.values():
 			average = update_average(stores, average)
-			calculation_results_html.append(calculation_result(average))
+			averages_html.append(average(average))
 		
-		return files, calculation_results_html
+		return files, averages_html
 
