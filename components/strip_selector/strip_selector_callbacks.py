@@ -5,8 +5,7 @@ This module contains all the callback functions for the Dash application.
 from dash import Input, Output, State, ctx, html, ALL, dcc, no_update
 import dash
 from styles import PRIMARY_COLOR, HIDDEN
-from components.averages_panel import update_average
-from components.average import average
+from components.averages_panel import average, update_average
 from .strip_selector_style import *
 from stores import get_store_data
 

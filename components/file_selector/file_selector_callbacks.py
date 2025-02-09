@@ -5,8 +5,7 @@ This module contains all the callback functions for the file selector component.
 from dash import Input, Output, State, ctx, html, ALL, dcc, no_update
 from .file_selector_logic import process_file
 from .file_selector_style import *
-from components.averages_panel import update_average
-from components.average import average
+from components.averages_panel import average, update_average
 from components.graph_display import create_multi_file_figure
 from stores import get_store_data
 
