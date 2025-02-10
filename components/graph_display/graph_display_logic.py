@@ -30,8 +30,8 @@ def create_multi_file_figure(stores, strips):
 	for average in averages.values():
 		if average['start_time'] is not None and average['end_time'] is not None:
 			# Get y-range for the rectangle
-			y_min = min(min(strip) for strip in file['raw_strip_resp'] for file in files.values())
-			y_max = max(max(strip) for strip in file['raw_strip_resp'] for file in files.values())
+			y_min = min([min(strip) for strip in file['raw_strip_resp'] for file in files.values()])
+			y_max = max([max(strip) for strip in file['raw_strip_resp'] for file in files.values()])
 			delta = (y_max - y_min) * 0.05
 			
 			fig.add_shape(

@@ -8,7 +8,6 @@ import dash
 from styles import *
 from .graph_display_logic import create_multi_file_figure
 from .graph_display_style import *
-from stores import get_store_data
 
 def register_graph_display_callbacks(app):
 	"""Register graph display callbacks."""
@@ -17,22 +16,17 @@ def register_graph_display_callbacks(app):
 		[Output('strip-responses-graph', 'figure', allow_duplicate=True),
 		 Output('strip-responses-graph', 'style', allow_duplicate=True),
 		 Output('graph-placeholder', 'style', allow_duplicate=True)],
-		[Input('add-file', 'contents'),
-		 Input({'type': 'time-offset', 'index': ALL}, 'value'),
+		[Input('file-store', 'data'),
+		 Input('average-store', 'data'),
 		 Input('strip-store', 'data')],
-		[State('stores', 'children'),
-		 State('add-file', 'filename'),
-		 State({'type': 'time-offset', 'index': ALL}, 'id')],
+		State('stores', 'children'),
 		prevent_initial_call=True
 	)
-
-	def update_data(contents, time_offsets, strips, stores, filename, offset_ids):
-		"""Handle file upload and update the graph."""
-
-		files = get_store_data(stores, 'file-store')
+	def update_data(files, averages, strips, stores):
+		"""Update the graph."""
 		
-		if not files:
-			return no_update, no_update, no_update
+		if not files or not strips:
+			return no_update, HIDDEN, GRAPH_PLACEHOLDER
 
 		# Create figure with all files
 		figure = create_multi_file_figure(stores, strips or [])

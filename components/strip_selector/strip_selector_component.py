@@ -29,9 +29,26 @@ def strip_selector():
 			html.Div(id='strip-dropdown-background')
 		], style=CUSTOM_DROPDOWN_CONTAINER),
 
-		html.Div(id='selected-strips-display', style=SELECTED_STRIPS_CONTAINER)
+		html.Div(id='strips', style=SELECTED_STRIPS_CONTAINER),
+		html.Div("No strip selected.", id='no-strip', style=NO_STRIP)
 	]) 
 
 def strip_store():
 	"""Create the strip store component."""
 	return dcc.Store(id='strip-store', data=[])
+
+def strip(strip):
+	return html.Div(
+		strip,
+		id={'type': 'strip-tag', 'index': strip},
+		className='delete-button',
+		style=SELECTED_STRIP_TAG
+	)
+
+def strip_option(strip):
+	return html.Div(
+		f'Strip {strip}',
+		id={'type': 'select-strip', 'index': strip},
+		className='strip-dropdown-item',
+		style=CUSTOM_DROPDOWN_ITEM
+	)

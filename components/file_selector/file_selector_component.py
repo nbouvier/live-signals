@@ -17,10 +17,42 @@ def file_selector():
 		),
 
 		# Loaded files list
-		html.Div(id='file-list', style=FILES_LIST),
+		html.Div(id='files', style=FILES_LIST),
 		html.Div("No file loaded.", id='no-file', style=NO_FILE)
 	])
 
 def file_store():
 	"""Create the file store component."""
 	return dcc.Store(id='file-store', data={})
+
+def file(file):
+	"""Create the file component."""
+	filename = file['filename'] if len(file['filename']) <= 20 else f"{file['filename'][0:10]}...{file['filename'][-10:]}"
+
+	return html.Div([
+		html.Div([
+			# File name
+			html.Div([
+				html.I(className="fa-solid fa-file"),
+				html.Span(filename, title=f'File {file['id']} : {filename}', style=FILE_NAME)
+			], style=FILE_NAME_CONTAINER),
+
+			# Offset input
+			dcc.Input(
+				id={'type': 'time-offset', 'index': file['id']},
+				type='number',
+				value=file['time_offset'],
+				step=1000,
+				debounce=True,
+				style=OFFSET_INPUT
+			)
+		], style=FILE_CARD_BODY),
+
+		# Delete button
+		html.Button(
+			html.I(className="fas fa-trash"),
+			id={'type': 'file-delete', 'index': file['id']},
+			className='delete-button',
+			style=FILE_DELETE
+		)
+	], id={'type': 'file-card', 'index': file['id']}, style=FILE_CARD)

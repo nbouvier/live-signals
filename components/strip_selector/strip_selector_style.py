@@ -176,3 +176,7 @@ STRIP_DROPDOWN_BACKGROUND = {
 	'left': 0,
 	'zIndex': f'calc({Z_INDEX_OVERLAY} - 1)'
 }
+
+NO_STRIP = {
+	'color': MUTED_TEXT_COLOR
+}

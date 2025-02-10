@@ -5,40 +5,57 @@ This module contains all the callback functions for the Dash application.
 import numpy as np
 from dash import Input, Output, State, ctx, html, ALL, dcc, no_update
 import dash
-import styles
-from components.graph_display import create_multi_file_figure
-from .averages_panel_component import average as average_component
-from .averages_panel_logic import process_average
+from styles import *
+from .averages_panel_component import average
+from .averages_panel_logic import process_average, update_average
+from .averages_panel_style import *
 from stores import get_store_data
 
 def register_averages_panel_callbacks(app):
 	"""Register averages panel callbacks."""
+
+	@app.callback(
+		[Output('averages', 'children'),
+		 Output('no-average', 'style')],
+		Input('average-store', 'data')
+	)
+	def display_averages(averages):
+		"""Display the averages."""
+
+		averages_html = [average(a) for a in averages.values()]
+
+		return averages_html, NO_AVERAGE if not averages_html else HIDDEN
+
+	@app.callback(
+		Output('average-store', 'data', allow_duplicate=True),
+		[Input('file-store', 'data'),
+		 Input('strip-store', 'data')],
+		State('stores', 'children'),
+		prevent_initial_call=True
+	)
+	def update_averages(files, strips, stores):
+		"""Update the averages."""
+		averages = get_store_data(stores, 'average-store')
+		return {a['id']: update_average(stores, a) for a in averages.values()}
 	
 	@app.callback(
 		[Output('average-store', 'data', allow_duplicate=True),
-		 Output('averages-content', 'children', allow_duplicate=True),
-		 Output('popup-message', 'style'),
-		 Output('popup-message-content', 'children'),
-		 Output('close-popup', 'style'),
-		 Output('strip-responses-graph', 'figure', allow_duplicate=True)],
-		Input('calc-button', 'n_clicks'),
+		 Output('popup-message-content', 'children', allow_duplicate=True),
+		 Output('popup-message', 'style', allow_duplicate=True)],
+		Input('add-average', 'n_clicks'),
 		[State('stores', 'children'),
-		 State('strip-responses-graph', 'selectedData'),
-		 State('averages-content', 'children')],
+		 State('strip-responses-graph', 'selectedData')],
 		prevent_initial_call=True
 	)
-	def add_average(n_clicks, stores, selected_data, averages_html):
+	def add_average(clicks, stores, selected_data):
 		"""Add an average when the add button is clicked."""
 
 		# Handle no data selected
-		if not 'range' in selected_data:
+		if not selected_data or not 'range' in selected_data:
 			return (
 				no_update,
-				no_update,
-				styles.BASE_POPUP,
-				html.Div("Please make a selection first", style=styles.ERROR_MESSAGE),
-				no_update,
-				no_update
+				html.Div("Please make a selection first", style=ERROR_MESSAGE),
+				BASE_POPUP
 			)
 
 		# Get time range
@@ -51,18 +68,7 @@ def register_averages_panel_callbacks(app):
 		averages = get_store_data(stores, 'average-store')
 		averages[average['id']] = average
 		
-		# Create new average element
-		average_html = average_component(average)
-
-		# Update display
-		averages_html = averages_html or []
-		averages_html.append(average_html)
-		
-		# Update graph with new average
-		strips = get_store_data(stores, 'strip-store')
-		updated_figure = create_multi_file_figure(stores, strips)
-		
-		return averages, averages_html, {'display': 'none'}, None, {'display': 'none'}, updated_figure
+		return averages, None, HIDDEN
 
 	@app.callback(
 		Output('average-store', 'data', allow_duplicate=True),
@@ -72,19 +78,17 @@ def register_averages_panel_callbacks(app):
 	)
 	def update_thickness(values, stores):
 		"""Update thickness value when it changes."""
-
-		if not values:
+		# Prevent trigger when no input
+		if not ctx.triggered or ctx.triggered[0]['value'] is None:
 			return no_update
-
-		# Get updated thickness id
-		updated_id = ctx.triggered_id['index']
-
-		# Get the corresponding value
-		value = [value for i, value in enumerate(values) if updated_id == ctx.inputs_list[0][i]['id']['index']][0]
+		
+		# Get data
+		average_id = ctx.triggered_id['index']
+		value = ctx.triggered[0]['value']
 
 		# Update average in store
 		averages = get_store_data(stores, 'average-store')
-		averages[str(updated_id)]['thickness'] = value
+		averages[str(average_id)]['thickness'] = value
 
 		return averages
 
@@ -94,12 +98,13 @@ def register_averages_panel_callbacks(app):
 		Input({'type': 'toggle-strip-averages', 'index': dash.MATCH}, 'n_clicks'),
 		State({'type': 'strip-averages-content', 'index': dash.MATCH}, 'style')
 	)
-	def toggle_strip_averages(n_clicks, current_style):
+	def toggle_strip_averages(clicks, current_style):
 		"""Toggle strip averages content when the button is clicked."""
-
-		if n_clicks is None:
+		# Prevent trigger when no input
+		if not ctx.triggered or ctx.triggered[0]['value'] is None:
 			return no_update, no_update
-		
+
+		# Fetch visibility
 		is_visible = current_style.get('display', 'none') != 'none'
 		
 		# Update content style
@@ -122,32 +127,22 @@ def register_averages_panel_callbacks(app):
 		return new_style, new_button_children
 
 	@app.callback(
-		[Output('average-store', 'data', allow_duplicate=True),
-		 Output('strip-responses-graph', 'figure', allow_duplicate=True),
-		 Output('averages-content', 'children', allow_duplicate=True)],
+		Output('average-store', 'data', allow_duplicate=True),
 		Input({'type': 'delete-average', 'index': ALL}, 'n_clicks'),
-		[State('stores', 'children'),
-		 State('averages-content', 'children')],
+		State('stores', 'children'),
 		prevent_initial_call=True
-
 	)
-	def delete_average(delete_clicks, stores, averages_html):
+	def delete_average(clicks, stores):
 		"""Delete an average."""
-		
-		if not any(click for click in delete_clicks if click):
-			return no_update, no_update, no_update
-			
-		deleted_id = ctx.triggered_id['index']
+		# Prevent trigger when no input
+		if not ctx.triggered or ctx.triggered[0]['value'] is None:
+			return no_update
+
+		# Get data
+		average_id = ctx.triggered_id['index']
 
 		# Delete average from store
 		averages = get_store_data(stores, 'average-store')
-		del averages[str(deleted_id)]
-		
-		# Update the average display
-		averages_html = [average for average in averages_html if average['props']['id']['index'] != deleted_id]
-		
-		# Update graph with new average
-		strips = get_store_data(stores, 'strip-store')
-		updated_figure = create_multi_file_figure(stores, strips)
+		del averages[str(average_id)]
 
-		return averages, updated_figure, averages_html
+		return averages

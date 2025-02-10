@@ -10,9 +10,10 @@ def averages_panel():
 		html.Button([
 			html.I(className="fas fa-plus", style=BUTTON_ICON),
 			"Average"
-		], id='calc-button', style=CALCULATE_BUTTON),
+		], id='add-average', style=CALCULATE_BUTTON),
 		
-		html.Div(id='averages-content', style=AVERAGES_CONTENT)
+		html.Div(id='averages', style=AVERAGES_CONTENT),
+		html.Div("No average calculated.", id='no-average', style=NO_AVERAGE)
 	])
 
 def average_store():
@@ -21,6 +22,8 @@ def average_store():
 
 def average(average):
 	"""Create an average component."""
+	average_average = f"{average['average']:.2f}" if average['average'] is not None else 'N/A'
+
 	return html.Div([
 		html.Div([
 			# Header with overall average and delete button
@@ -28,10 +31,7 @@ def average(average):
 				# Left side with overall average
 				html.Div([
 					html.Div([
-						html.Span(
-							f"{average['average']:.2f}",
-							style={'fontSize': '16px', 'fontWeight': 'bold'}
-						),
+						html.Span(average_average, style={'fontSize': '16px', 'fontWeight': 'bold'}),
 						html.Span("qdc", style={'fontSize': '12px', 'fontWeight': 'bold', 'marginLeft': '2px'}),
 						html.Div(style={
 							'width': '12px',
@@ -78,12 +78,8 @@ def average(average):
 					style=INDIVIDUAL_AVERAGES_BUTTON
 				),
 
-				# Content (hidden by default)
-				html.Div([
-						html.Div(f"Strip {strip_num}: {avg:.2f}", 
-								style=STRIP_AVERAGE_ITEM)
-						for strip_num, avg in sorted(average['strip_averages'])
-					],
+				# Content
+				html.Div([strip_average(strip, average) for strip, average in average['strip_averages']],
 					id={'type': 'strip-averages-content', 'index': average['id']},
 					style=STRIP_AVERAGES_CONTENT
 				)
@@ -107,5 +103,12 @@ def average(average):
 				'transition': 'all 0.3s'
 			}
 		)
-	], id={'type': 'average', 'index': average['id']}, style=CONTAINER) 
+	], id={'type': 'average', 'index': average['id']}, style=CONTAINER)
+
+def strip_average(strip, average):
+	"""Create an individual strip average component."""
+
+	strip_average = f"{average:.2f}" if average is not None else 'N/A'
+
+	return html.Div(f"Strip {strip}: {strip_average}", style=STRIP_AVERAGE_ITEM)
 

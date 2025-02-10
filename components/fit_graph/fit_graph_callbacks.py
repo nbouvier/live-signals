@@ -7,7 +7,6 @@ from dash import Input, Output, State, ctx, html, ALL, dcc, no_update
 import dash
 from .fit_graph_logic import create_fit_graph, calc_mu, exponential_model
 from .fit_graph_style import *
-from stores import get_store_data
 
 def register_fit_graph_callbacks(app):
 	"""Register fit graph callbacks."""
@@ -16,15 +15,11 @@ def register_fit_graph_callbacks(app):
 		[Output('fit-graph', 'figure'),
 		 Output('fit-graph', 'style'),
 		 Output('fit-graph-placeholder', 'style')],
-		[Input({'type': 'thickness-input', 'index': ALL}, 'value'),
-		 Input({'type': 'delete-average', 'index': ALL}, 'n_clicks')],
-		State('stores', 'children'),
+		Input('average-store', 'data'),
 		prevent_initial_call=True
 	)
-	def update_fit_graph(thickness_values, delete_clicks, stores):
+	def update_fit_graph(averages):
 		"""Update fit graph."""
-
-		averages = get_store_data(stores, 'average-store')
 
 		if len(averages) < 2:
 			return no_update, HIDDEN, GRAPH_PLACEHOLDER

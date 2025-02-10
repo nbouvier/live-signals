@@ -92,3 +92,7 @@ STRIP_AVERAGE_ITEM = {
 	'color': '#666',
 	'fontSize': '14px'
 } 
+
+NO_AVERAGE = {
+	'color': MUTED_TEXT_COLOR
+}

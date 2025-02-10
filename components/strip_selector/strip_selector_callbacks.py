@@ -4,13 +4,26 @@ This module contains all the callback functions for the Dash application.
 
 from dash import Input, Output, State, ctx, html, ALL, dcc, no_update
 import dash
-from styles import PRIMARY_COLOR, HIDDEN
-from components.averages_panel import average, update_average
+from styles import *
+from .strip_selector_component import strip, strip_option
 from .strip_selector_style import *
 from stores import get_store_data
 
 def register_strip_selector_callbacks(app):
 	"""Register strip selector callbacks."""
+
+	@app.callback(
+		[Output('strips', 'children'),
+		 Output('no-strip', 'style')],
+		Input('strip-store', 'data')
+	)
+	def display_strips(strips):
+		"""Display the strips."""
+
+		strips_html = [strip(s) for s in strips]
+
+		return strips_html, NO_STRIP if not strips_html else HIDDEN
+
 
 	@app.callback(
 		[Output('strip-dropdown-list', 'children', allow_duplicate=True),
@@ -21,7 +34,7 @@ def register_strip_selector_callbacks(app):
 		State('stores', 'children'),
 		prevent_initial_call=True
 	)
-	def filter_dropdown_list(search_value, n_clicks, stores):
+	def filter_dropdown_list(search_value, clicks, stores):
 		"""Update the dropdown list based on search input."""
 
 		trigger = ctx.triggered[0]['prop_id']
@@ -32,21 +45,14 @@ def register_strip_selector_callbacks(app):
 
 		# Filter out already selected strips
 		strips = get_store_data(stores, 'strip-store')
-		available_strips = [strip for strip in matching_strips if strip not in strips]
 
-		dropdown_items = [
-			html.Div(
-				f'Strip {strip}',
-				id={'type': 'select-strip', 'index': strip},
-				className='strip-dropdown-item',
-				style=CUSTOM_DROPDOWN_ITEM
-			) for strip in available_strips
-		]
+		# Update display
+		available_strips = [strip_option(strip) for strip in matching_strips if strip not in strips]
 
 		return (
-			dropdown_items,
-			CUSTOM_DROPDOWN_LIST if dropdown_items else HIDDEN,
-			STRIP_DROPDOWN_BACKGROUND if dropdown_items else HIDDEN
+			available_strips,
+			CUSTOM_DROPDOWN_LIST if available_strips else HIDDEN,
+			STRIP_DROPDOWN_BACKGROUND if available_strips else HIDDEN
 		)
 
 	@app.callback(
@@ -59,6 +65,7 @@ def register_strip_selector_callbacks(app):
 	)
 	def remove_from_dropdown_list(strips, options):
 		"""Remove the selected strip from the dropdown list when clicked."""
+
 		if not options:
 			return no_update
 		
@@ -76,7 +83,7 @@ def register_strip_selector_callbacks(app):
 		Input('strip-dropdown-background', 'n_clicks'),
 		prevent_initial_call=True
 	)
-	def close_dropdown_list(n_clicks):
+	def close_dropdown_list(clicks):
 		"""Close the dropdown list when clicking outside."""
 		return HIDDEN, HIDDEN
 
@@ -86,19 +93,18 @@ def register_strip_selector_callbacks(app):
 		 Input('no-strip-button', 'n_clicks'),
 		 Input('odd-strip-button', 'n_clicks'),
 		 Input('even-strip-button', 'n_clicks'),
-		 Input({'type': 'strip-tag', 'index': ALL}, 'n_clicks'),
-		 Input({'type': 'select-strip', 'index': ALL}, 'n_clicks')],
+		 Input({'type': 'select-strip', 'index': ALL}, 'n_clicks'),
+		 Input({'type': 'strip-tag', 'index': ALL}, 'n_clicks')],
 		State('stores', 'children'),
 		prevent_initial_call=True
 	)
-	def update_store(select_clicks, unselect_clicks, odd_clicks, even_clicks, remove_n_clicks, select_n_clicks, stores):
+	def update_store(all_clicks, none_clicks, odd_clicks, even_clicks, add_clicks, remove_clicks, stores):
 		"""Update the strip selection when the buttons are clicked."""
+		# Prevent trigger when no input
+		if not ctx.triggered or ctx.triggered[0]['value'] is None:
+			return no_update
 
 		strips = get_store_data(stores, 'strip-store')
-
-		# Prevent to triggers on strip-store creation
-		if not ctx.triggered[0]['value']:
-			return no_update
 
 		trigger = ctx.triggered[0]['prop_id']
 		all_strips = list(range(18, 153))
@@ -126,37 +132,3 @@ def register_strip_selector_callbacks(app):
 				strips.sort()
 
 		return strips
-
-	@app.callback(
-		[Output('selected-strips-display', 'children'),
-		 Output('averages-content', 'children', allow_duplicate=True)],
-		Input('strip-store', 'data'),
-		State('stores', 'children'),
-		prevent_initial_call=True
-	)
-	def update_selection_display(strips, stores):
-		"""Update the display of selected strips."""
-
-		if strips is None:
-			return no_update, no_update
-
-		# Update strips
-		strips.sort()
-		strips_html = [
-			html.Div(
-				strip,
-				id={'type': 'strip-tag', 'index': strip},
-				className='delete-button',
-				style=SELECTED_STRIP_TAG
-			)
-			for strip in strips
-		]
-
-		# Update averages
-		averages = get_store_data(stores, 'average-store')
-		averages_html = []
-		for average in averages.values():
-			average = update_average(stores, average)
-			averages_html.append(average(average))
-
-		return strips_html, averages_html
