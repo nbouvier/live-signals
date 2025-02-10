@@ -36,7 +36,7 @@ def average(average):
 						html.Div(style={
 							'width': '12px',
 							'height': '12px',
-							'backgroundColor': average['color'].replace('0.2)', '0.8)'),
+							'backgroundColor': average['color'],
 							'marginTop': '-2px',
 							'marginLeft': '10px',
 							'display': 'inline-block',
@@ -47,7 +47,7 @@ def average(average):
 
 					# Time range subtitle with color indicator
 					html.Span(
-						f"{average['start_time']:.1f}ms - {average['end_time']:.1f}ms",
+						f"{average['time_range'][0]:.1f}ms - {average['time_range'][1]:.1f}ms",
 						style=TIME_RANGE
 					)
 				]),

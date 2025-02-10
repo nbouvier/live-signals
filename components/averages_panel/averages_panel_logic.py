@@ -2,12 +2,15 @@ import numpy as np
 from stores import get_store_data
 
 SELECTION_COLORS = [
-	'rgba(128, 128, 128, 0.2)',  # Gray
-	'rgba(100, 149, 237, 0.2)',  # Cornflower Blue
-	'rgba(144, 238, 144, 0.2)',  # Light Green
-	'rgba(255, 182, 193, 0.2)',  # Light Pink
-	'rgba(255, 218, 185, 0.2)'   # Peach
+	'rgba(128, 128, 128, #opacity#)',  # Gray
+	'rgba(100, 149, 237, #opacity#)',  # Cornflower Blue
+	'rgba(144, 238, 144, #opacity#)',  # Light Green
+	'rgba(255, 182, 193, #opacity#)',  # Light Pink
+	'rgba(255, 218, 185, #opacity#)'   # Peach
 ]
+
+COLOR_OPACITY = 0.8
+BACKGROUND_COLORS_OPACITY = 0.2
 	
 average_id = 0
 
@@ -21,8 +24,8 @@ def update_average(stores, average):
 	average['strip_averages'] = []
 	for file in files.values():
 		# Adjust time range for this file's offset
-		adjusted_start = average['start_time'] - file['time_offset']
-		adjusted_end = average['end_time'] - file['time_offset']
+		adjusted_start = average['time_range'][0] - file['time_offset']
+		adjusted_end = average['time_range'][1] - file['time_offset']
 
 		# Find indices in the adjusted time range
 		start_idx = np.searchsorted(file['time_values'], adjusted_start)
@@ -35,28 +38,32 @@ def update_average(stores, average):
 		# Calculate strip averages for this file
 		file_strip_averages = []
 		for strip in strips:
-			strip_avg = np.mean(file['raw_strip_resp'][strip][start_idx:end_idx])
+			strip_avg = np.mean([
+				value for value in file['raw_strip_resp'][strip][start_idx:end_idx]
+				if average['qdc_range'][0] <= value <= average['qdc_range'][1]
+			])
 			file_strip_averages.append((strip, strip_avg))
 
 		average['strip_averages'].extend(file_strip_averages)
-	
+
 	# Calculate the overall average
-	average['average'] = np.mean([avg for _, avg in average['strip_averages']])
+	average['average'] = np.mean([avg for _, avg in average['strip_averages'] if not np.isnan(avg)])
 
 	return average
 
-def process_average(stores, start_time, end_time):
+def process_average(stores, time_range, qdc_range):
 	global average_id
 
 	average_id += 1
 
 	average = dict(
 		id=average_id,
-		color=SELECTION_COLORS[average_id % len(SELECTION_COLORS)],
+		color=SELECTION_COLORS[average_id % len(SELECTION_COLORS)].replace('#opacity#', str(COLOR_OPACITY)),
+		background_color=SELECTION_COLORS[average_id % len(SELECTION_COLORS)].replace('#opacity#', str(BACKGROUND_COLORS_OPACITY)),
 		average=0.0,
 		strip_averages=[],
-		start_time=start_time,
-		end_time=end_time,
+		time_range=time_range,
+		qdc_range=qdc_range,
 		thickness=1
 	)
 

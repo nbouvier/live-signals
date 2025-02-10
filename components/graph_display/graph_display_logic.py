@@ -28,22 +28,16 @@ def create_multi_file_figure(stores, strips):
 	
 	# Add rectangles for averages
 	for average in averages.values():
-		if average['start_time'] is not None and average['end_time'] is not None:
-			# Get y-range for the rectangle
-			y_min = min([min(strip) for strip in file['raw_strip_resp'] for file in files.values()])
-			y_max = max([max(strip) for strip in file['raw_strip_resp'] for file in files.values()])
-			delta = (y_max - y_min) * 0.05
-			
-			fig.add_shape(
-				type="rect",
-				x0=average['start_time'],
-				x1=average['end_time'],
-				y0=y_min - delta,
-				y1=y_max + delta,
-				fillcolor=average['color'],
-				line=dict(width=0),
-				layer="below"
-			)
+		fig.add_shape(
+			type="rect",
+			x0=average['time_range'][0],
+			x1=average['time_range'][1],
+			y0=average['qdc_range'][0],
+			y1=average['qdc_range'][1],
+			fillcolor=average['background_color'],
+			line=dict(color=average['color'], width=2),
+			layer="below"
+		)
 
 	# Update layout
 	fig.update_layout(

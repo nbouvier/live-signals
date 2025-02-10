@@ -21,12 +21,14 @@ def register_fit_graph_callbacks(app):
 	def update_fit_graph(averages):
 		"""Update fit graph."""
 
-		if len(averages) < 2:
+		filtered_averages = [average for average in averages.values() if average['average'] is not None]
+
+		if len(filtered_averages) < 2:
 			return no_update, HIDDEN, GRAPH_PLACEHOLDER
 
 		# Extract thicknesses and averages
-		thicknesses = [average['thickness'] for average in averages.values()]
-		averages = [average['average'] for average in averages.values()]
+		thicknesses = [average['thickness'] for average in filtered_averages]
+		averages = [average['average'] for average in filtered_averages]
 
 		# Calculate fit
 		a, b = calc_mu(thicknesses, averages)

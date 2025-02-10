@@ -57,12 +57,9 @@ def register_averages_panel_callbacks(app):
 				html.Div("Please make a selection first", style=ERROR_MESSAGE),
 				BASE_POPUP
 			)
-
-		# Get time range
-		start_time, end_time = selected_data['range']['x']
 		
 		# Create a new average
-		average = process_average(stores, start_time, end_time)
+		average = process_average(stores, selected_data['range']['x'], selected_data['range']['y'])
 
 		# Add average to store
 		averages = get_store_data(stores, 'average-store')
