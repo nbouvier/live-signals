@@ -13,7 +13,7 @@ def file_selector():
 			children=html.Button([
 				html.I(className="fas fa-plus", style=BUTTON_ICON),
 				"File"
-			], style=ADD_FILE_BUTTON)
+			], className='button primary', style=ADD_FILE_BUTTON)
 		),
 
 		# Loaded files list

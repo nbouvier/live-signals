@@ -14,7 +14,6 @@ CALCULATE_BUTTON = {
 	'borderRadius': BORDER_RADIUS,
 	'cursor': 'pointer',
 	'fontSize': FONT_SIZE_LARGE,
-	'transition': 'background-color 0.3s',
 	'width': '100%',
 	'marginBottom': '10px'
 }

@@ -8,10 +8,10 @@ def strip_selector():
 	"""Create the strip selector component."""
 	return html.Div([
 		html.Div([
-			html.Button('All', id='all-strip-button', style=SELECT_ALL_BUTTON),
-			html.Button('None', id='no-strip-button', style=UNSELECT_ALL_BUTTON),
-			html.Button("Even", id='even-strip-button', style=SELECT_BUTTON),
-			html.Button("Odd", id='odd-strip-button', style=SELECT_BUTTON)
+			html.Button('All', id='all-strip-button', className='button small success', style=SELECT_ALL_BUTTON),
+			html.Button('None', id='no-strip-button', className='button small warning', style=UNSELECT_ALL_BUTTON),
+			html.Button("Even", id='even-strip-button', className='button small primary', style=SELECT_BUTTON),
+			html.Button("Odd", id='odd-strip-button', className='button small primary', style=SELECT_BUTTON)
 		], style=BUTTON_CONTAINER),
 		
 		html.Div([

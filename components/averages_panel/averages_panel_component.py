@@ -10,7 +10,7 @@ def averages_panel():
 		html.Button([
 			html.I(className="fas fa-plus", style=BUTTON_ICON),
 			"Average"
-		], id='add-average', style=CALCULATE_BUTTON),
+		], id='add-average', className='button primary', style=CALCULATE_BUTTON),
 		
 		html.Div(id='averages', style=AVERAGES_CONTENT),
 		html.Div("No average calculated.", id='no-average', style=NO_AVERAGE)
