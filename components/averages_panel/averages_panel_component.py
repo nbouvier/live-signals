@@ -69,46 +69,48 @@ def average(average):
 			
 			# Collapsible section for individual averages
 			html.Div([
-				# Toggle button with arrow
-				html.Button([
-						html.I(className="fas fa-chevron-right", style=TOGGLE_ICON),
-						html.Span("Individual Strip Averages", style={'color': '#666', 'fontSize': '12px'})
-					],
-					id={'type': 'toggle-strip-averages', 'index': average['id']},
-					style=INDIVIDUAL_AVERAGES_BUTTON
-				),
+				html.Div([
+					# Toggle button with arrow
+					html.Button([
+							html.I(className="fas fa-chevron-right", style=TOGGLE_ICON),
+							html.Span("Individual Strip Averages", style={'color': '#666', 'fontSize': '12px'})
+						],
+						id={'type': 'toggle-strip-averages', 'index': average['id']},
+						style=INDIVIDUAL_AVERAGES_BUTTON
+					)
+				]),
 
 				# Content
-				html.Div([strip_average(strip, average) for strip, average in average['strip_averages']],
+				html.Div([strip_average(s) for s in average['strips']],
 					id={'type': 'strip-averages-content', 'index': average['id']},
 					style=STRIP_AVERAGES_CONTENT
 				)
 			])
 		], style={'padding': '12px 16px 12px 12px', 'flex': 1}),
 
-		# Delete button
-		html.Button(
-			html.I(className="fas fa-trash"),
-			id={'type': 'delete-average', 'index': average['id']},
-			className='delete-button',
-			style={
-				'border': '1px solid #dc3545',
-				'borderTopRightRadius': '4px',
-				'borderBottomRightRadius': '4px',
-				'backgroundColor': 'transparent',
-				'color': '#dc3545',
-				'width': '32px',
-				'padding': '4px',
-				'cursor': 'pointer',
-				'transition': 'all 0.3s'
-			}
-		)
+		html.Div([
+			# Select button
+			html.Button(
+				html.I(className="fas fa-eye"),
+				id={'type': 'select-average', 'index': average['id']},
+				className=f"info-button {'active' if average['selected'] else ''}",
+				style=SELECT_BUTTON
+			),
+
+			# Delete button
+			html.Button(
+				html.I(className="fas fa-trash"),
+				id={'type': 'delete-average', 'index': average['id']},
+				className='delete-button',
+				style=DELETE_BUTTON
+			)
+		], style=BUTTON_CONTAINER)
 	], id={'type': 'average', 'index': average['id']}, style=CONTAINER)
 
-def strip_average(strip, average):
+def strip_average(strip):
 	"""Create an individual strip average component."""
 
-	strip_average = f"{average:.2f}" if average is not None else 'N/A'
+	average = f"{strip['average']:.2f}" if strip['average'] is not None else 'N/A'
 
-	return html.Div(f"Strip {strip}: {strip_average}", style=STRIP_AVERAGE_ITEM)
+	return html.Div(f"Strip {strip['number']} (file {strip['file_id']}): {average} qdc", style=STRIP_AVERAGE_ITEM)
 

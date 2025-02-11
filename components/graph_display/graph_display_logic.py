@@ -22,8 +22,9 @@ def create_multi_file_figure(stores, strips):
 			fig.add_scatter(
 				x=adjusted_time,
 				y=file['raw_strip_resp'][strip],
-				name=f'Strip {strip} - File {file['id']}',
-				mode='lines'
+				name=f"{strip} (file {file['id']})",
+				mode='lines',
+				hovertemplate="%{y:.2f} qdc"
 			)
 	
 	# Add rectangles for averages

@@ -90,7 +90,34 @@ STRIP_AVERAGE_ITEM = {
 	'padding': '4px 0',
 	'color': '#666',
 	'fontSize': '14px'
-} 
+}
+
+BUTTON_CONTAINER = {
+	'display': 'flex',
+	'flexDirection': 'column'
+}
+
+SELECT_BUTTON = {
+	'border': '1px solid #888',
+	'borderTopRightRadius': '4px',
+	'borderBottomWidth': '0px',
+	'backgroundColor': 'transparent',
+	'color': '#666',
+	'width': '32px',
+	'padding': '4px',
+	'cursor': 'pointer'
+}
+
+DELETE_BUTTON = {
+	'flex': 1,
+	'border': '1px solid #dc3545',
+	'borderBottomRightRadius': '4px',
+	'backgroundColor': 'transparent',
+	'color': '#dc3545',
+	'width': '32px',
+	'padding': '4px',
+	'cursor': 'pointer'
+}
 
 NO_AVERAGE = {
 	'color': MUTED_TEXT_COLOR

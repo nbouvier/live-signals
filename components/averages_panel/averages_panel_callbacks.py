@@ -59,13 +59,39 @@ def register_averages_panel_callbacks(app):
 			)
 		
 		# Create a new average
-		average = process_average(stores, selected_data['range']['x'], selected_data['range']['y'])
+		new_average = process_average(stores, selected_data['range']['x'], selected_data['range']['y'])
 
 		# Add average to store
 		averages = get_store_data(stores, 'average-store')
-		averages[average['id']] = average
+		averages[new_average['id']] = new_average
+
+		# Update selected average
+		for average in averages.values():
+			average['selected'] = average['id'] == new_average['id']
 		
 		return averages, None, HIDDEN
+
+	@app.callback(
+		Output('average-store', 'data', allow_duplicate=True),
+		Input({'type': 'select-average', 'index': ALL}, 'n_clicks'),
+		State('stores', 'children'),
+		prevent_initial_call=True
+	)
+	def select_average(clicks, stores):
+		"""Select an average."""
+		# Prevent trigger when no input
+		if not ctx.triggered or ctx.triggered[0]['value'] is None:
+			return no_update
+
+		# Get data
+		average_id = ctx.triggered_id['index']
+
+		# Update average in store
+		averages = get_store_data(stores, 'average-store')
+		for average in averages.values():
+			average['selected'] = average['id'] == average_id
+
+		return averages
 
 	@app.callback(
 		Output('average-store', 'data', allow_duplicate=True),
@@ -95,7 +121,7 @@ def register_averages_panel_callbacks(app):
 		Input({'type': 'toggle-strip-averages', 'index': dash.MATCH}, 'n_clicks'),
 		State({'type': 'strip-averages-content', 'index': dash.MATCH}, 'style')
 	)
-	def toggle_strip_averages(clicks, current_style):
+	def toggle_strips(clicks, current_style):
 		"""Toggle strip averages content when the button is clicked."""
 		# Prevent trigger when no input
 		if not ctx.triggered or ctx.triggered[0]['value'] is None:

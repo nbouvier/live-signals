@@ -21,7 +21,7 @@ def update_average(stores, average):
 	strips = get_store_data(stores, 'strip-store')
 
 	# Calculate averages for each file
-	average['strip_averages'] = []
+	average['strips'] = []
 	for file in files.values():
 		# Adjust time range for this file's offset
 		adjusted_start = average['time_range'][0] - file['time_offset']
@@ -36,18 +36,21 @@ def update_average(stores, average):
 			continue
 		
 		# Calculate strip averages for this file
-		file_strip_averages = []
+		file_strips = []
 		for strip in strips:
-			strip_avg = np.mean([
+			strip_average = np.mean([
 				value for value in file['raw_strip_resp'][strip][start_idx:end_idx]
 				if average['qdc_range'][0] <= value <= average['qdc_range'][1]
 			])
-			file_strip_averages.append((strip, strip_avg))
+			file_strips.append(dict(number=strip, file_id=file['id'], average=strip_average, plot=True))
 
-		average['strip_averages'].extend(file_strip_averages)
+		average['strips'].extend(file_strips)
 
 	# Calculate the overall average
-	average['average'] = np.mean([avg for _, avg in average['strip_averages'] if not np.isnan(avg)])
+	average['average'] = np.mean([
+		s['average'] for s in average['strips']
+		if not np.isnan(s['average'])
+	])
 
 	return average
 
@@ -61,10 +64,11 @@ def process_average(stores, time_range, qdc_range):
 		color=SELECTION_COLORS[average_id % len(SELECTION_COLORS)].replace('#opacity#', str(COLOR_OPACITY)),
 		background_color=SELECTION_COLORS[average_id % len(SELECTION_COLORS)].replace('#opacity#', str(BACKGROUND_COLORS_OPACITY)),
 		average=0.0,
-		strip_averages=[],
+		strips=[],
 		time_range=time_range,
 		qdc_range=qdc_range,
-		thickness=1
+		thickness=1,
+		selected=False
 	)
 
 	# Update average

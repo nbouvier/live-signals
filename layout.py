@@ -9,6 +9,7 @@ from components.file_selector import file_store, file_selector, register_file_se
 from components.fit_graph import fit_graph, register_fit_graph_callbacks
 from components.graph_display import graph_display, register_graph_display_callbacks
 from components.popup_message import register_popup_message_callbacks
+from components.strip_graph import strip_graph, register_strip_graph_callbacks
 from components.strip_selector import strip_store, strip_selector, register_strip_selector_callbacks
 
 def create_layout(app):
@@ -19,6 +20,7 @@ def create_layout(app):
 	register_fit_graph_callbacks(app)
 	register_graph_display_callbacks(app)
 	register_popup_message_callbacks(app)
+	register_strip_graph_callbacks(app)
 	register_strip_selector_callbacks(app)
 
 	return html.Div([
@@ -35,7 +37,10 @@ def create_layout(app):
 		# Center panel - Graph display
 		html.Div([
 			graph_display(),
-			fit_graph()
+			html.Div([
+				strip_graph(),
+				fit_graph()
+			], style={'display': 'flex', 'gap': '16px'})
 		], style=CENTER_PANEL),
 		
 		# Popup message
