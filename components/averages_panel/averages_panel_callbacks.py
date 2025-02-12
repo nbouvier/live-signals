@@ -63,7 +63,7 @@ def register_averages_panel_callbacks(app):
 
 		# Add average to store
 		averages = get_store_data(stores, 'average-store')
-		averages[new_average['id']] = new_average
+		averages[str(new_average['id'])] = new_average
 
 		# Update selected average
 		for average in averages.values():

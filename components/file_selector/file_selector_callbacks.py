@@ -55,13 +55,13 @@ def register_file_selector_callbacks(app):
 
 		# Add file to store
 		files = get_store_data(stores, 'file-store')
-		files[file['id']] = file
+		files[str(file['id'])] = file
 
-		# Add file plateaus as averages
+		# Add file ranges to averages
 		averages = get_store_data(stores, 'average-store')
-		for plateaus in file['plateaus']:
-			average = process_average(stores, plateaus['time_range'], plateaus['qdc_range'])
-			averages[average['id']] = average
+		for ranges in file['ranges']:
+			average = process_average(stores, ranges['time_range'], ranges['qdc_range'], file_id=file['id'])
+			averages[str(average['id'])] = average
 		
 		return files, averages, None, None, None, None, HIDDEN
 	
@@ -87,7 +87,8 @@ def register_file_selector_callbacks(app):
 		return files
 	
 	@app.callback(
-		Output('file-store', 'data', allow_duplicate=True),
+		[Output('file-store', 'data', allow_duplicate=True),
+		 Output('average-store', 'data', allow_duplicate=True)],
 		Input({'type': 'file-delete', 'index': ALL}, 'n_clicks'),
 		State('stores', 'children'),
 		prevent_initial_call=True
@@ -95,7 +96,7 @@ def register_file_selector_callbacks(app):
 	def remove_file(clicks, stores):
 		# Prevent trigger when no input
 		if not ctx.triggered or ctx.triggered[0]['value'] is None:
-			return no_update
+			return no_update, no_update
 
 		# Get data
 		file_id = ctx.triggered_id['index']
@@ -103,6 +104,10 @@ def register_file_selector_callbacks(app):
 		# Remove file from store
 		files = get_store_data(stores, 'file-store')
 		del files[str(file_id)]
+
+		# Remove file ranges from averages
+		averages = get_store_data(stores, 'average-store')
+		averages = {a['id']: a for a in averages.values() if a['file_id'] != file_id}
 		
-		return files
+		return files, averages
 

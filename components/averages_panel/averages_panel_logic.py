@@ -25,13 +25,16 @@ def update_average(stores, average):
 
 	files = get_store_data(stores, 'file-store')
 	strips = get_store_data(stores, 'strip-store')
+	
+	file = files[str(average['file_id'])] if average['file_id'] else None
+	offset = file['time_offset'] if file else 0
 
 	# Calculate averages for each file
 	average['strips'] = []
 	for file in files.values():
 		# Adjust time range for this file's offset
-		adjusted_start = average['time_range'][0] - file['time_offset']
-		adjusted_end = average['time_range'][1] - file['time_offset']
+		adjusted_start = average['time_range'][0] + offset - file['time_offset']
+		adjusted_end = average['time_range'][1] + offset - file['time_offset']
 
 		# Find indices in the adjusted time range
 		start_idx = np.searchsorted(file['time_values'], adjusted_start)
@@ -60,7 +63,7 @@ def update_average(stores, average):
 
 	return average
 
-def process_average(stores, time_range, qdc_range, color=None):
+def process_average(stores, time_range, qdc_range, file_id=None, color=None):
 	global average_id
 
 	average_id += 1
@@ -76,7 +79,8 @@ def process_average(stores, time_range, qdc_range, color=None):
 		time_range=time_range,
 		qdc_range=qdc_range,
 		thickness=1,
-		selected=False
+		selected=False,
+		file_id=file_id
 	)
 
 	# Update average

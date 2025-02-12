@@ -106,5 +106,5 @@ def process_file(contents, filename):
 		time_values=time_values,
 		raw_strip_resp=raw_strip_resp,
 		time_offset=0,
-		plateaus=plateaus
+		ranges=plateaus
 	)

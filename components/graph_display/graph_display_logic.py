@@ -26,13 +26,16 @@ def create_multi_file_figure(stores, strips):
 				mode='lines',
 				hovertemplate="%{y:.2f} qdc"
 			)
-	
+
 	# Add rectangles for averages
 	for average in averages.values():
+		file = files[str(average['file_id'])]
+		offset = file['time_offset'] if file else 0
+		
 		fig.add_shape(
 			type="rect",
-			x0=average['time_range'][0],
-			x1=average['time_range'][1],
+			x0=average['time_range'][0] + offset,
+			x1=average['time_range'][1] + offset,
 			y0=average['qdc_range'][0],
 			y1=average['qdc_range'][1],
 			fillcolor=average['selected_color'] if average['selected'] else average['unselected_color'],
