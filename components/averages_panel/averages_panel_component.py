@@ -31,18 +31,9 @@ def average(average):
 				# Left side with overall average
 				html.Div([
 					html.Div([
+						html.Div(style={**COLOR_BOX, 'backgroundColor': average['color']}),
 						html.Span(average_average, style={'fontSize': '16px', 'fontWeight': 'bold'}),
-						html.Span("qdc", style={'fontSize': '12px', 'fontWeight': 'bold', 'marginLeft': '2px'}),
-						html.Div(style={
-							'width': '12px',
-							'height': '12px',
-							'backgroundColor': average['color'],
-							'marginTop': '-2px',
-							'marginLeft': '10px',
-							'display': 'inline-block',
-							'verticalAlign': 'middle',
-							'borderRadius': '2px'
-						})
+						html.Span("qdc", style={'fontSize': '12px', 'fontWeight': 'bold', 'marginLeft': '2px'})
 					], style={'display': 'flex', 'alignItems': 'center'}),
 
 					# Time range subtitle with color indicator

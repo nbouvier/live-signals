@@ -3,6 +3,7 @@ This module contains all the callback functions for the file selector component.
 """
 
 from dash import Input, Output, State, ctx, html, ALL, dcc, no_update
+from components.averages_panel import process_average
 from .file_selector_component import file
 from .file_selector_logic import process_file
 from .file_selector_style import *
@@ -26,6 +27,7 @@ def register_file_selector_callbacks(app):
 	
 	@app.callback(
 		[Output('file-store', 'data', allow_duplicate=True),
+		 Output('average-store', 'data', allow_duplicate=True),
 		 Output('add-file', 'contents'),
 		 Output('add-file', 'filename'),
 		 Output('add-file', 'last_modified'),
@@ -46,6 +48,7 @@ def register_file_selector_callbacks(app):
 				no_update,
 				no_update,
 				no_update,
+				no_update,
 				html.Div(f"Error processing file\n\n{e}", style=ERROR_MESSAGE),
 				BASE_POPUP
 			)
@@ -53,8 +56,14 @@ def register_file_selector_callbacks(app):
 		# Add file to store
 		files = get_store_data(stores, 'file-store')
 		files[file['id']] = file
+
+		# Add file plateaus as averages
+		averages = get_store_data(stores, 'average-store')
+		for plateaus in file['plateaus']:
+			average = process_average(stores, plateaus['time_range'], plateaus['qdc_range'])
+			averages[average['id']] = average
 		
-		return files, None, None, None, None, HIDDEN
+		return files, averages, None, None, None, None, HIDDEN
 	
 	@app.callback(
 		Output('file-store', 'data', allow_duplicate=True),

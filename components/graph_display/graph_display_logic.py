@@ -35,8 +35,8 @@ def create_multi_file_figure(stores, strips):
 			x1=average['time_range'][1],
 			y0=average['qdc_range'][0],
 			y1=average['qdc_range'][1],
-			fillcolor=average['background_color'],
-			line=dict(color=average['color'], width=2),
+			fillcolor=average['selected_color'] if average['selected'] else average['unselected_color'],
+			line=dict(width=0),
 			layer="below"
 		)
 

@@ -1,16 +1,22 @@
 import numpy as np
 from stores import get_store_data
 
-SELECTION_COLORS = [
-	'rgba(128, 128, 128, #opacity#)',  # Gray
-	'rgba(100, 149, 237, #opacity#)',  # Cornflower Blue
-	'rgba(144, 238, 144, #opacity#)',  # Light Green
-	'rgba(255, 182, 193, #opacity#)',  # Light Pink
-	'rgba(255, 218, 185, #opacity#)'   # Peach
+COLOR_PALETTE = [
+	'rgba(249, 65, 68, #opacity#)',
+	'rgba(144, 190, 109, #opacity#)',
+	'rgba(249, 199, 79, #opacity#)',
+	'rgba(39, 125, 161, #opacity#)',
+	'rgba(243, 114, 44, #opacity#)',
+	'rgba(67, 170, 139, #opacity#)',
+	'rgba(249, 132, 74, #opacity#)',
+	'rgba(87, 117, 144, #opacity#)',
+	'rgba(248, 150, 30, #opacity#)',
+	'rgba(77, 144, 142, #opacity#)'
 ]
 
-COLOR_OPACITY = 0.8
-BACKGROUND_COLORS_OPACITY = 0.2
+COLOR_OPACITY = 1
+SELECTED_COLOR_OPACITY = 0.5
+UNSELECTED_COLOR_OPACITY = 0.2
 	
 average_id = 0
 
@@ -54,15 +60,17 @@ def update_average(stores, average):
 
 	return average
 
-def process_average(stores, time_range, qdc_range):
+def process_average(stores, time_range, qdc_range, color=None):
 	global average_id
 
 	average_id += 1
+	color = color or COLOR_PALETTE[average_id % len(COLOR_PALETTE)]
 
 	average = dict(
 		id=average_id,
-		color=SELECTION_COLORS[average_id % len(SELECTION_COLORS)].replace('#opacity#', str(COLOR_OPACITY)),
-		background_color=SELECTION_COLORS[average_id % len(SELECTION_COLORS)].replace('#opacity#', str(BACKGROUND_COLORS_OPACITY)),
+		color=color.replace('#opacity#', str(COLOR_OPACITY)),
+		selected_color=color.replace('#opacity#', str(SELECTED_COLOR_OPACITY)),
+		unselected_color=color.replace('#opacity#', str(UNSELECTED_COLOR_OPACITY)),
 		average=0.0,
 		strips=[],
 		time_range=time_range,

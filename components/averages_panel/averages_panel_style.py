@@ -43,6 +43,16 @@ HEADER = {
 	'alignItems': 'flex-start'
 }
 
+COLOR_BOX = {
+	'width': '12px',
+	'height': '12px',
+	'marginTop': '-2px',
+	'marginRight': '10px',
+	'display': 'inline-block',
+	'verticalAlign': 'middle',
+	'borderRadius': '2px'
+}
+
 TIME_RANGE = {
 	'color': '#666',
 	'font-size': '12px'
