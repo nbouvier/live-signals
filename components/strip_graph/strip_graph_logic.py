@@ -11,9 +11,9 @@ def create_strip_graph(strips):
 		fig.add_scatter(
 			x=[strip['number']],
 			y=[strip['average']],
-			name=f'File {strip["file_id"]}',
+			name=f'Strip {strip['number']} (file {strip["file_id"]})',
 			mode='markers',
-			hovertemplate="%{y:.2f} qdc"
+			hovertemplate="%{y:.2f}"
 		)
 	
 	# Update layout
@@ -25,7 +25,6 @@ def create_strip_graph(strips):
 		xaxis=dict(title=dict(text='Strip number', font=dict(weight='bold', color='#666'))),
 		yaxis=dict(title=dict(text='Response average (qdc)', font=dict(weight='bold', color='#666'))),
 		showlegend=False,
-		hovermode='x unified',
 		height=400,
 		width=400,
 		modebar_remove=['select2d', 'lasso2d']

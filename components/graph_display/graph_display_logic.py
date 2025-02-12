@@ -14,17 +14,21 @@ def create_multi_file_figure(stores, strips):
 	fig = go.Figure()
 	
 	# Add traces for each file
-	for strip in strips:
+	noises = []
+	for strip_number in strips:
 		for file in files.values():
+			strip = file['strips'][str(strip_number)]
+			noises.append(strip['noise'])
+
 			# Add time offset to each time value
 			adjusted_time = [t + file['time_offset'] for t in file['time_values']]
 
 			fig.add_scatter(
 				x=adjusted_time,
-				y=file['raw_strip_resp'][strip],
-				name=f"{strip} (file {file['id']})",
+				y=strip['noised_values'],
+				name=f"Strip {strip['number']} (file {file['id']})",
 				mode='lines',
-				hovertemplate="%{y:.2f} qdc"
+				hovertemplate="%{y:.2f}"
 			)
 
 	# Add rectangles for averages
@@ -36,8 +40,8 @@ def create_multi_file_figure(stores, strips):
 			type="rect",
 			x0=average['time_range'][0] + offset,
 			x1=average['time_range'][1] + offset,
-			y0=average['qdc_range'][0],
-			y1=average['qdc_range'][1],
+			y0=average['qdc_range'][0] - max(noises),
+			y1=average['qdc_range'][1] - min(noises),
 			fillcolor=average['selected_color'] if average['selected'] else average['unselected_color'],
 			line=dict(width=0),
 			layer="below"
@@ -51,7 +55,6 @@ def create_multi_file_figure(stores, strips):
 		),
 		xaxis=dict(title=dict(text="Time (ms)", font=dict(weight='bold', color='#666'))),
 		yaxis=dict(title=dict(text="Strip response (qdc)", font=dict(weight='bold', color='#666'))),
-		hovermode='x unified',
 		showlegend=True,
 		height=400,
 		dragmode='select',

@@ -2,6 +2,7 @@
 This module contains the averages panel component.
 """
 from dash import html, dcc
+from styles import *
 from .averages_panel_style import *
 
 def averages_panel():
@@ -45,17 +46,16 @@ def average(average):
 
 				# Thickness input
 				html.Div([
-					html.Span("Thickness: ", style={'fontSize': '10px', 'fontWeight': 'bold', 'color': '#666'}),
+					html.Span("Thickness (cm)", style=INPUT_LABEL),
 					dcc.Input(
 						id={'type': 'thickness-input', 'index': average['id']},
 						type='number',
-						placeholder='...',
 						value=average['thickness'],
 						step=0.01,
 						debounce=True,
-						style=THICKNESS_INPUT
+						style=INPUT
 					)
-				], style=THICKNESS_CONTAINER)
+				], style=INPUT_CONTAINER)
 			], style=HEADER),
 			
 			# Collapsible section for individual averages

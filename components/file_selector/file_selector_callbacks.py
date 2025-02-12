@@ -57,10 +57,10 @@ def register_file_selector_callbacks(app):
 		files = get_store_data(stores, 'file-store')
 		files[str(file['id'])] = file
 
-		# Add file ranges to averages
+		# Add file plateaus to averages
 		averages = get_store_data(stores, 'average-store')
-		for ranges in file['ranges']:
-			average = process_average(stores, ranges['time_range'], ranges['qdc_range'], file_id=file['id'])
+		for plateau in file['plateaus']:
+			average = process_average(stores, plateau['time_range'], plateau['qdc_range'], file_id=file['id'])
 			averages[str(average['id'])] = average
 		
 		return files, averages, None, None, None, None, HIDDEN
@@ -105,7 +105,7 @@ def register_file_selector_callbacks(app):
 		files = get_store_data(stores, 'file-store')
 		del files[str(file_id)]
 
-		# Remove file ranges from averages
+		# Remove file plateaus from averages
 		averages = get_store_data(stores, 'average-store')
 		averages = {a['id']: a for a in averages.values() if a['file_id'] != file_id}
 		

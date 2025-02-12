@@ -2,6 +2,7 @@
 This module contains the graph display component.
 """
 from dash import html, dcc
+from styles import *
 from .file_selector_style import *
 
 def file_selector():
@@ -27,7 +28,7 @@ def file_store():
 
 def file(file):
 	"""Create the file component."""
-	filename = file['filename'] if len(file['filename']) <= 20 else f"{file['filename'][0:10]}...{file['filename'][-10:]}"
+	filename = file['filename'] if len(file['filename']) <= 15 else f"{file['filename'][0:15]}..."
 
 	return html.Div([
 		html.Div([
@@ -38,14 +39,17 @@ def file(file):
 			], style=FILE_NAME_CONTAINER),
 
 			# Offset input
-			dcc.Input(
-				id={'type': 'time-offset', 'index': file['id']},
-				type='number',
-				value=file['time_offset'],
-				step=1000,
-				debounce=True,
-				style=OFFSET_INPUT
-			)
+			html.Div([
+				html.Span("Offset (ms)", style=INPUT_LABEL),
+				dcc.Input(
+					id={'type': 'time-offset', 'index': file['id']},
+					type='number',
+					value=file['time_offset'],
+					step=1000,
+					debounce=True,
+					style=INPUT
+				)
+			], style=INPUT_CONTAINER)
 		], style=FILE_CARD_BODY),
 
 		# Delete button

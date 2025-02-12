@@ -201,3 +201,23 @@ MAIN_CONTENT = {
 HIDDEN = {
 	'display': 'none'
 }
+
+INPUT_CONTAINER = {
+	'display': 'flex',
+	'flexDirection': 'column',
+	'gap': '2px'
+}
+
+INPUT_LABEL = {
+	'fontSize': '10px',
+	'fontWeight': 'bold',
+	'color': '#666'
+}
+
+INPUT = {
+	'width': '80px',
+	'padding': f'{SPACING_UNIT} {SPACING_SMALL}',
+	'border': '1px solid #ccc',
+	'borderRadius': BORDER_RADIUS,
+	'fontSize': FONT_SIZE_NORMAL
+}

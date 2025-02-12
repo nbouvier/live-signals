@@ -58,20 +58,6 @@ TIME_RANGE = {
 	'font-size': '12px'
 }
 
-THICKNESS_CONTAINER = {
-	'display': 'flex',
-	'flexDirection': 'column',
-	'gap': '2px'
-}
-
-THICKNESS_INPUT = {
-	'width': '80px',
-	'padding': f'{SPACING_UNIT} {SPACING_SMALL}',
-	'border': '1px solid #ccc',
-	'borderRadius': BORDER_RADIUS,
-	'fontSize': FONT_SIZE_NORMAL
-}
-
 INDIVIDUAL_AVERAGES_BUTTON = {
 	'width': '100%',
 	'textAlign': 'left',

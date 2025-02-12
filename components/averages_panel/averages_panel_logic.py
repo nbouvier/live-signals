@@ -46,12 +46,20 @@ def update_average(stores, average):
 		
 		# Calculate strip averages for this file
 		file_strips = []
-		for strip in strips:
+		for strip_number in strips:
+			strip = file['strips'][str(strip_number)]
+
 			strip_average = np.mean([
-				value for value in file['raw_strip_resp'][strip][start_idx:end_idx]
-				if average['qdc_range'][0] <= value <= average['qdc_range'][1]
+				v for v in strip['noised_values'][start_idx:end_idx]
+				if average['qdc_range'][0] <= v <= average['qdc_range'][1]
 			])
-			file_strips.append(dict(number=strip, file_id=file['id'], average=strip_average, plot=True))
+
+			file_strips.append(dict(
+				number=strip_number,
+				file_id=file['id'],
+				average=strip_average,
+				plot=True
+			))
 
 		average['strips'].extend(file_strips)
 
