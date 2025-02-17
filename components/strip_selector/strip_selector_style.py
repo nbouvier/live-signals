@@ -56,7 +56,7 @@ SELECTED_STRIPS_CONTAINER = {
 	'maxHeight': '110px'
 }
 
-SELECTED_STRIP_TAG = {
+STRIP_TAG = {
 	'backgroundColor': 'rgba(188, 188, 188, 0.1)',
 	'border': '1px solid #ddd',
 	'padding': f'6px {SPACING_SMALL} {SPACING_UNIT} {SPACING_SMALL}',
@@ -101,25 +101,21 @@ DROPDOWN_ARROW = {
 }
 
 CUSTOM_DROPDOWN_LIST = {
+	'display': 'flex',
+	'flexWrap': 'wrap',
+	'gap': SPACING_SMALL,
+	'padding': SPACING_UNIT,
 	'position': 'absolute',
 	'top': 'calc(100% + 4px)',
 	'left': '0',
 	'right': '0',
-	'maxHeight': '300px',
+	'maxHeight': '150px',
 	'overflowY': 'auto',
 	'backgroundColor': 'white',
 	'border': BORDER_STYLE,
 	'borderRadius': BORDER_RADIUS,
 	'boxShadow': SHADOW_MEDIUM,
-	'display': 'block',
 	'zIndex': Z_INDEX_OVERLAY
-}
-
-CUSTOM_DROPDOWN_ITEM = {
-	'padding': SPACING_MEDIUM,
-	'cursor': 'pointer',
-	'transition': f'background-color {TRANSITION_NORMAL}',
-	'backgroundColor': 'white'
 }
 
 STRIP_DROPDOWN_BACKGROUND = {

@@ -19,7 +19,6 @@ FILE_HEADER = {
 	'display': 'flex',
 	'alignItems': 'center',
 	'justifyContent': 'space-between',
-	'fontSize': FONT_SIZE_SMALL,
 	'fontWeight': 'bold',
 	'color': MUTED_TEXT_COLOR,
 	'cursor': 'pointer',
@@ -27,7 +26,8 @@ FILE_HEADER = {
 }
 
 FILE_NAME = {
-	'marginLeft': '6px'
+	'marginLeft': '6px',
+	'fontSize': FONT_SIZE_NORMAL,
 }
 
 OFFSET_INPUT = {

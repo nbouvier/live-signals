@@ -16,7 +16,7 @@ def RangeSelector(file):
 	], className='flex column medium-gap full-width')
 
 def RangesPlaceholder(file):
-	return html.Div("No average calculated.", id={'type': 'no-range', 'file_id': file['id']}, className='muted')
+	return html.Div("No range calculated.", id={'type': 'no-range', 'file_id': file['id']}, className='text-small muted')
 
 def Range(file, range):
 	return html.Div([

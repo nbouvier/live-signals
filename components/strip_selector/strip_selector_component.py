@@ -35,7 +35,7 @@ def StripSelector(file):
 		], style=CUSTOM_DROPDOWN_CONTAINER),
 
 		html.Div(id={'type': 'selected-strips', 'file_id': file['id']}, style=SELECTED_STRIPS_CONTAINER),
-		html.Div("No strip selected.", id={'type': 'no-selected-strip', 'file_id': file['id']}, className='muted'),
+		html.Div("No strip selected.", id={'type': 'no-selected-strip', 'file_id': file['id']}, className='text-small muted'),
 		
 		dcc.Store(id={'type': 'selected-strips-store', 'file_id': file['id']}, data=[s for s in file['strips'].values() if s['selected']])
 	], className='full-width')
@@ -58,13 +58,13 @@ def SelectedStrip(file, strip):
 		strip['id'],
 		id={'type': 'selected-strip', 'file_id': file['id'], 'strip_id': strip['id']},
 		className='button danger small inverted',
-		style=SELECTED_STRIP_TAG
+		style=STRIP_TAG
 	)
 
 def DropdownOption(file, strip):
 	return html.Div(
-		f'Strip {strip['id']}',
+		strip['id'],
 		id={'type': 'strip-search-option', 'file_id': file['id'], 'strip_id': strip['id']},
-		className='strip-dropdown-item',
-		style=CUSTOM_DROPDOWN_ITEM
+		className='button secondary small inverted',
+		style=STRIP_TAG
 	)

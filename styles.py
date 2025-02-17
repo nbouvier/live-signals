@@ -91,7 +91,7 @@ TOGGLE_SIDE_PANEL = {
 	'borderLeft': 'none',
 	'borderTopRightRadius': '25px',
 	'borderBottomRightRadius': '25px',
-	'color': MUTED_TEXT_COLOR,
+	'color': PRIMARY_COLOR,
 	'zIndex': 1,
 	'cursor': 'pointer',
 	'transition': 'all 0.3s ease-in-out'

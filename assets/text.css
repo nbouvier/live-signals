@@ -1,3 +1,15 @@
 .muted {
     color: var(--color-muted);
 }
+
+.text-small {
+    font-size: var(--font-size-small);
+}
+
+.text-medium {
+    font-size: var(--font-size-normal);
+}
+
+.text-large {
+    font-size: var(--font-size-large);
+}

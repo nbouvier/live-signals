@@ -4,8 +4,12 @@ from .strip_noise_style import *
 def StripNoise(file):
 	return html.Div([
 		html.Div([
-				"Strip noises",
-			html.I(id={'type': 'toggle-strip-list-icon', 'file_id': file['id']}, className='fas fa-chevron-right')
+			"Strip noises",
+			html.I(
+				id={'type': 'toggle-strip-list-icon', 'file_id': file['id']},
+				className='fas fa-chevron-right',
+				style={'fontSize': FONT_SIZE_SMALL}
+			)
 		], id={'type': 'toggle-strip-list', 'file_id': file['id']}, style=STRIP_LIST_TOGGLE),
 
 		html.Div([

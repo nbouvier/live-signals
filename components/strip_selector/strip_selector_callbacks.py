@@ -1,9 +1,4 @@
-"""
-This module contains all the callback functions for the Dash application.
-"""
-
 from dash import Input, Output, State, ctx, html, ALL, MATCH, dcc, no_update
-import dash
 from styles import *
 from .strip_selector_component import SelectedStrip, DropdownOption
 from .strip_selector_style import *

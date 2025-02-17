@@ -6,7 +6,7 @@ STRIP_LIST_TOGGLE = {
 	'justifyContent': 'space-between',
 	'cursor': 'pointer',
 	'color': MUTED_TEXT_COLOR,
-	'fontSize': FONT_SIZE_LARGE
+	'fontSize': FONT_SIZE_NORMAL
 }
 
 STRIP_LIST = {

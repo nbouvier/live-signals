@@ -21,7 +21,7 @@ def FileSelector():
 	], className='flex column medium-gap')
 
 def FilesPlaceholder():
-	return html.Div("No file loaded.", id='files-placeholder', className='muted')
+	return html.Div("No file loaded.", id='files-placeholder', className='text-medium muted')
 
 def File(file):
 	filename = file['filename'] if len(file['filename']) <= 30 else f"{file['filename'][0:30]}..."
