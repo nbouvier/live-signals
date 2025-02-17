@@ -17,10 +17,13 @@ BORDER_COLOR = '#ddd'
 BORDER_STYLE = '1px solid #dee2e6'
 
 # Spacing
+SPACING_ZERO = '0px'
+SPACING_TINY = '2px'
 SPACING_UNIT = '4px'
 SPACING_SMALL = '8px'
 SPACING_MEDIUM = '16px'
 SPACING_LARGE = '24px'
+SPACING_XLARGE = '32px'
 
 # Font sizes
 FONT_SIZE_SMALL = '12px'
@@ -74,34 +77,6 @@ CENTER_PANEL = {
 	'padding': SPACING_MEDIUM,
 	'boxSizing': 'border-box',
 	'overflowY': 'scroll'
-}
-
-# Strip selector styles
-STRIP_SELECTOR = {
-	'display': 'grid',
-	'gridTemplateColumns': 'repeat(auto-fill, minmax(80px, 1fr))',
-	'gap': '5px',
-	'overflowY': 'auto',
-	'padding': '10px 0',
-	'backgroundColor': BACKGROUND_COLOR
-}
-
-# Button styles
-BUTTON = {
-	'backgroundColor': '#4CAF50',
-	'color': 'white',
-	'padding': '10px 20px',
-	'border': 'none',
-	'borderRadius': '4px',
-	'margin': '5px',
-	'cursor': 'pointer',
-	'fontSize': '14px'
-}
-
-BUTTON_CONTAINER = {
-	'display': 'flex',
-	'gap': '10px',
-	'marginBottom': '10px'
 }
 
 # Overlay styles
@@ -220,4 +195,59 @@ INPUT = {
 	'border': '1px solid #ccc',
 	'borderRadius': BORDER_RADIUS,
 	'fontSize': FONT_SIZE_NORMAL
+}
+
+GRAPHS_CONTAINER = {
+	'overflowX': 'auto'
+}
+
+GRAPH_CONTAINER = {
+	'display': 'flex',
+	'alignItems': 'center',
+	'justifyContent': 'center',
+	'height': '400px',
+	'minHeight': '400px',
+	'padding': '20px 60px 20px 60px',
+	'backgroundColor': BACKGROUND_COLOR,
+	'border': BORDER_STYLE,
+	'borderRadius': BORDER_RADIUS,
+	'color': MUTED_TEXT_COLOR,
+	'fontSize': FONT_SIZE_LARGE
+}
+
+GRAPH = {
+	'display': 'block'
+}
+
+GRAPH_PLACEHOLDER = {
+	'display': 'flex',
+	'justifyContent': 'center',
+	'alignItems': 'center'
+}
+
+TAB_GRAPH_CONTAINER = {
+	**GRAPH_CONTAINER,
+	'borderTop': 'none',
+	'borderRadius': 'none',
+	'borderBottomLeftRadius': BORDER_RADIUS,
+	'borderBottomRightRadius': BORDER_RADIUS
+}
+
+TAB = {
+	'color': MUTED_TEXT_COLOR,
+	'fontSize': FONT_SIZE_SMALL,
+	'backgroundColor': 'white',
+	'padding': '10px',
+	'borderTopLeftRadius': BORDER_RADIUS,
+	'borderTopRightRadius': BORDER_RADIUS
+}
+
+SELECTED_TAB = {
+	'color': MUTED_TEXT_COLOR,
+	'fontSize': FONT_SIZE_SMALL,
+	'fontWeight': 'bold',
+	'backgroundColor': BACKGROUND_COLOR,
+	'padding': '10px',
+	'borderTopLeftRadius': BORDER_RADIUS,
+	'borderTopRightRadius': BORDER_RADIUS
 }

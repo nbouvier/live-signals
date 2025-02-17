@@ -1,0 +1,46 @@
+:root {
+    /* Colors */
+    --color-white: rgb(255, 255, 255);
+    --color-info: rgb(0, 111, 230);
+    --color-success: rgb(0, 116, 0);
+    --color-danger: rgb(220, 53, 69);
+    --color-secondary: rgb(102, 102, 102);
+    --color-muted: #6c757d;
+
+    /* Background colors */
+    --bg-color-white: rgb(255, 255, 255);
+    --bg-color-black: rgb(0, 0, 0);
+    --bg-color-info: rgb(0, 123, 255);
+    --bg-color-info-darken: rgb(0, 111, 230);
+    --bg-color-success: rgb(0, 148, 0);
+    --bg-color-success-darken: rgb(0, 128, 0);
+    --bg-color-danger: rgb(220, 53, 69);
+    --bg-color-danger-darken: rgb(185, 43, 59);
+    --bg-color-secondary: rgb(102, 102, 102);
+    --bg-color-secondary-darken: rgb(82, 82, 82);
+    
+    /* Spacing */
+    --spacing-zero: 0px;
+    --spacing-tiny: 2px;
+    --spacing-unit: 4px;
+    --spacing-small: 8px;
+    --spacing-medium: 16px;
+    --spacing-large: 24px;
+
+    /* Font sizes */
+    --font-size-small: 12px;
+    --font-size-normal: 14px;
+    --font-size-large: 16px;
+
+    /* Font weights */
+    --font-weight-normal: 400;
+    --font-weight-bold: 600;
+
+    /* Border styles */
+    --border-radius: 4px;
+    --border-color: #ddd;
+    --border-style: 1px solid #dee2e6;
+
+    /* Transitions */
+    --transition-default: all 0.3s ease;
+}

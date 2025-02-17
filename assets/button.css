@@ -1,0 +1,80 @@
+.button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-small);
+    color: var(--color-white);
+	font-size: var(--font-size-normal);
+	border: none;
+	border-radius: var(--border-radius);
+    background-color: var(--bg-color-black);
+	cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+.button:hover { transform: scale(1.03) perspective(1px); }
+.inverted.button {
+    color: var(--bg-color-black);
+    border: 1px solid var(--bg-color-black);
+    background-color: transparent;
+}
+
+.no-growth.button:hover { transform: none; }
+
+.small.button { font-size: var(--font-size-small); }
+.small.button:hover { transform: scale(1.1) perspective(1px); }
+
+.big.button {
+    font-size: var(--font-size-normal);
+    font-weight: var(--font-weight-normal);
+    padding: var(--spacing-small) var(--spacing-medium);
+    width: 100%;
+}
+.big.button:hover { transform: scale(1.03) perspective(1px); }
+
+.success.button { background-color: var(--bg-color-success); }
+.success.button:hover { background-color: var(--bg-color-success-darken)!important; }
+.inverted.success.button {
+    color: var(--bg-color-success);
+    border-color: var(--bg-color-success);
+    background-color: transparent;
+}
+.inverted.success.button:hover, .active.inverted.success.button {
+    color: var(--color-white)!important;
+    background-color: var(--bg-color-success)!important;
+}
+
+.danger.button { background-color: var(--bg-color-danger); }
+.danger.button:hover { background-color: var(--bg-color-danger-darken)!important; }
+.inverted.danger.button {
+    color: var(--bg-color-danger);
+    border-color: var(--bg-color-danger);
+    background-color: transparent;
+}
+.inverted.danger.button:hover, .active.inverted.danger.button {
+    color: var(--color-white)!important;
+    background-color: var(--bg-color-danger)!important;
+}
+
+.info.button { background-color: var(--bg-color-info); }
+.info.button:hover { background-color: var(--bg-color-info-darken)!important; }
+.inverted.info.button {
+    color: var(--bg-color-info);
+    border-color: var(--bg-color-info);
+    background-color: transparent;
+}
+.inverted.info.button:hover, .active.inverted.info.button {
+    color: var(--color-white)!important;
+    background-color: var(--bg-color-info)!important;
+}
+
+.secondary.button { background-color: var(--bg-color-secondary); }
+.secondary.button:hover { background-color: var(--bg-color-secondary-darken)!important; }
+.inverted.secondary.button {
+    color: var(--bg-color-secondary);
+    border-color: var(--bg-color-secondary);
+    background-color: transparent;
+}
+.inverted.secondary.button:hover, .active.inverted.secondary.button {
+    color: var(--color-white)!important;
+    background-color: var(--bg-color-secondary)!important;
+}

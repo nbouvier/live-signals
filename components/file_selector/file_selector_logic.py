@@ -1,16 +1,44 @@
-"""
-This module contains functions for reading and processing binary data files.
-"""
-
 import base64
 import numpy as np
 from pathlib import Path
+from components.averages_panel import process_range
 
 PLATEAU_DELTA = 0.01
 PLATEAU_MIN_MATCHES = 10
 BOX_SIZE_DELTA = 0.01
 
-file_id = 0
+next_file_id = 0
+
+def process_file(contents, filename):
+	global next_file_id
+
+	raw_strip_resp, time_values = read_bin_file(contents, filename)
+
+	plateaus = find_plateaus(raw_strip_resp, time_values)
+	noise_range = plateaus.pop(np.argmin([p['value'] for p in plateaus]))
+
+	strips = process_strips(raw_strip_resp, time_values, noise_range)
+
+	file = dict(
+		id=str(next_file_id),
+		filename=filename,
+		time_values=time_values,
+		time_offset=0,
+		strips=strips,
+		noise_range=noise_range,
+		next_range_id=0,
+		ranges={}
+	)
+
+	next_file_id += 1
+
+	noises = [s['noise'] for s in strips.values()]
+	for plateau in plateaus:
+		noised_qdc_range = [plateau['qdc_range'][0] - max(noises), plateau['qdc_range'][1] - min(noises)]
+		range = process_range(file, plateau['time_range'], noised_qdc_range)
+		file['ranges'][range['id']] = range
+	
+	return file
 
 def read_bin_file(contents, filename):
 	content_type, content_string = contents.split(',')
@@ -46,13 +74,13 @@ def read_bin_file(contents, filename):
 
 	return raw_strip_resp, time_values
 
-def find_responses_plateaus(raw_strip_resp, time_values):
+def find_plateaus(raw_strip_resp, time_values):
 	max_strip_resp = max([max(s) for s in raw_strip_resp])
 	time_strips_mean = np.mean(raw_strip_resp, axis=0)
 
 	# Init data
 	plateaus = []
-	evaluated_range = dict(
+	evaluated_plateau = dict(
 		start_time=time_values[0],
 		end_time=time_values[0],
 		response=time_strips_mean[0],
@@ -61,22 +89,22 @@ def find_responses_plateaus(raw_strip_resp, time_values):
 
 	# Search for plateaus
 	for mean, time in zip(time_strips_mean[1:], time_values[1:]):
-		min_response = evaluated_range['response'] * (1 - PLATEAU_DELTA)
-		max_response = evaluated_range['response'] * (1 + PLATEAU_DELTA)
+		min_response = evaluated_plateau['response'] * (1 - PLATEAU_DELTA)
+		max_response = evaluated_plateau['response'] * (1 + PLATEAU_DELTA)
 
-		# If mean is in plateau, dd to potential plateau
+		# If mean is in plateau, add to potential plateau
 		if min_response <= mean <= max_response:
-			evaluated_range['end_time'] = time
-			evaluated_range['matches'] += 1
+			evaluated_plateau['end_time'] = time
+			evaluated_plateau['matches'] += 1
 		
 		# Else if plateau has reach minimum matches, add new plateau and reset postential plateau
-		elif evaluated_range['matches'] >= PLATEAU_MIN_MATCHES:
+		elif evaluated_plateau['matches'] >= PLATEAU_MIN_MATCHES:
 			plateaus.append(dict(
-				time_range=[evaluated_range['start_time'], evaluated_range['end_time']],
+				time_range=[evaluated_plateau['start_time'], evaluated_plateau['end_time']],
 				qdc_range=[0, max_strip_resp * (1 + BOX_SIZE_DELTA)],
-				value=evaluated_range['response']
+				value=evaluated_plateau['response']
 			))
-			evaluated_range = dict(
+			evaluated_plateau = dict(
 				start_time=time,
 				end_time=time,
 				response=mean,
@@ -85,7 +113,7 @@ def find_responses_plateaus(raw_strip_resp, time_values):
 
 		# Else, reset potential plateau
 		else:
-			evaluated_range = dict(
+			evaluated_plateau = dict(
 				start_time=time,
 				end_time=time,
 				response=mean,
@@ -94,39 +122,25 @@ def find_responses_plateaus(raw_strip_resp, time_values):
 
 	return plateaus
 
-def process_strips(raw_strip_resp, time_values, noise_plateau):
+def process_strips(raw_strip_resp, time_values, noise_range):
 	strips = {}
 
 	for i, values in enumerate(raw_strip_resp):
-		noise_start = np.searchsorted(time_values, noise_plateau['time_range'][0])
-		noise_end = np.searchsorted(time_values, noise_plateau['time_range'][1])
+		id = str(i + 1)
+
+		noise_start = np.searchsorted(time_values, noise_range['time_range'][0])
+		noise_end = np.searchsorted(time_values, noise_range['time_range'][1])
 
 		noise = np.mean(values[noise_start:noise_end])
 		noised_values = [v - noise if noise <= v else 0 for v in values]
 
-		strips[str(i)] = dict(number=i, values=values, noise=noise, noised_values=noised_values)
+		strips[id] = dict(
+			id=id,
+			values=values,
+			noise=noise,
+			noised_values=noised_values,
+			selected=False,
+			filtered=False
+		)
 
 	return strips
-
-def process_file(contents, filename):
-	"""Process uploaded bin file."""
-	global file_id
-
-	raw_strip_resp, time_values = read_bin_file(contents, filename)
-
-	plateaus = find_responses_plateaus(raw_strip_resp, time_values)
-	noise_plateau = plateaus.pop(np.argmin([p['value'] for p in plateaus]))
-
-	strips = process_strips(raw_strip_resp, time_values, noise_plateau)
-
-	file_id += 1
-	
-	return dict(
-		id=file_id,
-		filename=filename,
-		time_values=time_values,
-		time_offset=0,
-		strips=strips,
-		noise_plateau=noise_plateau,
-		plateaus=plateaus
-	)

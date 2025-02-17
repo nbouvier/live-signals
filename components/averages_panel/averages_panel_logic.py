@@ -1,5 +1,4 @@
 import numpy as np
-from stores import get_store_data
 
 COLOR_PALETTE = [
 	'rgba(249, 65, 68, #opacity#)',
@@ -17,81 +16,47 @@ COLOR_PALETTE = [
 COLOR_OPACITY = 1
 SELECTED_COLOR_OPACITY = 0.5
 UNSELECTED_COLOR_OPACITY = 0.2
-	
-average_id = 0
 
-def update_average(stores, average):
-	"""Update average."""
+def process_range(file, time_range, qdc_range, color=None):
+	color = color or COLOR_PALETTE[file['next_range_id'] % len(COLOR_PALETTE)]
 
-	files = get_store_data(stores, 'file-store')
-	strips = get_store_data(stores, 'strip-store')
-	
-	file = files[str(average['file_id'])] if average['file_id'] else None
-	offset = file['time_offset'] if file else 0
-
-	# Calculate averages for each file
-	average['strips'] = []
-	for file in files.values():
-		# Adjust time range for this file's offset
-		adjusted_start = average['time_range'][0] + offset - file['time_offset']
-		adjusted_end = average['time_range'][1] + offset - file['time_offset']
-
-		# Find indices in the adjusted time range
-		start_idx = np.searchsorted(file['time_values'], adjusted_start)
-		end_idx = np.searchsorted(file['time_values'], adjusted_end)
-		
-		# Skip if signal is not in range
-		if start_idx == end_idx:
-			continue
-		
-		# Calculate strip averages for this file
-		file_strips = []
-		for strip_number in strips:
-			strip = file['strips'][str(strip_number)]
-
-			strip_average = np.mean([
-				v for v in strip['noised_values'][start_idx:end_idx]
-				if average['qdc_range'][0] <= v <= average['qdc_range'][1]
-			])
-
-			file_strips.append(dict(
-				number=strip_number,
-				file_id=file['id'],
-				average=strip_average,
-				plot=True
-			))
-
-		average['strips'].extend(file_strips)
-
-	# Calculate the overall average
-	average['average'] = np.mean([
-		s['average'] for s in average['strips']
-		if not np.isnan(s['average'])
-	])
-
-	return average
-
-def process_average(stores, time_range, qdc_range, file_id=None, color=None):
-	global average_id
-
-	average_id += 1
-	color = color or COLOR_PALETTE[average_id % len(COLOR_PALETTE)]
-
-	average = dict(
-		id=average_id,
+	range = dict(
+		id=str(file['next_range_id']),
 		color=color.replace('#opacity#', str(COLOR_OPACITY)),
 		selected_color=color.replace('#opacity#', str(SELECTED_COLOR_OPACITY)),
 		unselected_color=color.replace('#opacity#', str(UNSELECTED_COLOR_OPACITY)),
-		average=0.0,
-		strips=[],
+		average=np.nan,
+		strips={},
 		time_range=time_range,
 		qdc_range=qdc_range,
-		thickness=1,
-		selected=False,
-		file_id=file_id
+		thickness=0,
+		selected=False
 	)
 
-	# Update average
-	average = update_average(stores, average)
+	file['next_range_id'] += 1
 
-	return average
+	return update_range(file, range)
+
+def update_range(file, range):
+	start_idx = np.searchsorted(file['time_values'], range['time_range'][0])
+	end_idx = np.searchsorted(file['time_values'], range['time_range'][1])
+	
+	selected_strips = [s for s in file['strips'].values() if s['selected']]
+
+	range['strips'] = {}
+	for strip in selected_strips:
+		range['strips'][strip['id']] = dict(
+			id=strip['id'],
+			average=np.mean([
+				v for v in strip['noised_values'][start_idx:end_idx]
+				if range['qdc_range'][0] <= v <= range['qdc_range'][1]
+			])
+		)
+
+	range['average'] = np.mean([
+		s['average'] for s in range['strips'].values()
+		if not np.isnan(s['average'])
+	])
+
+	return range
+

@@ -1,56 +1,33 @@
-"""
-This module contains styles for the file selector component.
-"""
-
 from styles import *
 
-ADD_FILE_BUTTON = {
-	'display': 'flex',
-	'justifyContent': 'center',
-	'backgroundColor': PRIMARY_COLOR,
-	'color': 'white',
-	'padding': f'{SPACING_SMALL} {SPACING_MEDIUM}',
-	'border': 'none',
-	'borderRadius': BORDER_RADIUS,
-	'cursor': 'pointer',
-	'fontSize': FONT_SIZE_LARGE,
-	'width': '100%',
-	'marginBottom': '10px'
-}
-
-BUTTON_ICON = {
-	'marginRight': SPACING_SMALL
-} 
-
-FILES_LIST = {
+FILE = {
 	'display': 'flex',
 	'flexDirection': 'column',
-	'gap': '10px'
-}
-
-FILE_CARD = {
-	'display': 'flex',
-	'backgroundColor': 'rgba(188, 188, 188, 0.1)',
-	'borderRadius': '6px',
-	'border': '1px solid #ddd',
 	'color': '#444'
 }
 
-FILE_CARD_BODY = {
+FILE_BODY = {
 	'display': 'flex',
+	'flexDirection': 'column',
 	'flex': 1,
+	'gap': SPACING_LARGE,
 	'alignItems': 'center',
-	'padding': '8px 12px'
+	'padding': f'{SPACING_SMALL} {SPACING_ZERO} {SPACING_XLARGE} {SPACING_ZERO}'
 }
 
-FILE_NAME_CONTAINER = {
-	'fontSize': '12px',
-	'color': MUTED_TEXT_COLOR
+FILE_HEADER = {
+	'display': 'flex',
+	'alignItems': 'center',
+	'justifyContent': 'space-between',
+	'fontSize': FONT_SIZE_SMALL,
+	'fontWeight': 'bold',
+	'color': MUTED_TEXT_COLOR,
+	'cursor': 'pointer',
+	'padding': f'{SPACING_SMALL} {SPACING_ZERO}'
 }
 
 FILE_NAME = {
-	'marginLeft': '6px',
-	'fontWeight': 'bold'
+	'marginLeft': '6px'
 }
 
 OFFSET_INPUT = {
@@ -62,19 +39,7 @@ OFFSET_INPUT = {
 	'fontSize': FONT_SIZE_NORMAL
 }
 
-FILE_DELETE = {
-	'alignSelf': 'stretch',
-	'border': '1px solid #dc3545',
-	'borderTopRightRadius': '4px',
-	'borderBottomRightRadius': '4px',
-	'backgroundColor': 'transparent',
-	'color': '#dc3545',
-	'width': '32px',
-	'padding': '4px',
-	'cursor': 'pointer',
-	'transition': 'all 0.3s'
-}
-
-NO_FILE = {
-	'color': MUTED_TEXT_COLOR
+FILE_GRAPHS_CONTAINER = {
+	'width': '820px',
+	'minWidth': '820px'
 }

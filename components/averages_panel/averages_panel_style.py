@@ -4,20 +4,6 @@ This module contains styles for the averages panel component.
 
 from styles import *
 
-CALCULATE_BUTTON = {
-	'display': 'flex',
-	'justifyContent': 'center',
-	'backgroundColor': PRIMARY_COLOR,
-	'color': 'white',
-	'padding': f'{SPACING_SMALL} {SPACING_MEDIUM}',
-	'border': 'none',
-	'borderRadius': BORDER_RADIUS,
-	'cursor': 'pointer',
-	'fontSize': FONT_SIZE_LARGE,
-	'width': '100%',
-	'marginBottom': '10px'
-}
-
 AVERAGES_CONTENT = {
 	'display': 'flex',
 	'flexDirection': 'column',
@@ -75,7 +61,6 @@ TOGGLE_ICON = {
 }
 
 STRIP_AVERAGES_CONTENT = {
-	'display': 'none',
 	'padding': '10px',
 	'backgroundColor': '#f8f9fa',
 	'borderRadius': '4px',
@@ -94,27 +79,17 @@ BUTTON_CONTAINER = {
 }
 
 SELECT_BUTTON = {
-	'border': '1px solid #888',
+	'borderRadius': 0,
+	'borderBottom': 'none',
 	'borderTopRightRadius': '4px',
-	'borderBottomWidth': '0px',
-	'backgroundColor': 'transparent',
-	'color': '#666',
 	'width': '32px',
-	'padding': '4px',
-	'cursor': 'pointer'
+	'padding': '4px'
 }
 
 DELETE_BUTTON = {
 	'flex': 1,
-	'border': '1px solid #dc3545',
+	'borderRadius': 0,
 	'borderBottomRightRadius': '4px',
-	'backgroundColor': 'transparent',
-	'color': '#dc3545',
 	'width': '32px',
-	'padding': '4px',
-	'cursor': 'pointer'
-}
-
-NO_AVERAGE = {
-	'color': MUTED_TEXT_COLOR
+	'padding': '4px'
 }

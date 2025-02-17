@@ -1,8 +1,4 @@
-"""
-This module exports the graph display component.
-"""
+from .graph_display_callbacks import register_strip_responses_graph_callbacks
+from .graph_display_component import StripResponsesGraph
 
-from .graph_display_callbacks import register_graph_display_callbacks
-from .graph_display_component import graph_display
-
-__all__ = ['graph_display', 'register_graph_display_callbacks']
+__all__ = ['StripResponsesGraph', 'register_strip_responses_graph_callbacks']

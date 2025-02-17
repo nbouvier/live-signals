@@ -4,51 +4,54 @@ This module contains the strip selector component.
 from dash import html, dcc
 from .strip_selector_style import *
 
-def strip_selector():
+def StripSelector(file):
 	"""Create the strip selector component."""
 	return html.Div([
 		html.Div([
-			html.Button('All', id='all-strip-button', className='button small success', style=SELECT_ALL_BUTTON),
-			html.Button('None', id='no-strip-button', className='button small warning', style=UNSELECT_ALL_BUTTON),
-			html.Button("Even", id='even-strip-button', className='button small primary', style=SELECT_BUTTON),
-			html.Button("Odd", id='odd-strip-button', className='button small primary', style=SELECT_BUTTON)
+			html.Button('All', id={'type': 'select-strips-button', 'file_id': file['id'], 'strips': 'all'}, className='button small success'),
+			html.Button('None', id={'type': 'select-strips-button', 'file_id': file['id'], 'strips': 'none'}, className='button small danger'),
+			html.Button("Even", id={'type': 'select-strips-button', 'file_id': file['id'], 'strips': 'even'}, className='button small info'),
+			html.Button("Odd", id={'type': 'select-strips-button', 'file_id': file['id'], 'strips': 'odd'}, className='button small info')
 		], style=BUTTON_CONTAINER),
 		
 		html.Div([
 			html.Div([
 				dcc.Input(
-					id='strip-search-input',
+					id={'type': 'strip-search', 'file_id': file['id']},
 					type='text',
+					debounce=1,
 					placeholder='Search strips...',
 					style=CUSTOM_DROPDOWN_INPUT,
 					autoComplete='off'
 				),
-				html.Div('▼', style=DROPDOWN_ARROW)
-			], id='strip-search-input-container', style=CUSTOM_DROPDOWN_INPUT_CONTAINER),
-			html.Div(id='strip-dropdown-list'),
-			html.Div(id='strip-dropdown-background')
+				html.I(
+					id={'type': 'strip-search-dropdown-icon', 'file_id': file['id']},
+					className='fas fa-chevron-right',
+					style=DROPDOWN_ARROW
+				)
+			], id={'type': 'strip-search-input', 'file_id': file['id']}, style=CUSTOM_DROPDOWN_INPUT_CONTAINER),
+			html.Div(id={'type': 'strip-search-dropdown', 'file_id': file['id']}, style=HIDDEN),
+			html.Div(id={'type': 'strip-search-overlay', 'file_id': file['id']}, style=HIDDEN)
 		], style=CUSTOM_DROPDOWN_CONTAINER),
 
-		html.Div(id='strips', style=SELECTED_STRIPS_CONTAINER),
-		html.Div("No strip selected.", id='no-strip', style=NO_STRIP)
-	]) 
+		html.Div(id={'type': 'selected-strips', 'file_id': file['id']}, style=SELECTED_STRIPS_CONTAINER),
+		html.Div("No strip selected.", id={'type': 'no-selected-strip', 'file_id': file['id']}, className='muted'),
 
-def strip_store():
-	"""Create the strip store component."""
-	return dcc.Store(id='strip-store', data=[])
+		dcc.Store(id={'type': 'strips-store', 'file_id': file['id']}, data=[s for s in file['strips'].values() if s['selected']])
+	], className='full-width')
 
-def strip(strip):
+def SelectedStrip(file, strip):
 	return html.Div(
-		strip,
-		id={'type': 'strip-tag', 'index': strip},
-		className='delete-button',
+		strip['id'],
+		id={'type': 'selected-strip', 'file_id': file['id'], 'strip_id': strip['id']},
+		className='button danger small inverted',
 		style=SELECTED_STRIP_TAG
 	)
 
-def strip_option(strip):
+def DropdownOption(file, strip):
 	return html.Div(
-		f'Strip {strip}',
-		id={'type': 'select-strip', 'index': strip},
+		f'Strip {strip['id']}',
+		id={'type': 'strip-search-option', 'file_id': file['id'], 'strip_id': strip['id']},
 		className='strip-dropdown-item',
 		style=CUSTOM_DROPDOWN_ITEM
 	)

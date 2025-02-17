@@ -1,0 +1,11 @@
+.graph-container > div{
+    flex: 1;
+}
+
+.graph .main-svg {
+    background-color: transparent!important;
+}
+
+.modebar-group {
+    background-color: transparent!important;
+}

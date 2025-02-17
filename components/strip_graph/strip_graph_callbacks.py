@@ -1,36 +1,29 @@
-"""
-This module contains all the callback functions for the strip graph.
-"""
+from dash import Input, Output, State, MATCH, ctx, no_update
+from styles import *
+from .strip_graph_logic import create_strip_averages_graph
 
-from dash import Input, Output, State, ctx, html, ALL, dcc, no_update
-from .strip_graph_logic import create_strip_graph
-from .strip_graph_style import *
-
-def register_strip_graph_callbacks(app):
-	"""Register strip graph callbacks."""
+def register_strip_averages_graph_callbacks(app):
 	
 	@app.callback(
-		[Output('strip-graph', 'figure'),
-		 Output('strip-graph', 'style'),
-		 Output('strip-graph-placeholder', 'style')],
-		Input('average-store', 'data'),
-		prevent_initial_call=True
+		[Output({'type': 'strip-averages-graph', 'file_id': MATCH}, 'figure'),
+		 Output({'type': 'strip-averages-graph', 'file_id': MATCH}, 'style'),
+		 Output({'type': 'strip-averages-graph-placeholder', 'file_id': MATCH}, 'style')],
+		[Input({'type': 'ranges-store', 'file_id': MATCH}, 'data'),
+		 Input({'type': 'strips-store', 'file_id': MATCH}, 'data')],
+		State({'type': 'file-store', 'file_id': MATCH}, 'data')
 	)
-	def update_graph(averages):
-		"""Update strip graph."""
-
-		# Get plotted strips
-		averages = [a for a in averages.values() if a['selected']]
-
-		if not averages:
-			return no_update, HIDDEN, GRAPH_PLACEHOLDER
-
-		strips = [s for s in averages[0]['strips'] if s['plot']]
-
+	def update_strip_averages_graph(_ranges, strips, file):
 		if not strips:
 			return no_update, HIDDEN, GRAPH_PLACEHOLDER
 
-		# Create graph
-		figure = create_strip_graph(strips)
+		selected_range = None
 
-		return figure, GRAPH, HIDDEN
+		for range in file['ranges'].values():
+			if range['selected']:
+				selected_range = range
+				break
+
+		if not selected_range:
+			return no_update, HIDDEN, GRAPH_PLACEHOLDER
+		
+		return create_strip_averages_graph(selected_range), GRAPH, HIDDEN

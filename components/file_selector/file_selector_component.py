@@ -1,62 +1,67 @@
-"""
-This module contains the graph display component.
-"""
 from dash import html, dcc
 from styles import *
+from components.averages_panel import RangeSelector
+from components.strip_selector import StripSelector
+from components.graph_display import StripResponsesGraph
+from components.strip_graph import StripAveragesGraph
 from .file_selector_style import *
 
-def file_selector():
-	"""Create the file selector component."""
+def FileSelector():
 	return html.Div([
-		# Add file button
 		dcc.Upload(
 			id='add-file',
-			children=html.Button([
-				html.I(className="fas fa-plus", style=BUTTON_ICON),
-				"File"
-			], className='button primary', style=ADD_FILE_BUTTON)
+			children=html.Button(
+				[html.I(className="fas fa-plus"), "File" ],
+				className='button info big'
+			)
 		),
 
-		# Loaded files list
-		html.Div(id='files', style=FILES_LIST),
-		html.Div("No file loaded.", id='no-file', style=NO_FILE)
-	])
+		html.Div(FilesPlaceholder(), id='files', className='flex column')
+	], className='flex column medium-gap')
 
-def file_store():
-	"""Create the file store component."""
-	return dcc.Store(id='file-store', data={})
+def FilesPlaceholder():
+	return html.Div("No file loaded.", id='files-placeholder', className='muted')
 
-def file(file):
-	"""Create the file component."""
-	filename = file['filename'] if len(file['filename']) <= 15 else f"{file['filename'][0:15]}..."
+def File(file):
+	filename = file['filename'] if len(file['filename']) <= 30 else f"{file['filename'][0:30]}..."
 
 	return html.Div([
 		html.Div([
-			# File name
 			html.Div([
 				html.I(className="fa-solid fa-file"),
-				html.Span(filename, title=f'File {file['id']} : {filename}', style=FILE_NAME)
-			], style=FILE_NAME_CONTAINER),
+				html.Span(filename, title=filename, style=FILE_NAME)
+			]),
+			html.I(id={'type': 'file-header-toggle', 'file_id': file['id']}, className="fas fa-chevron-down")
+		], id={'type': 'file-header', 'file_id': file['id']}, style=FILE_HEADER),
 
-			# Offset input
-			html.Div([
-				html.Span("Offset (ms)", style=INPUT_LABEL),
-				dcc.Input(
-					id={'type': 'time-offset', 'index': file['id']},
-					type='number',
-					value=file['time_offset'],
-					step=1000,
-					debounce=True,
-					style=INPUT
-				)
-			], style=INPUT_CONTAINER)
-		], style=FILE_CARD_BODY),
+		html.Div([
+			StripSelector(file),
+			
+			RangeSelector(file),
 
-		# Delete button
-		html.Button(
-			html.I(className="fas fa-trash"),
-			id={'type': 'file-delete', 'index': file['id']},
-			className='delete-button',
-			style=FILE_DELETE
-		)
-	], id={'type': 'file-card', 'index': file['id']}, style=FILE_CARD)
+			html.Button(
+				"Delete",
+				id={'type': 'delete-file', 'file_id': file['id']},
+				className='button danger big'
+			)
+		], id={'type': 'file-body', 'file_id': file['id']}, style=FILE_BODY),
+
+		dcc.Store(id={'type': 'file-store', 'file_id': file['id']}, data=file)
+	], id={'type': 'file', 'file_id': file['id']}, style=FILE)
+
+def FileGraphs(file):
+	return html.Div([
+		dcc.Tabs([
+			dcc.Tab(
+				label="Responses", value="responses",
+				children=StripResponsesGraph(file),
+				style=TAB, selected_style=SELECTED_TAB
+			),
+
+			dcc.Tab(
+				label="Averages", value="averages",
+				children=StripAveragesGraph(file),
+				style=TAB, selected_style=SELECTED_TAB
+			)
+		], value="responses")
+	], id={'type': 'file_graphs', 'file_id': file['id']}, style=FILE_GRAPHS_CONTAINER)

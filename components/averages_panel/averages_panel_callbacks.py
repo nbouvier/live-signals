@@ -3,169 +3,121 @@ This module contains all the callback functions for the Dash application.
 """
 
 import numpy as np
-from dash import Input, Output, State, ctx, html, ALL, dcc, no_update
-import dash
+from dash import Input, Output, State, ctx, html, ALL, MATCH, dcc, no_update
 from styles import *
-from .averages_panel_component import average
-from .averages_panel_logic import process_average, update_average
+from .averages_panel_component import RangesPlaceholder, Range
+from .averages_panel_logic import process_range, update_range
 from .averages_panel_style import *
-from stores import get_store_data
 
 def register_averages_panel_callbacks(app):
-	"""Register averages panel callbacks."""
-
-	@app.callback(
-		[Output('averages', 'children'),
-		 Output('no-average', 'style')],
-		Input('average-store', 'data')
-	)
-	def display_averages(averages):
-		"""Display the averages."""
-
-		averages_html = [average(a) for a in averages.values()]
-
-		return averages_html, NO_AVERAGE if not averages_html else HIDDEN
-
-	@app.callback(
-		Output('average-store', 'data', allow_duplicate=True),
-		[Input('file-store', 'data'),
-		 Input('strip-store', 'data')],
-		State('stores', 'children'),
-		prevent_initial_call=True
-	)
-	def update_averages(files, strips, stores):
-		"""Update the averages."""
-		averages = get_store_data(stores, 'average-store')
-		return {a['id']: update_average(stores, a) for a in averages.values()}
 	
 	@app.callback(
-		[Output('average-store', 'data', allow_duplicate=True),
-		 Output('popup-message-content', 'children', allow_duplicate=True),
-		 Output('popup-message', 'style', allow_duplicate=True)],
-		Input('add-average', 'n_clicks'),
-		[State('stores', 'children'),
-		 State('strip-responses-graph', 'selectedData')],
+		[Output({'type': 'file-store', 'file_id': MATCH}, 'data', allow_duplicate=True),
+		 Output({'type': 'ranges-store', 'file_id': MATCH}, 'data', allow_duplicate=True)],
+		Input({'type': 'add-range', 'file_id': MATCH}, 'n_clicks'),
+		[State({'type': 'file-store', 'file_id': MATCH}, 'data'),
+		 State({'type': 'strip-responses-graph', 'file_id': MATCH}, 'selectedData')],
 		prevent_initial_call=True
-	)
-	def add_average(clicks, stores, selected_data):
-		"""Add an average when the add button is clicked."""
-
-		# Handle no data selected
+	)	
+	def add_range(_clicks, file, selected_data):
 		if not selected_data or not 'range' in selected_data:
-			return (
-				no_update,
-				html.Div("Please make a selection first", style=ERROR_MESSAGE),
-				BASE_POPUP
-			)
+			return no_update, no_update
 		
-		# Create a new average
-		new_average = process_average(stores, selected_data['range']['x'], selected_data['range']['y'])
-
-		# Add average to store
-		averages = get_store_data(stores, 'average-store')
-		averages[str(new_average['id'])] = new_average
-
-		# Update selected average
-		for average in averages.values():
-			average['selected'] = average['id'] == new_average['id']
+		range = process_range(file, selected_data['range']['x'], selected_data['range']['y'])
+		file['ranges'][range['id']] = range
 		
-		return averages, None, HIDDEN
+		return file, list(file['ranges'].keys())
 
 	@app.callback(
-		Output('average-store', 'data', allow_duplicate=True),
-		Input({'type': 'select-average', 'index': ALL}, 'n_clicks'),
-		State('stores', 'children'),
+		[Output({'type': 'file-store', 'file_id': MATCH}, 'data', allow_duplicate=True),
+		 Output({'type': 'ranges-store', 'file_id': MATCH}, 'data', allow_duplicate=True)],
+		Input({'type': 'select-range', 'file_id': MATCH, 'range_id': ALL}, 'n_clicks'),
+		State({'type': 'file-store', 'file_id': MATCH}, 'data'),
 		prevent_initial_call=True
 	)
-	def select_average(clicks, stores):
-		"""Select an average."""
-		# Prevent trigger when no input
-		if not ctx.triggered or ctx.triggered[0]['value'] is None:
-			return no_update
-
-		# Get data
-		average_id = ctx.triggered_id['index']
-
-		# Update average in store
-		averages = get_store_data(stores, 'average-store')
-		for average in averages.values():
-			average['selected'] = average['id'] == average_id
-
-		return averages
-
-	@app.callback(
-		Output('average-store', 'data', allow_duplicate=True),
-		Input({'type': 'thickness-input', 'index': ALL}, 'value'),
-		State('stores', 'children'),
-		prevent_initial_call=True
-	)
-	def update_thickness(values, stores):
-		"""Update thickness value when it changes."""
-		# Prevent trigger when no input
-		if not ctx.triggered or ctx.triggered[0]['value'] is None:
-			return no_update
-		
-		# Get data
-		average_id = ctx.triggered_id['index']
-		value = ctx.triggered[0]['value']
-
-		# Update average in store
-		averages = get_store_data(stores, 'average-store')
-		averages[str(average_id)]['thickness'] = value
-
-		return averages
-
-	@app.callback(
-		[Output({'type': 'strip-averages-content', 'index': dash.MATCH}, 'style'),
-		 Output({'type': 'toggle-strip-averages', 'index': dash.MATCH}, 'children')],
-		Input({'type': 'toggle-strip-averages', 'index': dash.MATCH}, 'n_clicks'),
-		State({'type': 'strip-averages-content', 'index': dash.MATCH}, 'style')
-	)
-	def toggle_strips(clicks, current_style):
-		"""Toggle strip averages content when the button is clicked."""
-		# Prevent trigger when no input
-		if not ctx.triggered or ctx.triggered[0]['value'] is None:
+	def select_range(_clicks, file):
+		if ctx.triggered[0]['value'] is None:
 			return no_update, no_update
 
-		# Fetch visibility
-		is_visible = current_style.get('display', 'none') != 'none'
+		range_id = ctx.triggered_id['range_id']
+		file['ranges'][range_id]['selected'] == True
 		
-		# Update content style
-		new_style = dict(current_style)
-		new_style['display'] = 'none' if is_visible else 'block'
+		for range in file['ranges'].values():
+			file['ranges'][range['id']]['selected'] = range['id'] == range_id
 		
-		# Update button icon
-		new_button_children = [
-			html.I(
-				className="fas fa-chevron-right" if is_visible else "fas fa-chevron-down",
-				style={
-					'marginRight': '8px',
-					'transition': 'transform 0.3s',
-					'transform': 'rotate(0deg)' if is_visible else 'rotate(90deg)'
-				}
-			),
-			html.Strong("Individual Strip Averages")
-		]
+		return file, list(file['ranges'].keys())
+	
+	@app.callback(
+		[Output({'type': 'file-store', 'file_id': MATCH}, 'data', allow_duplicate=True),
+		 Output({'type': 'ranges-store', 'file_id': MATCH}, 'data', allow_duplicate=True)],
+		Input({'type': 'strips-store', 'file_id': MATCH}, 'data'),
+		State({'type': 'file-store', 'file_id': MATCH}, 'data'),
+		prevent_initial_call=True
+	)	
+	def update_average(_strips, file):
+		for range in file['ranges'].values():
+			file['ranges'][range['id']] = update_range(file, range)
 		
-		return new_style, new_button_children
+		return file, list(file['ranges'].keys())
 
 	@app.callback(
-		Output('average-store', 'data', allow_duplicate=True),
-		Input({'type': 'delete-average', 'index': ALL}, 'n_clicks'),
-		State('stores', 'children'),
+		[Output({'type': 'file-store', 'file_id': MATCH}, 'data', allow_duplicate=True),
+		 Output({'type': 'ranges-store', 'file_id': MATCH}, 'data', allow_duplicate=True)],
+		Input({'type': 'thickness-input', 'file_id': MATCH, 'range_id': ALL}, 'value'),
+		State({'type': 'file-store', 'file_id': MATCH}, 'data'),
 		prevent_initial_call=True
 	)
-	def delete_average(clicks, stores):
-		"""Delete an average."""
-		# Prevent trigger when no input
-		if not ctx.triggered or ctx.triggered[0]['value'] is None:
-			return no_update
+	def update_thickness(values, file):
+		if ctx.triggered_id is None:
+			return no_update, no_update
 
-		# Get data
-		average_id = ctx.triggered_id['index']
+		range_id = ctx.triggered_id['range_id']
+		value = ctx.triggered[0]['value']
 
-		# Delete average from store
-		averages = get_store_data(stores, 'average-store')
-		del averages[str(average_id)]
+		if value is None and file['ranges'][range_id]['thickness'] is None:
+			return no_update, no_update
+			
+		file['ranges'][range_id]['thickness'] = value
+		
+		return file, list(file['ranges'].keys())
 
-		return averages
+	@app.callback(
+		[Output({'type': 'strip-averages-toggle-icon', 'file_id': MATCH, 'range_id': MATCH}, 'className'),
+		 Output({'type': 'strip-averages-content', 'file_id': MATCH, 'range_id': MATCH}, 'style')],
+		Input({'type': 'strip-averages-toggle', 'file_id': MATCH, 'range_id': MATCH}, 'n_clicks')
+	)
+	def toggle_strips(clicks):
+		if clicks is None:
+			return no_update, no_update
+
+		classes = "fas fa-chevron-right" if clicks % 2 == 0 else "fas fa-chevron-down"
+		style = HIDDEN if clicks % 2 == 0 else STRIP_AVERAGES_CONTENT
+
+		return classes, style
+
+	@app.callback(
+		[Output({'type': 'file-store', 'file_id': MATCH}, 'data', allow_duplicate=True),
+		 Output({'type': 'ranges-store', 'file_id': MATCH}, 'data', allow_duplicate=True)],
+		Input({'type': 'delete-range', 'file_id': MATCH, 'range_id': ALL}, 'n_clicks'),
+		State({'type': 'file-store', 'file_id': MATCH}, 'data'),
+		prevent_initial_call=True
+	)
+	def delete_range(_clicks, file):
+		if ctx.triggered[0]['value'] is None:
+			return no_update, no_update
+
+		range_id = ctx.triggered_id['range_id']
+		del file['ranges'][range_id]
+
+		return file, list(file['ranges'].keys())
+
+	@app.callback(
+		Output({'type': 'ranges', 'file_id': MATCH}, 'children'),
+		[Input({'type': 'ranges-store', 'file_id': MATCH}, 'data'),
+		 Input({'type': 'strips-store', 'file_id': MATCH}, 'data')],
+		State({'type': 'file-store', 'file_id': MATCH}, 'data')
+	)
+	def display_averages(_ranges, _strips, file):
+		ranges = [Range(file, a) for a in file['ranges'].values()] or RangesPlaceholder(file)
+
+		return ranges

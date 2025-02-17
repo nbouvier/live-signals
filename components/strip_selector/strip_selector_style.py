@@ -4,40 +4,6 @@ This module contains styles for the strip selector component.
 
 from styles import *
 
-STRIP_SELECTOR = {
-	'width': '100%',
-	'maxHeight': 'calc(100vh - 190px)',
-	'padding': SPACING_MEDIUM,
-	'border': BORDER_STYLE,
-	'borderRadius': BORDER_RADIUS,
-	'backgroundColor': BACKGROUND_COLOR,
-	'margin': f'{SPACING_MEDIUM} 0'
-}
-
-BUTTON = {
-	'backgroundColor': SECONDARY_COLOR,
-	'color': 'white',
-	'border': 'none',
-	'borderRadius': BORDER_RADIUS,
-	'cursor': 'pointer',
-	'fontSize': FONT_SIZE_SMALL
-}
-
-SELECT_ALL_BUTTON = {
-	**BUTTON,
-	'backgroundColor': 'green'
-}
-
-UNSELECT_ALL_BUTTON = {
-	**BUTTON,
-	'backgroundColor': WARNING_COLOR
-}
-
-SELECT_BUTTON = {
-	**BUTTON,
-	'backgroundColor': PRIMARY_COLOR
-}
-
 BUTTON_CONTAINER = {
 	'display': 'flex',
 	'gap': SPACING_SMALL,
@@ -91,20 +57,12 @@ SELECTED_STRIPS_CONTAINER = {
 }
 
 SELECTED_STRIP_TAG = {
-	'display': 'flex',
-	'justifyContent': 'center',
 	'backgroundColor': 'rgba(188, 188, 188, 0.1)',
 	'border': '1px solid #ddd',
-	'borderRadius': '6px',
 	'padding': f'6px {SPACING_SMALL} {SPACING_UNIT} {SPACING_SMALL}',
-	'display': 'flex',
-	'alignItems': 'center',
-	'gap': SPACING_SMALL,
-	'fontSize': FONT_SIZE_SMALL,
 	'color': '#666',
 	'fontWeight': 'bold',
-	'cursor': 'pointer',
-	'width': '30px',
+	'width': '30px'
 }
 
 CUSTOM_DROPDOWN_CONTAINER = {
@@ -136,7 +94,7 @@ CUSTOM_DROPDOWN_INPUT = {
 
 DROPDOWN_ARROW = {
 	'position': 'absolute',
-	'right': SPACING_MEDIUM,
+	'right': SPACING_LARGE,
 	'top': '50%',
 	'transform': 'translateY(-50%)',
 	'pointerEvents': 'none',
@@ -175,8 +133,4 @@ STRIP_DROPDOWN_BACKGROUND = {
 	'top': 0,
 	'left': 0,
 	'zIndex': f'calc({Z_INDEX_OVERLAY} - 1)'
-}
-
-NO_STRIP = {
-	'color': MUTED_TEXT_COLOR
 }

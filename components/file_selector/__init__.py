@@ -1,8 +1,4 @@
-"""
-This module exports the file selector component.
-"""
-
 from .file_selector_callbacks import register_file_selector_callbacks
-from .file_selector_component import file_selector, file_store
+from .file_selector_component import FileSelector
 
-__all__ = ['file_selector', 'file_store', 'register_file_selector_callbacks']
+__all__ = ['FileSelector', 'register_file_selector_callbacks']
