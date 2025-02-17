@@ -1,7 +1,3 @@
-"""
-This module contains global style variables used across the application.
-"""
-
 # Color palette
 PRIMARY_COLOR = '#007bff'
 SECONDARY_COLOR = '#6c757d'

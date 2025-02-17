@@ -1,7 +1,3 @@
-"""
-Main application file that initializes and runs the Dash application.
-"""
-
 import numpy as np
 from dash import Dash
 from layout import create_layout

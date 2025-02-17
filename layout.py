@@ -1,30 +1,24 @@
-"""
-This module contains the layout of the application.
-"""
-
 from dash import html, dcc
 from styles import *
 from callbacks import register_callbacks
-from components.averages_panel import register_averages_panel_callbacks
-from components.file_selector import FileSelector, register_file_selector_callbacks
-from components.fit_graph import exponential_fit_graph, register_exponential_fit_graph_callbacks
-from components.graph_display import register_strip_responses_graph_callbacks
+from components.ranges_manager import register_ranges_manager_callbacks
+from components.files_manager import FileManager, register_files_manager_callbacks
+from components.exponential_fit_graph import ExponentialFitGraph, register_exponential_fit_graph_callbacks
+from components.strip_responses_graph import register_strip_responses_graph_callbacks
 from components.popup_message import register_popup_message_callbacks
-from components.strip_graph import register_strip_averages_graph_callbacks
-from components.strip_noise import register_strip_noise_callbacks
+from components.strip_averages_graph import register_strip_averages_graph_callbacks
+from components.strip_manager import register_strips_manager_callbacks
 from components.strip_selector import register_strip_selector_callbacks
 
 def create_layout(app):
-	"""Create the application layout."""
-
 	register_callbacks(app)
-	register_averages_panel_callbacks(app)
+	register_ranges_manager_callbacks(app)
 	register_exponential_fit_graph_callbacks(app)
-	register_file_selector_callbacks(app)
+	register_files_manager_callbacks(app)
 	register_popup_message_callbacks(app)
 	register_strip_averages_graph_callbacks(app)
 	register_strip_responses_graph_callbacks(app)
-	register_strip_noise_callbacks(app)
+	register_strips_manager_callbacks(app)
 	register_strip_selector_callbacks(app)
 
 	return html.Div([
@@ -32,7 +26,7 @@ def create_layout(app):
 		dcc.Location(id='url', refresh=False),
 
 		# Left panel
-		html.Div(FileSelector(), id='side-panel', style=SIDE_PANEL),
+		html.Div(FileManager(), id='side-panel', style=SIDE_PANEL),
 		html.Div([
 			html.Div([
 				html.I(id={'type': 'toggle-side-panel-icon', 'id': 1}, className="fas fa-chevron-left"),
@@ -43,7 +37,7 @@ def create_layout(app):
 		# Center panel
 		html.Div([
 			html.Div([], id='graphs', className='flex medium-gap', style=GRAPHS_CONTAINER),
-			exponential_fit_graph()
+			ExponentialFitGraph()
 		], style=CENTER_PANEL),
 		
 		# Popup message
