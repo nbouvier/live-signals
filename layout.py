@@ -4,6 +4,7 @@ This module contains the layout of the application.
 
 from dash import html, dcc
 from styles import *
+from callbacks import register_callbacks
 from components.averages_panel import register_averages_panel_callbacks
 from components.file_selector import FileSelector, register_file_selector_callbacks
 from components.fit_graph import exponential_fit_graph, register_exponential_fit_graph_callbacks
@@ -15,6 +16,7 @@ from components.strip_selector import register_strip_selector_callbacks
 def create_layout(app):
 	"""Create the application layout."""
 
+	register_callbacks(app)
 	register_averages_panel_callbacks(app)
 	register_exponential_fit_graph_callbacks(app)
 	register_file_selector_callbacks(app)
@@ -28,9 +30,13 @@ def create_layout(app):
 		dcc.Location(id='url', refresh=False),
 
 		# Left panel
+		html.Div(FileSelector(), id='side-panel', style=SIDE_PANEL),
 		html.Div([
-			FileSelector()
-		], style=SIDE_PANEL),
+			html.Div([
+				html.I(id={'type': 'toggle-side-panel-icon', 'id': 1}, className="fas fa-chevron-left"),
+				html.I(id={'type': 'toggle-side-panel-icon', 'id': 2}, className="fas fa-chevron-left")
+			], id='toggle-side-panel', style=TOGGLE_SIDE_PANEL)
+		], id='toggle-side-panel-container', style=TOGGLE_SIDE_PANEL_CONTAINER),
 
 		# Center panel
 		html.Div([

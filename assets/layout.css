@@ -1,0 +1,3 @@
+#toggle-side-panel-container:hover div, #side-panel:hover + #toggle-side-panel-container div {
+    opacity: 100!important;
+}

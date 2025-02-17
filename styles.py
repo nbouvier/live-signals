@@ -66,8 +66,34 @@ SIDE_PANEL = {
 	'backgroundColor': BACKGROUND_COLOR,
 	'padding': SPACING_MEDIUM,
 	'border': '1px solid #ddd',
-	'zIndex': 1,
 	'boxSizing': 'border-box'
+}
+
+TOGGLE_SIDE_PANEL_CONTAINER= {
+	'display': 'flex',
+	'width': '10px',
+	'position': 'relative'
+}
+
+TOGGLE_SIDE_PANEL = {
+	'opacity': '0',
+	'display': 'flex',
+	'alignItems': 'center',
+	'position': 'absolute',
+	'top': '15px',
+	'left': '-1px',
+	'width': '35px',
+	'height': '50px',
+	'paddingLeft': SPACING_SMALL,
+	'backgroundColor': BACKGROUND_COLOR,
+	'border': '1px solid #ddd',
+	'borderLeft': 'none',
+	'borderTopRightRadius': '25px',
+	'borderBottomRightRadius': '25px',
+	'color': MUTED_TEXT_COLOR,
+	'zIndex': 1,
+	'cursor': 'pointer',
+	'transition': 'all 0.3s ease-in-out'
 }
 
 CENTER_PANEL = {
@@ -76,6 +102,7 @@ CENTER_PANEL = {
 	'flex': '1',
 	'gap': SPACING_MEDIUM,
 	'padding': SPACING_MEDIUM,
+	'paddingLeft': '6px',
 	'boxSizing': 'border-box',
 	'overflowY': 'scroll'
 }
