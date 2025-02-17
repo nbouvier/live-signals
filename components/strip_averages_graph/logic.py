@@ -12,7 +12,7 @@ def create_strip_averages_graph(range):
 		yaxis=dict(title=dict(text='Response average (qdc)', font=dict(weight='bold', color='#666'))),
 		showlegend=True,
 		height=400,
-		modebar_remove=['select2d', 'lasso2d']
+		dragmode='select'
 	)
 	
 	# Update axes to show 2 decimal places for x and 0 decimal places for y

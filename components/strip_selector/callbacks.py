@@ -9,10 +9,11 @@ def register_strip_selector_callbacks(app):
 		[Output({'type': 'file-store', 'file_id': MATCH}, 'data', allow_duplicate=True),
 		 Output({'type': 'selected-strips-store', 'file_id': MATCH}, 'data', allow_duplicate=True)],
 		Input({'type': 'select-strips-button', 'file_id': MATCH, 'strips': ALL}, 'n_clicks'),
-		State({'type': 'file-store', 'file_id': MATCH}, 'data'),
+		[State({'type': 'file-store', 'file_id': MATCH}, 'data'),
+		 State({'type': 'strip-averages-graph', 'file_id': MATCH}, 'selectedData')],
 		prevent_initial_call=True
 	)
-	def select_all_strips(_clicks, file):
+	def select_all_strips(_clicks, file, selected_data):
 		if ctx.triggered[0]['value'] is None:
 			return no_update, no_update
 		
@@ -29,6 +30,14 @@ def register_strip_selector_callbacks(app):
 			case 'odd':
 				for strip in file['strips'].values():
 					strip['selected'] = int(strip['id']) % 2 == 1
+			case 'filter':
+				if not selected_data or not 'points' in selected_data:
+					return no_update, no_update
+
+				selected_strips = [p['x'] for p in selected_data['points']]
+
+				for strip in file['strips'].values():
+					strip['selected'] = strip['id'] in selected_strips
 
 		return file, [s['id'] for s in file['strips'].values() if s['selected']]
 

@@ -4,10 +4,13 @@ from .styles import *
 def StripSelector(file):
 	return html.Div([
 		html.Div([
-			html.Button('All', id={'type': 'select-strips-button', 'file_id': file['id'], 'strips': 'all'}, className='button small success'),
-			html.Button('None', id={'type': 'select-strips-button', 'file_id': file['id'], 'strips': 'none'}, className='button small danger'),
-			html.Button("Even", id={'type': 'select-strips-button', 'file_id': file['id'], 'strips': 'even'}, className='button small info'),
-			html.Button("Odd", id={'type': 'select-strips-button', 'file_id': file['id'], 'strips': 'odd'}, className='button small info')
+			html.Div([
+				html.Button('All', id={'type': 'select-strips-button', 'file_id': file['id'], 'strips': 'all'}, className='button small success'),
+				html.Button('None', id={'type': 'select-strips-button', 'file_id': file['id'], 'strips': 'none'}, className='button small danger'),
+				html.Button("Even", id={'type': 'select-strips-button', 'file_id': file['id'], 'strips': 'even'}, className='button small info'),
+				html.Button("Odd", id={'type': 'select-strips-button', 'file_id': file['id'], 'strips': 'odd'}, className='button small info')
+			], className='flex small-gap'),
+			html.Button("Filter", id={'type': 'select-strips-button', 'file_id': file['id'], 'strips': 'filter'}, className='button small info')
 		], style=BUTTON_CONTAINER),
 		
 		html.Div([

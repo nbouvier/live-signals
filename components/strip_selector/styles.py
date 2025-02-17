@@ -3,6 +3,7 @@ from styles import *
 BUTTON_CONTAINER = {
 	'display': 'flex',
 	'gap': SPACING_SMALL,
+	'justifyContent': 'space-between',
 	'marginBottom': SPACING_SMALL
 }
 
