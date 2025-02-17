@@ -86,7 +86,7 @@ CUSTOM_DROPDOWN_INPUT = {
 	'borderRadius': BORDER_RADIUS,
 	'fontSize': FONT_SIZE_NORMAL,
 	'backgroundColor': 'white',
-	'cursor': 'pointer',
+	'cursor': 'text',
 	'outline': 'none',
 	'boxSizing': 'border-box'
 }

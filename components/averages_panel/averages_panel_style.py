@@ -53,24 +53,27 @@ INDIVIDUAL_AVERAGES_BUTTON = {
 	'cursor': 'pointer',
 	'display': 'flex',
 	'alignItems': 'center',
-	'gap': '8px'
-}
-
-TOGGLE_ICON = {
-	'transition': 'transform 0.3s'
+	'gap': '8px',
+	'color': '#666',
+	'fontSize': '12px'
 }
 
 STRIP_AVERAGES_CONTENT = {
-	'padding': '10px',
-	'backgroundColor': '#f8f9fa',
-	'borderRadius': '4px',
-	'marginTop': '8px'
+	'display': 'flex',
+	'flexWrap': 'wrap',
+	'marginLeft': SPACING_NORMAL,
+	'paddingLeft': SPACING_NORMAL,
+	'borderLeft': '2px solid #666',
+	'maxHeight': '100px',
+	'overflowY': 'auto'
 }
 
 STRIP_AVERAGE_ITEM = {
-	'padding': '4px 0',
+	'display': 'flex',
+	'flexBasis': '50%',
 	'color': '#666',
-	'fontSize': '14px'
+	'fontSize': FONT_SIZE_SMALL,
+	'overflow': 'hidden'
 }
 
 BUTTON_CONTAINER = {

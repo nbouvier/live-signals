@@ -60,10 +60,9 @@ def Range(file, range):
 				html.Div([
 						html.I(
 							id={'type': 'strip-averages-toggle-icon', 'file_id': file['id'], 'range_id': range['id']},
-							className="fas fa-chevron-right",
-							style=TOGGLE_ICON
+							className="fas fa-chevron-right"
 						),
-						html.Span("Individual Strip Averages", style={'color': '#666', 'fontSize': '12px'})
+						"Individual Strip Averages"
 					],
 					id={'type': 'strip-averages-toggle', 'file_id': file['id'], 'range_id': range['id']},
 					style=INDIVIDUAL_AVERAGES_BUTTON
@@ -100,5 +99,10 @@ def Range(file, range):
 def IndivudualStrip(strip):
 	average = f"{strip['average']:.2f}" if strip['average'] is not None else 'N/A'
 
-	return html.Div(f"Strip {strip['id']}: {average} qdc", style=STRIP_AVERAGE_ITEM)
+	return html.Div([
+		html.Div(strip['id'], style={'display': 'flex', 'justifyContent': 'center', 'fontWeight': 'bold', 'minWidth': '28px'}),
+		html.Span('-', style={'fontWeight': 'bold', 'marginTop': '-2px'}),
+		html.Span(average, style={'margin': '0px 4px'}),
+		html.Span('qdc', style={'fontSize': '10px'})
+	], style=STRIP_AVERAGE_ITEM)
 
