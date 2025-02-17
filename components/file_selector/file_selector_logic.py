@@ -2,6 +2,7 @@ import base64
 import numpy as np
 from pathlib import Path
 from components.averages_panel import process_range
+from components.strip_noise import process_strips
 
 PLATEAU_DELTA = 0.01
 PLATEAU_MIN_MATCHES = 10
@@ -121,26 +122,3 @@ def find_plateaus(raw_strip_resp, time_values):
 			)
 
 	return plateaus
-
-def process_strips(raw_strip_resp, time_values, noise_range):
-	strips = {}
-
-	for i, values in enumerate(raw_strip_resp):
-		id = str(i + 1)
-
-		noise_start = np.searchsorted(time_values, noise_range['time_range'][0])
-		noise_end = np.searchsorted(time_values, noise_range['time_range'][1])
-
-		noise = np.mean(values[noise_start:noise_end])
-		noised_values = [v - noise if noise <= v else 0 for v in values]
-
-		strips[id] = dict(
-			id=id,
-			values=values,
-			noise=noise,
-			noised_values=noised_values,
-			selected=False,
-			filtered=False
-		)
-
-	return strips

@@ -11,6 +11,7 @@ from components.fit_graph import exponential_fit_graph, register_exponential_fit
 from components.graph_display import register_strip_responses_graph_callbacks
 from components.popup_message import register_popup_message_callbacks
 from components.strip_graph import register_strip_averages_graph_callbacks
+from components.strip_noise import register_strip_noise_callbacks
 from components.strip_selector import register_strip_selector_callbacks
 
 def create_layout(app):
@@ -23,6 +24,7 @@ def create_layout(app):
 	register_popup_message_callbacks(app)
 	register_strip_averages_graph_callbacks(app)
 	register_strip_responses_graph_callbacks(app)
+	register_strip_noise_callbacks(app)
 	register_strip_selector_callbacks(app)
 
 	return html.Div([

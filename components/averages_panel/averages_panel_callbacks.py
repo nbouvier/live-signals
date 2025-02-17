@@ -50,7 +50,7 @@ def register_averages_panel_callbacks(app):
 	@app.callback(
 		[Output({'type': 'file-store', 'file_id': MATCH}, 'data', allow_duplicate=True),
 		 Output({'type': 'ranges-store', 'file_id': MATCH}, 'data', allow_duplicate=True)],
-		Input({'type': 'strips-store', 'file_id': MATCH}, 'data'),
+		Input({'type': 'selected-strips-store', 'file_id': MATCH}, 'data'),
 		State({'type': 'file-store', 'file_id': MATCH}, 'data'),
 		prevent_initial_call=True
 	)	
@@ -114,7 +114,7 @@ def register_averages_panel_callbacks(app):
 	@app.callback(
 		Output({'type': 'ranges', 'file_id': MATCH}, 'children'),
 		[Input({'type': 'ranges-store', 'file_id': MATCH}, 'data'),
-		 Input({'type': 'strips-store', 'file_id': MATCH}, 'data')],
+		 Input({'type': 'selected-strips-store', 'file_id': MATCH}, 'data')],
 		State({'type': 'file-store', 'file_id': MATCH}, 'data')
 	)
 	def display_averages(_ranges, _strips, file):

@@ -9,7 +9,7 @@ def register_strip_responses_graph_callbacks(app):
 		 Output({'type': 'strip-responses-graph', 'file_id': MATCH}, 'style'),
 		 Output({'type': 'strip-responses-graph-placeholder', 'file_id': MATCH}, 'style')],
 		[Input({'type': 'ranges-store', 'file_id': MATCH}, 'data'),
-		 Input({'type': 'strips-store', 'file_id': MATCH}, 'data')],
+		 Input({'type': 'selected-strips-store', 'file_id': MATCH}, 'data')],
 		State({'type': 'file-store', 'file_id': MATCH}, 'data')
 	)
 	def update_strip_responses_graph(_ranges, strips, file):

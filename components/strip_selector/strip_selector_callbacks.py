@@ -12,7 +12,7 @@ def register_strip_selector_callbacks(app):
 
 	@app.callback(
 		[Output({'type': 'file-store', 'file_id': MATCH}, 'data', allow_duplicate=True),
-		 Output({'type': 'strips-store', 'file_id': MATCH}, 'data', allow_duplicate=True)],
+		 Output({'type': 'selected-strips-store', 'file_id': MATCH}, 'data', allow_duplicate=True)],
 		Input({'type': 'select-strips-button', 'file_id': MATCH, 'strips': ALL}, 'n_clicks'),
 		State({'type': 'file-store', 'file_id': MATCH}, 'data'),
 		prevent_initial_call=True
@@ -49,7 +49,7 @@ def register_strip_selector_callbacks(app):
 
 	@app.callback(
 		[Output({'type': 'file-store', 'file_id': MATCH}, 'data', allow_duplicate=True),
-		 Output({'type': 'strips-store', 'file_id': MATCH}, 'data', allow_duplicate=True)],
+		 Output({'type': 'selected-strips-store', 'file_id': MATCH}, 'data', allow_duplicate=True)],
 		Input({'type': 'strip-search', 'file_id': MATCH}, 'value'),
 		State({'type': 'file-store', 'file_id': MATCH}, 'data'),
 		prevent_initial_call=True
@@ -65,7 +65,7 @@ def register_strip_selector_callbacks(app):
 
 	@app.callback(
 		[Output({'type': 'file-store', 'file_id': MATCH}, 'data', allow_duplicate=True),
-		 Output({'type': 'strips-store', 'file_id': MATCH}, 'data', allow_duplicate=True)],
+		 Output({'type': 'selected-strips-store', 'file_id': MATCH}, 'data', allow_duplicate=True)],
 		Input({'type': 'strip-search-option', 'file_id': MATCH, 'strip_id': ALL}, 'n_clicks'),
 		State({'type': 'file-store', 'file_id': MATCH}, 'data'),
 		prevent_initial_call=True
@@ -81,7 +81,7 @@ def register_strip_selector_callbacks(app):
 
 	@app.callback(
 		[Output({'type': 'file-store', 'file_id': MATCH}, 'data', allow_duplicate=True),
-		 Output({'type': 'strips-store', 'file_id': MATCH}, 'data', allow_duplicate=True)],
+		 Output({'type': 'selected-strips-store', 'file_id': MATCH}, 'data', allow_duplicate=True)],
 		Input({'type': 'selected-strip', 'file_id': MATCH, 'strip_id': ALL}, 'n_clicks'),
 		State({'type': 'file-store', 'file_id': MATCH}, 'data'),
 		prevent_initial_call=True
@@ -109,7 +109,7 @@ def register_strip_selector_callbacks(app):
 		[Output({'type': 'selected-strips', 'file_id': MATCH}, 'children'),
 		 Output({'type': 'no-selected-strip', 'file_id': MATCH}, 'style'),
 		 Output({'type': 'strip-search-dropdown', 'file_id': MATCH}, 'children')],
-		Input({'type': 'strips-store', 'file_id': MATCH}, 'data'),
+		Input({'type': 'selected-strips-store', 'file_id': MATCH}, 'data'),
 		State({'type': 'file-store', 'file_id': MATCH}, 'data')
 	)
 	def display_strips(_strips, file):

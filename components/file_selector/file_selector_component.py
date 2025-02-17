@@ -4,6 +4,7 @@ from components.averages_panel import RangeSelector
 from components.strip_selector import StripSelector
 from components.graph_display import StripResponsesGraph
 from components.strip_graph import StripAveragesGraph
+from components.strip_noise import StripNoise
 from .file_selector_style import *
 
 def FileSelector():
@@ -35,8 +36,8 @@ def File(file):
 		], id={'type': 'file-header', 'file_id': file['id']}, style=FILE_HEADER),
 
 		html.Div([
+			StripNoise(file),
 			StripSelector(file),
-			
 			RangeSelector(file),
 
 			html.Button(

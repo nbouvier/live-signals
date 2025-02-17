@@ -91,7 +91,6 @@ CUSTOM_DROPDOWN_INPUT = {
 	'boxSizing': 'border-box'
 }
 
-
 DROPDOWN_ARROW = {
 	'position': 'absolute',
 	'right': SPACING_LARGE,
@@ -120,10 +119,7 @@ CUSTOM_DROPDOWN_ITEM = {
 	'padding': SPACING_MEDIUM,
 	'cursor': 'pointer',
 	'transition': f'background-color {TRANSITION_NORMAL}',
-	'backgroundColor': 'white',
-	'hover': {
-		'backgroundColor': f'{PRIMARY_COLOR}11'
-	}
+	'backgroundColor': 'white'
 }
 
 STRIP_DROPDOWN_BACKGROUND = {

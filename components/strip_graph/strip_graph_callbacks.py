@@ -9,7 +9,7 @@ def register_strip_averages_graph_callbacks(app):
 		 Output({'type': 'strip-averages-graph', 'file_id': MATCH}, 'style'),
 		 Output({'type': 'strip-averages-graph-placeholder', 'file_id': MATCH}, 'style')],
 		[Input({'type': 'ranges-store', 'file_id': MATCH}, 'data'),
-		 Input({'type': 'strips-store', 'file_id': MATCH}, 'data')],
+		 Input({'type': 'selected-strips-store', 'file_id': MATCH}, 'data')],
 		State({'type': 'file-store', 'file_id': MATCH}, 'data')
 	)
 	def update_strip_averages_graph(_ranges, strips, file):

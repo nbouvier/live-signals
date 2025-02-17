@@ -36,9 +36,22 @@ def StripSelector(file):
 
 		html.Div(id={'type': 'selected-strips', 'file_id': file['id']}, style=SELECTED_STRIPS_CONTAINER),
 		html.Div("No strip selected.", id={'type': 'no-selected-strip', 'file_id': file['id']}, className='muted'),
-
-		dcc.Store(id={'type': 'strips-store', 'file_id': file['id']}, data=[s for s in file['strips'].values() if s['selected']])
+		
+		dcc.Store(id={'type': 'selected-strips-store', 'file_id': file['id']}, data=[s for s in file['strips'].values() if s['selected']])
 	], className='full-width')
+
+def Strip(file, strip):
+	return html.Div([
+		html.Div(strip['id'], style=STRIP_LABEL),
+		dcc.Input(
+			id={'type': 'strip-noise', 'file_id': file['id'], 'strip_id': strip['id']},
+			type='number',
+			step=0.01,
+			debounce=1,
+			value=round(strip['noise'], 2),
+			style=STRIP_NOISE
+		),
+	], id={'type': 'strip', 'file_id': file['id'], 'strip_id': strip['id']}, style=STRIP)
 
 def SelectedStrip(file, strip):
 	return html.Div(
