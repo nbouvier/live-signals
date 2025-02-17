@@ -10,6 +10,7 @@ def exponential_fit_graph():
 				dcc.Graph(
 					id="exponential-fit-graph",
 					className='graph',
+					config={'scrollZoom': True, 'displaylogo': False},
 					style=HIDDEN
 				),
 				

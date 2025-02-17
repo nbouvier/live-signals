@@ -10,6 +10,7 @@ def StripAveragesGraph(file):
 				dcc.Graph(
 					id={'type': 'strip-averages-graph', 'file_id': file['id']},
 					className='graph',
+					config={'scrollZoom': True, 'displaylogo': False},
 					style=HIDDEN
 				),
 				

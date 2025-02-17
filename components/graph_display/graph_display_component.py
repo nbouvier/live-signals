@@ -13,6 +13,7 @@ def StripResponsesGraph(file):
 				dcc.Graph(
 					id={'type': 'strip-responses-graph', 'file_id': file['id']},
 					className='graph',
+					config={'scrollZoom': True, 'displaylogo': False},
 					style=HIDDEN
 				),
 				
