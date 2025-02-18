@@ -48,7 +48,6 @@ MAIN_CONTAINER = {
 	'display': 'flex',
 	'boxSizing': 'border-box',
 	'minHeight': '100vh',
-	'width': '100vw',
 	'margin': 0,
 	'padding': 0,
 	'background-color': 'white'
@@ -58,8 +57,8 @@ SIDE_PANEL = {
 	'display': 'flex',
 	'flexDirection': 'column',
 	'gap': '24px',
-	'width': '335px',
-	'minWidth': '335px',
+	'width': '351px',
+	'minWidth': '351px',
 	'backgroundColor': BACKGROUND_COLOR,
 	'padding': SPACING_MEDIUM,
 	'border': '1px solid #ddd',
@@ -101,7 +100,7 @@ CENTER_PANEL = {
 	'padding': SPACING_MEDIUM,
 	'paddingLeft': '6px',
 	'boxSizing': 'border-box',
-	'overflowY': 'scroll'
+	'overflowY': 'auto'
 }
 
 # Overlay styles

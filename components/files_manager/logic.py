@@ -42,6 +42,7 @@ def process_file(contents, filename, options=[]):
 			noised_qdc_range = [plateau['qdc_range'][0] - max(noises), plateau['qdc_range'][1] - min(noises)]
 			range = process_range(file, plateau['time_range'], noised_qdc_range)
 			file['ranges'][range['id']] = range
+			file['ranges'][range['id']]['selected'] = range['id'] == '0'
 	
 	return file
 

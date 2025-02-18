@@ -6,15 +6,6 @@ FILE = {
 	'color': '#444'
 }
 
-FILE_BODY = {
-	'display': 'flex',
-	'flexDirection': 'column',
-	'flex': 1,
-	'gap': SPACING_LARGE,
-	'alignItems': 'center',
-	'padding': f'{SPACING_SMALL} {SPACING_ZERO} {SPACING_XLARGE} {SPACING_ZERO}'
-}
-
 FILE_HEADER = {
 	'display': 'flex',
 	'alignItems': 'center',
@@ -26,8 +17,17 @@ FILE_HEADER = {
 }
 
 FILE_NAME = {
-	'marginLeft': '6px',
+	'marginLeft': SPACING_SMALL,
 	'fontSize': FONT_SIZE_NORMAL,
+}
+
+FILE_BODY = {
+	'display': 'flex',
+	'flexDirection': 'column',
+	'flex': 1,
+	'gap': SPACING_LARGE,
+	'alignItems': 'center',
+	'padding': f'{SPACING_SMALL} {SPACING_SMALL} {SPACING_XLARGE} {SPACING_SMALL}'
 }
 
 OFFSET_INPUT = {

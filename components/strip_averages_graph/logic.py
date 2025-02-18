@@ -23,7 +23,7 @@ def create_strip_averages_graph(file, range):
 			fig.add_scatter(
 				x=[strip['id']],
 				y=[strip['noised_average']],
-				name=f'Strip {strip['id']}',
+				name=f"Strip {strip['id']}",
 				mode='markers',
 				hovertemplate="%{y:.2f}"
 			)
