@@ -52,36 +52,42 @@ def register_strip_selector_callbacks(app):
 		return CUSTOM_DROPDOWN_LIST, "fas fa-chevron-down", STRIP_DROPDOWN_BACKGROUND
 
 	@app.callback(
-		[Output({'type': 'file-store', 'file_id': MATCH}, 'data', allow_duplicate=True),
-		 Output({'type': 'selected-strips-store', 'file_id': MATCH}, 'data', allow_duplicate=True)],
+		Output({'type': 'strip-search-dropdown', 'file_id': MATCH}, 'children'),
 		Input({'type': 'strip-search', 'file_id': MATCH}, 'value'),
 		State({'type': 'file-store', 'file_id': MATCH}, 'data'),
 		prevent_initial_call=True
 	)
 	def filter_dropdown_options(search, file):
 		search = search or ''
-		
-		for strip in file['strips'].values():
-			strip['filtered'] = strip['selected'] or search not in strip['id']
-			
+		options = []
 
-		return file, [s['id'] for s in file['strips'].values() if s['selected']]
+		for strip in file['strips'].values():
+			if not strip['selected'] and search in strip['id']:
+				options.append(DropdownOption(file, strip))
+
+		return options
 
 	@app.callback(
 		[Output({'type': 'file-store', 'file_id': MATCH}, 'data', allow_duplicate=True),
-		 Output({'type': 'selected-strips-store', 'file_id': MATCH}, 'data', allow_duplicate=True)],
+		 Output({'type': 'selected-strips-store', 'file_id': MATCH}, 'data', allow_duplicate=True),
+		 Output({'type': 'strip-search-dropdown', 'file_id': MATCH}, 'children', allow_duplicate=True)],
 		Input({'type': 'strip-search-option', 'file_id': MATCH, 'strip_id': ALL}, 'n_clicks'),
-		State({'type': 'file-store', 'file_id': MATCH}, 'data'),
+		[State({'type': 'file-store', 'file_id': MATCH}, 'data'),
+		 State({'type': 'strip-search-dropdown', 'file_id': MATCH}, 'children')],
 		prevent_initial_call=True
 	)
-	def select_strip(_clicks, file):
+	def select_strip(_clicks, file, options):
 		if ctx.triggered[0]['value'] is None:
-			return no_update, no_update
+			return no_update, no_update, no_update
 
 		strip_id = ctx.triggered_id['strip_id']
 		file['strips'][strip_id]['selected'] = True
 
-		return file, [s['id'] for s in file['strips'].values() if s['selected']]
+		for i, option in enumerate(options):
+			if option['props']['id']['strip_id'] == strip_id:
+				del options[i]
+
+		return file, [s['id'] for s in file['strips'].values() if s['selected']], options
 
 	@app.callback(
 		[Output({'type': 'file-store', 'file_id': MATCH}, 'data', allow_duplicate=True),
@@ -111,19 +117,11 @@ def register_strip_selector_callbacks(app):
 
 	@app.callback(
 		[Output({'type': 'selected-strips', 'file_id': MATCH}, 'children'),
-		 Output({'type': 'no-selected-strip', 'file_id': MATCH}, 'style'),
-		 Output({'type': 'strip-search-dropdown', 'file_id': MATCH}, 'children')],
+		 Output({'type': 'no-selected-strip', 'file_id': MATCH}, 'style')],
 		Input({'type': 'selected-strips-store', 'file_id': MATCH}, 'data'),
 		State({'type': 'file-store', 'file_id': MATCH}, 'data')
 	)
-	def display_strips(_strips, file):
-		selected_strips = []
-		dropdown_options = []
+	def display_selected_strips(_strips, file):
+		selected_strips = [SelectedStrip(file, s) for s in file['strips'].values() if s['selected']]
 
-		for strip in file['strips'].values():
-			if strip['selected']:
-				selected_strips.append(SelectedStrip(file, strip))
-			elif not strip['filtered']:
-				dropdown_options.append(DropdownOption(file, strip))
-
-		return selected_strips, None if not selected_strips else HIDDEN, dropdown_options
+		return selected_strips, None if not selected_strips else HIDDEN

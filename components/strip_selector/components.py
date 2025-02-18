@@ -18,7 +18,6 @@ def StripSelector(file):
 				dcc.Input(
 					id={'type': 'strip-search', 'file_id': file['id']},
 					type='text',
-					debounce=1,
 					placeholder='Search strips...',
 					style=CUSTOM_DROPDOWN_INPUT,
 					autoComplete='off'
@@ -29,7 +28,11 @@ def StripSelector(file):
 					style=DROPDOWN_ARROW
 				)
 			], id={'type': 'strip-search-input', 'file_id': file['id']}, style=CUSTOM_DROPDOWN_INPUT_CONTAINER),
-			html.Div(id={'type': 'strip-search-dropdown', 'file_id': file['id']}, style=HIDDEN),
+			
+			html.Div([
+				DropdownOption(file, s) for s in file['strips'].values() if not s['selected']
+			], id={'type': 'strip-search-dropdown', 'file_id': file['id']}, style=HIDDEN),
+
 			html.Div(id={'type': 'strip-search-overlay', 'file_id': file['id']}, style=HIDDEN)
 		], style=CUSTOM_DROPDOWN_CONTAINER),
 
