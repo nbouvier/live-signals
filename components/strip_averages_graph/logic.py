@@ -1,6 +1,6 @@
 import plotly.graph_objects as go
 
-def create_strip_averages_graph(range):
+def create_strip_averages_graph(file, range):
 	fig = go.Figure()
 	
 	fig.update_layout(
@@ -15,18 +15,17 @@ def create_strip_averages_graph(range):
 		dragmode='select'
 	)
 	
-	# Update axes to show 2 decimal places for x and 0 decimal places for y
 	fig.update_xaxes(tickformat=".0f")
 	fig.update_yaxes(tickformat=".0f")
 	
-	# Add individual points with separate legends
 	for strip in range['strips'].values():
-		fig.add_scatter(
-			x=[strip['id']],
-			y=[strip['noised_average']],
-			name=f'Strip {strip['id']}',
-			mode='markers',
-			hovertemplate="%{y:.2f}"
-		)
+		if file['strips'][strip['id']]['selected']:
+			fig.add_scatter(
+				x=[strip['id']],
+				y=[strip['noised_average']],
+				name=f'Strip {strip['id']}',
+				mode='markers',
+				hovertemplate="%{y:.2f}"
+			)
 
 	return fig;

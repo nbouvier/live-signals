@@ -26,6 +26,7 @@ def process_range(file, time_range, qdc_range, color=None):
 		selected_color=color.replace('#opacity#', str(SELECTED_COLOR_OPACITY)),
 		unselected_color=color.replace('#opacity#', str(UNSELECTED_COLOR_OPACITY)),
 		average=np.nan,
+		noised_average=np.nan,
 		strips={},
 		time_range=time_range,
 		qdc_range=qdc_range,
@@ -33,39 +34,46 @@ def process_range(file, time_range, qdc_range, color=None):
 		selected=False
 	)
 
-	file['next_range_id'] += 1
-
-	return update_range(file, range)
-
-def update_range(file, range):
 	start_idx = np.searchsorted(file['time_values'], range['time_range'][0])
 	end_idx = np.searchsorted(file['time_values'], range['time_range'][1])
-	
-	selected_strips = [s for s in file['strips'].values() if s['selected']]
 
-	range['strips'] = {}
-	for strip in selected_strips:
+	for strip in file['strips'].values():
 		range['strips'][strip['id']] = dict(
 			id=strip['id'],
 			average=np.mean([
 				v for v in strip['values'][start_idx:end_idx]
 				if range['qdc_range'][0] <= v <= range['qdc_range'][1]
 			]),
-			noised_average=np.mean([
+			noised_average=np.nan
+		)
+
+	file['next_range_id'] += 1
+
+	update_range(file, range)
+	update_range_strips(file, range)
+
+	return range
+
+def update_range(file, range):
+	start_idx = np.searchsorted(file['time_values'], range['time_range'][0])
+	end_idx = np.searchsorted(file['time_values'], range['time_range'][1])
+
+	for strip in file['strips'].values():
+		range['strips'][strip['id']]['noised_average'] = np.mean([
 				v for v in strip['noised_values'][start_idx:end_idx]
 				if range['qdc_range'][0] <= v <= range['qdc_range'][1]
 			])
-		)
 
+	update_range_strips(file, range)
+
+def update_range_strips(file, range):
 	range['average'] = np.mean([
 		s['average'] for s in range['strips'].values()
-		if not np.isnan(s['average'])
+		if file['strips'][s['id']]['selected'] and not np.isnan(s['average'])
 	])
 
 	range['noised_average'] = np.mean([
 		s['noised_average'] for s in range['strips'].values()
-		if not np.isnan(s['noised_average'])
+		if file['strips'][s['id']]['selected'] and not np.isnan(s['noised_average'])
 	])
-
-	return range
 

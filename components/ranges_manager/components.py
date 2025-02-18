@@ -70,7 +70,7 @@ def Range(file, range):
 
 				# Content
 				html.Div(
-					[IndivudualStrip(s) for s in range['strips'].values()],
+					[IndivudualStrip(s) for s in range['strips'].values() if file['strips'][s['id']]['selected']],
 					id={'type': 'strip-averages-content', 'file_id': file['id'], 'range_id': range['id']},
 					style=HIDDEN
 				)

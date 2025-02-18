@@ -26,4 +26,4 @@ def register_strip_averages_graph_callbacks(app):
 		if not selected_range:
 			return no_update, HIDDEN, GRAPH_PLACEHOLDER
 		
-		return create_strip_averages_graph(selected_range), GRAPH, HIDDEN
+		return create_strip_averages_graph(file, selected_range), GRAPH, HIDDEN

@@ -1,7 +1,7 @@
 from dash import Input, Output, State, ctx, ALL, MATCH, no_update
 from styles import *
 from .components import RangesPlaceholder, Range
-from .logic import process_range, update_range
+from .logic import process_range, update_range, update_range_strips
 from .styles import *
 
 def register_ranges_manager_callbacks(app):
@@ -45,13 +45,26 @@ def register_ranges_manager_callbacks(app):
 	@app.callback(
 		[Output({'type': 'file-store', 'file_id': MATCH}, 'data', allow_duplicate=True),
 		 Output({'type': 'ranges-store', 'file_id': MATCH}, 'data', allow_duplicate=True)],
-		Input({'type': 'selected-strips-store', 'file_id': MATCH}, 'data'),
+		Input({'type': 'strips-store', 'file_id': MATCH}, 'data'),
 		State({'type': 'file-store', 'file_id': MATCH}, 'data'),
 		prevent_initial_call=True
 	)	
 	def update_average(_strips, file):
 		for range in file['ranges'].values():
-			file['ranges'][range['id']] = update_range(file, range)
+			update_range(file, range)
+			
+		return file, list(file['ranges'].keys())
+	
+	@app.callback(
+		[Output({'type': 'file-store', 'file_id': MATCH}, 'data', allow_duplicate=True),
+		 Output({'type': 'ranges-store', 'file_id': MATCH}, 'data', allow_duplicate=True)],
+		Input({'type': 'selected-strips-store', 'file_id': MATCH}, 'data'),
+		State({'type': 'file-store', 'file_id': MATCH}, 'data'),
+		prevent_initial_call=True
+	)	
+	def update_average_strips(_strips, file):
+		for range in file['ranges'].values():
+			update_range_strips(file, range)
 		
 		return file, list(file['ranges'].keys())
 
