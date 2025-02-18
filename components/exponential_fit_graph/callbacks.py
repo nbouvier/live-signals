@@ -16,14 +16,14 @@ def register_exponential_fit_graph_callbacks(app):
 	def update_exponential_fit_graph(_ranges, files):
 		ranges = [
 			r for f in files for r in f['ranges'].values()
-			if r['average'] is not None and r['thickness'] is not None
+			if r['noised_average'] is not None and r['thickness'] is not None
 		]
 		
 		if len(ranges) < 2:
 			return no_update, HIDDEN, GRAPH_PLACEHOLDER
 
 		x = [a['thickness'] for a in ranges]
-		y = [a['average'] for a in ranges]
+		y = [a['noised_average'] for a in ranges]
 
 		a, b = calc_mu(x, y)
 

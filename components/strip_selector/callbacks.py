@@ -13,7 +13,7 @@ def register_strip_selector_callbacks(app):
 		 State({'type': 'strip-averages-graph', 'file_id': MATCH}, 'selectedData')],
 		prevent_initial_call=True
 	)
-	def select_all_strips(_clicks, file, selected_data):
+	def select_strips_button(_clicks, file, selected_data):
 		if ctx.triggered[0]['value'] is None:
 			return no_update, no_update
 		

@@ -48,6 +48,10 @@ def update_range(file, range):
 		range['strips'][strip['id']] = dict(
 			id=strip['id'],
 			average=np.mean([
+				v for v in strip['values'][start_idx:end_idx]
+				if range['qdc_range'][0] <= v <= range['qdc_range'][1]
+			]),
+			noised_average=np.mean([
 				v for v in strip['noised_values'][start_idx:end_idx]
 				if range['qdc_range'][0] <= v <= range['qdc_range'][1]
 			])
@@ -56,6 +60,11 @@ def update_range(file, range):
 	range['average'] = np.mean([
 		s['average'] for s in range['strips'].values()
 		if not np.isnan(s['average'])
+	])
+
+	range['noised_average'] = np.mean([
+		s['noised_average'] for s in range['strips'].values()
+		if not np.isnan(s['noised_average'])
 	])
 
 	return range

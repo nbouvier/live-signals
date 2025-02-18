@@ -27,7 +27,7 @@ def Range(file, range):
 					html.Div([
 						html.Div(style={**COLOR_BOX, 'backgroundColor': range['color']}),
 						html.Span(
-							f"{range['average']:.2f}" if range['average'] is not None else 'N/A',
+							f"{range['noised_average']:.2f}" if range['noised_average'] is not None else 'N/A',
 							style={'fontSize': '16px', 'fontWeight': 'bold'}
 						),
 						html.Span("qdc", style={'fontSize': '12px', 'fontWeight': 'bold', 'marginLeft': '2px'})
@@ -97,7 +97,7 @@ def Range(file, range):
 	], id={'type': 'range', 'file_id': file['id'], 'range_id': range['id']}, style=CONTAINER)
 
 def IndivudualStrip(strip):
-	average = f"{strip['average']:.2f}" if strip['average'] is not None else 'N/A'
+	average = f"{strip['noised_average']:.2f}" if strip['noised_average'] is not None else 'N/A'
 
 	return html.Div([
 		html.Div(strip['id'], style={'display': 'flex', 'justifyContent': 'center', 'fontWeight': 'bold', 'minWidth': '28px'}),

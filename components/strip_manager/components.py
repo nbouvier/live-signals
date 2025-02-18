@@ -13,8 +13,17 @@ def StripManager(file):
 		], id={'type': 'toggle-strip-list', 'file_id': file['id']}, style=STRIP_LIST_TOGGLE),
 
 		html.Div([
-			Strip(file, s) for s in file['strips'].values()
-		], id={'type': 'strip-list', 'file_id': file['id']}, style=HIDDEN)
+			html.Div([
+				Strip(file, s) for s in file['strips'].values()
+			], id={'type': 'strip-list', 'file_id': file['id']}, style=STRIP_LIST),
+			
+			html.Div([
+				html.Button('Update', id={'type': 'update-strip-noise-button', 'file_id': file['id'], 'action': 'update'}, className='button small info'),
+				html.Button("Reset", id={'type': 'update-strip-noise-button', 'file_id': file['id'], 'action': 'reset'}, className='button small danger')
+			], className='flex right small-gap'),
+		], id={'type': 'strip-list-container', 'file_id': file['id']}, className='flex column small-gap', style=HIDDEN),
+
+		dcc.Store(id={'type': 'strips-store', 'file_id': file['id']}, data=[s for s in file['strips'].values()])
 	], className='flex column medium-gap full-width')
 
 def Strip(file, strip):

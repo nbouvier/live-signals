@@ -3,18 +3,13 @@
     flex-direction: row;
 }
 
-.column.flex {
-	flex-direction: column;
-}
+.row.flex { flex-direction: row; }
+.column.flex { flex-direction: column; }
 
-.small-gap.flex {
-    gap: var(--spacing-small);
-}
+.small-gap.flex { gap: var(--spacing-small); }
+.medium-gap.flex { gap: var(--spacing-medium); }
+.large-gap.flex { gap: var(--spacing-large); }
 
-.medium-gap.flex {
-    gap: var(--spacing-medium);
-}
-
-.large-gap.flex {
-    gap: var(--spacing-large);
-}
+.left.flex { justify-content: flex-start; }
+.center.flex { justify-content: center; }
+.right.flex { justify-content: flex-end; }
