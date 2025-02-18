@@ -37,7 +37,7 @@ def StripSelector(file):
 		], style=CUSTOM_DROPDOWN_CONTAINER),
 
 		html.Div(id={'type': 'selected-strips', 'file_id': file['id']}, style=SELECTED_STRIPS_CONTAINER),
-		html.Div("No strip selected.", id={'type': 'no-selected-strip', 'file_id': file['id']}, className='text-small muted'),
+		html.Div("No strip selected.", id={'type': 'no-selected-strip', 'file_id': file['id']}, className='small-text muted'),
 		
 		dcc.Store(id={'type': 'selected-strips-store', 'file_id': file['id']}, data=[s for s in file['strips'].values() if s['selected']])
 	], className='full-width')

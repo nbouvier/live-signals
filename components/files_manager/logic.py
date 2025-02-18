@@ -10,15 +10,18 @@ BOX_SIZE_DELTA = 0.01
 
 next_file_id = 0
 
-def process_file(contents, filename):
+def process_file(contents, filename, options=[]):
 	global next_file_id
 
 	raw_strip_resp, time_values = read_bin_file(contents, filename)
 
-	plateaus = find_plateaus(raw_strip_resp, time_values)
-	noise_range = plateaus.pop(np.argmin([p['value'] for p in plateaus]))
+	if 'ranges' in options or 'noise' in options:
+		plateaus = find_plateaus(raw_strip_resp, time_values)
+		noise_range = plateaus.pop(np.argmin([p['value'] for p in plateaus]))
+	else:
+		plateaus, noise_range = [], None
 
-	strips = process_strips(raw_strip_resp, time_values, noise_range)
+	strips = process_strips(raw_strip_resp, time_values, noise_range=noise_range)
 
 	file = dict(
 		id=str(next_file_id),
@@ -33,11 +36,12 @@ def process_file(contents, filename):
 
 	next_file_id += 1
 
-	noises = [s['noise'] for s in strips.values()]
-	for plateau in plateaus:
-		noised_qdc_range = [plateau['qdc_range'][0] - max(noises), plateau['qdc_range'][1] - min(noises)]
-		range = process_range(file, plateau['time_range'], noised_qdc_range)
-		file['ranges'][range['id']] = range
+	if 'ranges' in options:
+		noises = [s['noise'] for s in strips.values()]
+		for plateau in plateaus:
+			noised_qdc_range = [plateau['qdc_range'][0] - max(noises), plateau['qdc_range'][1] - min(noises)]
+			range = process_range(file, plateau['time_range'], noised_qdc_range)
+			file['ranges'][range['id']] = range
 	
 	return file
 

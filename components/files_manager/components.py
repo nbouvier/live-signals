@@ -9,19 +9,34 @@ from .styles import *
 
 def FileManager():
 	return html.Div([
-		dcc.Upload(
-			id='add-file',
-			children=html.Button(
-				[html.I(className="fas fa-plus"), "File" ],
-				className='button info big'
+		html.Div([
+			dcc.Upload(
+				id='add-file',
+				children=html.Button(
+					[html.I(className="fas fa-plus"), "File" ],
+					className='button info big'
+				)
+			),
+
+			dcc.Checklist(
+				id='file-options',
+				options=[
+					{'label': 'Auto range', 'value': 'ranges'},
+					{'label': 'Auto noise', 'value': 'noise'}
+				],
+				value=['noise', 'ranges'],
+				inline=True,
+				className='flex small-gap medium-text',
+				labelClassName='flex center tiny-gap',
+				labelStyle={'display': 'flex'}
 			)
-		),
+		], className='flex column small-gap'),
 
 		html.Div(FilesPlaceholder(), id='files', className='flex column')
 	], className='flex column medium-gap')
 
 def FilesPlaceholder():
-	return html.Div("No file loaded.", id='files-placeholder', className='text-medium muted')
+	return html.Div("No file loaded.", id='files-placeholder', className='medium-text muted')
 
 def File(file):
 	filename = file['filename'] if len(file['filename']) <= 30 else f"{file['filename'][0:30]}..."

@@ -60,9 +60,9 @@ def update_range(file, range):
 
 	for strip in file['strips'].values():
 		range['strips'][strip['id']]['noised_average'] = np.mean([
-				v for v in strip['noised_values'][start_idx:end_idx]
-				if range['qdc_range'][0] <= v <= range['qdc_range'][1]
-			])
+			v for v in strip['noised_values'][start_idx:end_idx]
+			if range['qdc_range'][0] <= v <= range['qdc_range'][1]
+		])
 
 	update_range_strips(file, range)
 

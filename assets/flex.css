@@ -6,10 +6,11 @@
 .row.flex { flex-direction: row; }
 .column.flex { flex-direction: column; }
 
+.tiny-gap.flex { gap: var(--spacing-tiny); }
 .small-gap.flex { gap: var(--spacing-small); }
 .medium-gap.flex { gap: var(--spacing-medium); }
 .large-gap.flex { gap: var(--spacing-large); }
 
 .left.flex { justify-content: flex-start; }
-.center.flex { justify-content: center; }
+.center.flex { align-items: center; justify-content: center; }
 .right.flex { justify-content: flex-end; }

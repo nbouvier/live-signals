@@ -17,13 +17,14 @@ def register_files_manager_callbacks(app):
 		Input('add-file', 'contents'),
 		[State({'type': 'file-store', 'file_id': ALL}, 'data'),
 		 State('add-file', 'filename'),
+		 State('file-options', 'value'),
 		 State('files', 'children'),
 		 State('graphs', 'children')],
 		prevent_initial_call=True
 	)
-	def add_file(content, files, filename, files_html, graphs_html):
+	def add_file(content, files, filename, options, files_html, graphs_html):
 		try:
-			file = process_file(content, filename)
+			file = process_file(content, filename, options=options)
 		except Exception as e:
 			return (
 				no_update, no_update, no_update, no_update, no_update,

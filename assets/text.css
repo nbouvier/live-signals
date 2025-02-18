@@ -2,14 +2,14 @@
     color: var(--color-muted);
 }
 
-.text-small {
+.small-text {
     font-size: var(--font-size-small);
 }
 
-.text-medium {
+.medium-text {
     font-size: var(--font-size-normal);
 }
 
-.text-large {
+.large-text {
     font-size: var(--font-size-large);
 }

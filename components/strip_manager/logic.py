@@ -1,15 +1,18 @@
 import numpy as np
 
-def process_strips(raw_strip_resp, time_values, noise_range):
+def process_strips(raw_strip_resp, time_values, noise_range=None):
 	strips = {}
 
 	for i, values in enumerate(raw_strip_resp):
 		id = str(i + 1)
 
-		noise_start = np.searchsorted(time_values, noise_range['time_range'][0])
-		noise_end = np.searchsorted(time_values, noise_range['time_range'][1])
+		if noise_range:
+			noise_start = np.searchsorted(time_values, noise_range['time_range'][0])
+			noise_end = np.searchsorted(time_values, noise_range['time_range'][1])
 
-		noise = np.mean(values[noise_start:noise_end])
+			noise = np.mean(values[noise_start:noise_end])
+		else:
+			noise = 0
 
 		strips[id] = update_strip(dict(
 			id=id,
