@@ -5,7 +5,7 @@ from components.ranges_manager import register_ranges_manager_callbacks
 from components.files_manager import FileManager, register_files_manager_callbacks
 from components.exponential_fit_graph import ExponentialFitGraph, register_exponential_fit_graph_callbacks
 from components.strip_responses_graph import register_strip_responses_graph_callbacks
-from components.popup_message import register_popup_message_callbacks
+from components.popup_manager import PopupList, register_popup_manager_callbacks
 from components.strip_averages_graph import register_strip_averages_graph_callbacks
 from components.strip_manager import register_strips_manager_callbacks
 from components.strip_selector import register_strip_selector_callbacks
@@ -15,16 +15,13 @@ def create_layout(app):
 	register_ranges_manager_callbacks(app)
 	register_exponential_fit_graph_callbacks(app)
 	register_files_manager_callbacks(app)
-	register_popup_message_callbacks(app)
+	register_popup_manager_callbacks(app)
 	register_strip_averages_graph_callbacks(app)
 	register_strip_responses_graph_callbacks(app)
 	register_strips_manager_callbacks(app)
 	register_strip_selector_callbacks(app)
 
 	return html.Div([
-		# URL Location component for page initialization
-		dcc.Location(id='url', refresh=False),
-
 		# Left panel
 		html.Div(FileManager(), id='side-panel', style=SIDE_PANEL),
 		html.Div([
@@ -40,13 +37,5 @@ def create_layout(app):
 			ExponentialFitGraph()
 		], style=CENTER_PANEL),
 		
-		# Popup message
-		html.Div([
-			html.Div(id='popup-message-content'),
-			html.Button(
-				html.I(className="fas fa-times"),
-				id='close-popup',
-				style=CLOSE_BUTTON
-			)
-		], id='popup-message', style=HIDDEN_POPUP),
+		PopupList()
 	], style=MAIN_CONTAINER)

@@ -123,27 +123,6 @@ OVERLAY_VISIBLE = {
 	'left': '0'
 }
 
-# Popup styles
-BASE_POPUP = {
-	'position': 'fixed',
-	'top': '20px',
-	'left': '50%',
-	'transform': 'translateX(-50%)',
-	'backgroundColor': 'white',
-	'padding': SPACING_MEDIUM,
-	'borderRadius': BORDER_RADIUS,
-	'boxShadow': SHADOW_MEDIUM,
-	'zIndex': Z_INDEX_OVERLAY + 1,
-	'display': 'flex',
-	'alignItems': 'center',
-	'gap': SPACING_MEDIUM
-}
-
-HIDDEN_POPUP = {
-	**BASE_POPUP,
-	'display': 'none'
-}
-
 # Click catcher style
 CLICK_CATCHER = {
 	'position': 'fixed',
@@ -153,28 +132,6 @@ CLICK_CATCHER = {
 	'height': '100vh',
 	'backgroundColor': 'rgba(0, 0, 0, 0.5)',
 	'zIndex': Z_INDEX_OVERLAY - 1
-}
-
-# Close button style
-CLOSE_BUTTON = {
-	'backgroundColor': 'transparent',
-	'border': 'none',
-	'color': MUTED_TEXT_COLOR,
-	'cursor': 'pointer',
-	'padding': '4px',
-	'display': 'flex',
-	'alignItems': 'center',
-	'justifyContent': 'center',
-	'transition': f'color {TRANSITION_NORMAL}',
-	':hover': {
-		'color': WARNING_COLOR
-	}
-}
-
-# Error message style
-ERROR_MESSAGE = {
-	'color': '#ff3333',
-	'fontWeight': 'bold'
 }
 
 # Selection indicator styles

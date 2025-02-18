@@ -3,6 +3,7 @@ from .components import FilesPlaceholder, File, FileGraphs
 from .logic import process_file
 from .styles import *
 from styles import *
+from components.popup_manager import popup
 
 def register_files_manager_callbacks(app):
 	
@@ -12,31 +13,29 @@ def register_files_manager_callbacks(app):
 		 Output('add-file', 'contents'),
 		 Output('add-file', 'filename'),
 		 Output('add-file', 'last_modified'),
-		 Output('popup-message-content', 'children', allow_duplicate=True),
-		 Output('popup-message', 'style', allow_duplicate=True)],
+		 Output('popups-store', 'data', allow_duplicate=True)],
 		Input('add-file', 'contents'),
 		[State({'type': 'file-store', 'file_id': ALL}, 'data'),
 		 State('add-file', 'filename'),
 		 State('file-options', 'value'),
 		 State('files', 'children'),
-		 State('graphs', 'children')],
+		 State('graphs', 'children'),
+		 State('popups-store', 'data')],
 		prevent_initial_call=True
 	)
-	def add_file(content, files, filename, options, files_html, graphs_html):
+	def add_file(content, files, filename, options, files_html, graphs_html, popups):
 		try:
 			file = process_file(content, filename, options=options)
 		except Exception as e:
-			return (
-				no_update, no_update, no_update, no_update, no_update,
-				html.Div(f"Error processing file\n\n{e}", style=ERROR_MESSAGE),
-				BASE_POPUP
-			)
+			p = popup(f"Error processing file: {e}", 'error')
+			popups[p['id']] = p
+			return no_update, no_update, None, None, None, popups
 
 		files_html = [] if not files else files_html
 		files_html.append(File(file))
 		graphs_html.append(FileGraphs(file))
 		
-		return files_html, graphs_html, None, None, None, no_update, no_update
+		return files_html, graphs_html, None, None, None, no_update
 
 	@app.callback(
 		[Output({'type': 'file-header-toggle', 'file_id': MATCH}, 'className'),
