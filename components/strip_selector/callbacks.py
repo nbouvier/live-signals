@@ -44,15 +44,22 @@ def register_strip_selector_callbacks(app):
 	@app.callback(
 		[Output({'type': 'strip-search-dropdown', 'file_id': MATCH}, 'style', allow_duplicate=True),
 		 Output({'type': 'strip-search-dropdown-icon', 'file_id': MATCH}, 'className', allow_duplicate=True),
-		 Output({'type': 'strip-search-overlay', 'file_id': MATCH}, 'style', allow_duplicate=True)],
+		 Output({'type': 'strip-search-overlay', 'file_id': MATCH}, 'style', allow_duplicate=True),
+		 Output({'type': 'strip-search-dropdown', 'file_id': MATCH}, 'children', allow_duplicate=True)],
 		Input({'type': 'strip-search-input', 'file_id': MATCH}, 'n_clicks'),
+		State({'type': 'file-store', 'file_id': MATCH}, 'data'),
 		prevent_initial_call=True
 	)
-	def open_dropdown(_clicks):
-		return CUSTOM_DROPDOWN_LIST, "fas fa-chevron-down", STRIP_DROPDOWN_BACKGROUND
+	def open_dropdown(_clicks, file):
+		options = []
+		for strip in file['strips'].values():
+			if not strip['selected']:
+				options.append(DropdownOption(file, strip))
+
+		return CUSTOM_DROPDOWN_LIST, "fas fa-chevron-down", STRIP_DROPDOWN_BACKGROUND, options
 
 	@app.callback(
-		Output({'type': 'strip-search-dropdown', 'file_id': MATCH}, 'children'),
+		Output({'type': 'strip-search-dropdown', 'file_id': MATCH}, 'children', allow_duplicate=True),
 		Input({'type': 'strip-search', 'file_id': MATCH}, 'value'),
 		State({'type': 'file-store', 'file_id': MATCH}, 'data'),
 		prevent_initial_call=True
@@ -108,12 +115,13 @@ def register_strip_selector_callbacks(app):
 	@app.callback(
 		[Output({'type': 'strip-search-dropdown', 'file_id': MATCH}, 'style', allow_duplicate=True),
 		 Output({'type': 'strip-search-dropdown-icon', 'file_id': MATCH}, 'className', allow_duplicate=True),
-		 Output({'type': 'strip-search-overlay', 'file_id': MATCH}, 'style', allow_duplicate=True)],
+		 Output({'type': 'strip-search-overlay', 'file_id': MATCH}, 'style', allow_duplicate=True),
+		 Output({'type': 'strip-search', 'file_id': MATCH}, 'value')],
 		Input({'type': 'strip-search-overlay', 'file_id': MATCH}, 'n_clicks'),
 		prevent_initial_call=True
 	)
 	def close_dropdown(_clicks):
-		return HIDDEN, "fas fa-chevron-right", HIDDEN
+		return HIDDEN, "fas fa-chevron-right", HIDDEN, None
 
 	@app.callback(
 		[Output({'type': 'selected-strips', 'file_id': MATCH}, 'children'),
