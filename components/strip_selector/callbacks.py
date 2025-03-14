@@ -17,27 +17,26 @@ def register_strip_selector_callbacks(app):
 		if ctx.triggered[0]['value'] is None:
 			return no_update, no_update
 		
-		match ctx.triggered_id['strips']:
-			case 'all':
-				for strip in file['strips'].values():
-					strip['selected'] = True
-			case 'none':
-				for strip in file['strips'].values():
-					strip['selected'] = False
-			case 'even':
-				for strip in file['strips'].values():
-					strip['selected'] = int(strip['id']) % 2 == 0
-			case 'odd':
-				for strip in file['strips'].values():
-					strip['selected'] = int(strip['id']) % 2 == 1
-			case 'filter':
-				if not selected_data or not 'points' in selected_data:
-					return no_update, no_update
+		if ctx.triggered_id['strips'] == 'all':
+			for strip in file['strips'].values():
+				strip['selected'] = True
+		elif ctx.triggered_id['strips'] == 'none':
+			for strip in file['strips'].values():
+				strip['selected'] = False
+		elif ctx.triggered_id['strips'] == 'even':
+			for strip in file['strips'].values():
+				strip['selected'] = int(strip['id']) % 2 == 0
+		elif ctx.triggered_id['strips'] == 'odd':
+			for strip in file['strips'].values():
+				strip['selected'] = int(strip['id']) % 2 == 1
+		elif ctx.triggered_id['strips'] == 'filter':
+			if not selected_data or not 'points' in selected_data:
+				return no_update, no_update
 
-				selected_strips = [p['x'] for p in selected_data['points']]
+			selected_strips = [p['x'] for p in selected_data['points']]
 
-				for strip in file['strips'].values():
-					strip['selected'] = strip['id'] in selected_strips
+			for strip in file['strips'].values():
+				strip['selected'] = strip['id'] in selected_strips
 
 		return file, [s['id'] for s in file['strips'].values() if s['selected']]
 

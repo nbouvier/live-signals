@@ -53,22 +53,21 @@ def register_strips_manager_callbacks(app):
 		if ctx.triggered[0]['value'] is None:
 			return no_update, no_update
 		
-		match ctx.triggered_id['action']:
-			case 'reset':
-				for strip in file['strips'].values():
-					strip['noise'] = 0
+		if ctx.triggered_id['action'] == 'reset':
+			for strip in file['strips'].values():
+				strip['noise'] = 0
+				update_strip(strip)
+
+		elif ctx.triggered_id['action'] == 'update':
+			if not selected_data or not 'range' in selected_data:
+				return no_update, no_update
+
+			range = process_range(file, selected_data['range']['x'], selected_data['range']['y'])
+
+			for strip in file['strips'].values():
+				if strip['selected']:
+					strip['noise'] = range['strips'][strip['id']]['average']
 					update_strip(strip)
-
-			case 'update':
-				if not selected_data or not 'range' in selected_data:
-					return no_update, no_update
-
-				range = process_range(file, selected_data['range']['x'], selected_data['range']['y'])
-
-				for strip in file['strips'].values():
-					if strip['selected']:
-						strip['noise'] = range['strips'][strip['id']]['average']
-						update_strip(strip)
 
 		return file, list(file['strips'].keys())
 
